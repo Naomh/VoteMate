@@ -1,0 +1,109 @@
+<div [ngSwitch]="stateSubject$ | async">
+    <div *ngSwitchCase="'init'">
+        <div class="container">
+        
+        <h2>Create a wallet and secure your recovery key!</h2>
+        <h3>What is a Secret Recovery Phrase?</h3>
+        Your Secret Recovery Phrase is a 12-word phrase that is the “master key” to your wallet and your funds
+        
+        <h3>How do I save my Secret Recovery Phrase?</h3>
+        <ul>
+            
+            <li>Save in a password manager</li>
+            <li>Store in a safe deposit box</li>
+            <li>Write down and store in multiple secret places</li>
+        </ul>
+        <h3>
+            Should I share my Secret Recovery Phrase?
+        </h3>
+        <ul>
+            <li>
+                Never, ever share your Secret Recovery Phrase with anyone!
+            </li>
+        </ul>
+        <hr>
+        <div class="hint">
+            If you have an existing wallet click the 'recover wallet' button.
+        </div>
+        <hr>
+        <div class="button-container">
+            <button (click)="setState('recovery')">recover wallet</button>
+            <button (click)="setState('mnemonic'); generateWallet()">generate wallet</button>
+        </div>
+    </div>
+    </div>
+    <div *ngSwitchCase="'mnemonic'">
+        <div class="container">
+            <h1>This is your recovery phrase</h1>
+            <p>Below is your recovery phrase, which is the only way to restore access to your wallet. It’s extremely important to keep it safe and private. Do not share it with anyone.</p>
+            <div class="wordlist-container">
+                <div *ngFor="let word of wallet.mnemonic.split(' ');let i = index">
+                    <label [for]="word">{{i+1}}.</label><input [id]="word" [value]="word">
+                </div>
+            </div>
+            <div class="button-container">
+                <button (click)="setState('init')">back</button>
+                <button (click)="setState('validation')">next</button>
+            </div>
+        </div>
+    </div>
+    <div *ngSwitchCase="'validation'">
+        <div class="container">
+            <h1>Verify your recovery phrase</h1>
+            <p>To ensure that you have securely backed up your recovery phrase, please fill in the missing words below. This is a critical step to verify that you’ve recorded your phrase correctly.
+            </p>
+                <ul>
+                    <li>Double-check your phrase before completing the form.</li>
+                    <li>Make sure you are in a private and secure location to avoid exposing your recovery phrase.</li>
+                </ul>
+            <form [formGroup]="form">
+                <div class="wordlist-container">
+                    
+                    <div *ngFor="let word of wallet.mnemonic.split(' '); let i = index">
+                        <label [for]="word">{{i+1}}.</label><input [id]="word" [formControlName]="'word'+i">
+                    </div>
+                </div>
+            </form>
+                <div class="button-container">
+                    <button (click)="setState('mnemonic')">back</button>
+                    <button [disabled]="form.invalid" (click)="setState('success'); save() ">next</button>
+                </div>
+        </div>
+    </div>
+    <div *ngSwitchCase="'success'"><div class="container">
+        <h1>All set-up! 🎉</h1>
+
+        Your wallet has been successfully set up and is ready for use. Please remember:
+        <br>
+        <br>
+            Keep your recovery phrase and private key safe – anyone with access to these can control your wallet.
+            <br>
+            We cannot recover your wallet if you lose your recovery phrase.
+      </div>
+      <div class="button-container">
+        <button [routerLink]="['/list']" routerLinkActive="router-link-active" >finish!</button>
+    </div>
+    </div>
+    <div *ngSwitchCase="'recovery'">
+        <div class="container">
+        <h1>Enter Your Recovery Phrase</h1>
+        <p>Please enter your recovery phrase in the fields below to access your wallet.</p>
+        <ul>
+            <li>Ensure that you enter the words in the exact order.</li>
+            <li>Keep this information private and secure. Do not share your recovery phrase with anyone.</li>
+        </ul>
+        <form [formGroup]="recoveryForm">
+
+                <div class="wordlist-container">
+                    <div *ngFor="let word of recoveryPhrase; let i = index">
+                        {{i+1}}<input [formControlName]="'word'+i">
+                    </div>
+                </div>
+            </form>
+            <div class="button-container">
+                <button (click)="setState('init')">back</button>
+                <button [disabled]="recoveryForm.invalid" (click)="recover()">next</button>
+            </div>
+        </div>
+    </div> <!-- Volitelné, pro neznámé stavy -->
+</div>

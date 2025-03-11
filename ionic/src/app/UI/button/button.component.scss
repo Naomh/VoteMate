@@ -1,0 +1,72 @@
+button{
+    gap: 5px;
+    min-height: 25px;
+    position: relative;
+    overflow: hidden;
+    transition: width 1s ease-in;
+    &::after{
+        content: "";
+        position: absolute;
+        height: 200%;
+        width: 200%;
+
+    }
+    &.failure::after{
+        border-radius: 100%;
+        animation: growAndFade 1s linear;
+    }
+    &.success::after{
+        border-radius: 100%;
+        animation: growAndFadeSuccess 1s linear;
+    }
+}
+.loader {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    background: linear-gradient(0deg, var(--c-secondary) 33%, var(--c-quaternary) 100%);
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  .loader::after {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 11px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--c-background-disabled);
+  }
+
+  @keyframes rotation {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg)}
+  }
+
+  @keyframes growAndFade {
+    0% {
+      opacity: .25;
+      transform: scale(0);
+      background-color: red;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(10);
+    }
+  }
+  @keyframes growAndFadeSuccess {
+    0% {
+      opacity: .25;
+      transform: scale(0);
+      background-color: green;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(10);
+    }
+  }

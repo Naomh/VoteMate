@@ -1,0 +1,120 @@
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:231:13: Warning: Return value of low-level calls not used.
+            mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+            ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:282:13: Warning: Return value of low-level calls not used.
+            mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+            ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:315:9: Warning: Return value of low-level calls not used.
+        mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+        ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:174:24: Warning: Unused local variable.
+        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                       ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:196:24: Warning: Unused local variable.
+        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                       ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:24: Warning: Unused local variable.
+        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                       ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:268:24: Warning: Unused local variable.
+        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                       ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:288:24: Warning: Unused local variable.
+        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                       ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:306:24: Warning: Unused local variable.
+        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                       ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--20958-xtpB8ARa5sJ3
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+EC address:  0xE3B05063Aa4471920b95f51606A36b5B68597A17
+FastEcMul address:  0x1b99C89996c006D89Cc2De40da30443511796A03
+VotingBoothDeployer address:  0xbBAc1E143CCCf60950Ad13c783419bF1058ec35F
+VotingFunc address:  0xcF713aFCc95D9359373F878D12e5bAe3737CC11B
+MainVotingC address:  0x27E44bA85d43c9D8aA5123b3bFE6Df4dC30d2825
+VotingCalls address:  0xD04585a9aE8328119Ded0DE1c84DDd2e3e1D9283
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  3
+Cnt of faulty voters:  1
+Enroll batch size:  250
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  3
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 179204
+	 \/== Gas used in enrollVoters: 179204
+  [32m  ✓[0m[90m Enroll voters[0m[31m (527ms)[0m
+	 \/== Gas used in splitGroups batch with start_idx 0: 147917
+	 \/== Gas used in splitGroups: 147917
+	 \/== Gas used in deployBooths: 4644163
+  [32m  ✓[0m[90m Split to groups and deploy booth contracts[0m[31m (630ms)[0m
+Booth  0  voter count:  3
+  [32m  ✓[0m[90m Call booth contract[0m[33m (48ms)[0m
+	 \/== Gas used in submitVotersPK by voter[0]: 117211
+	 \/== Gas used in submitVotersPK by voter[1]: 121411
+	 \/== Gas used in submitVotersPK by voter[2]: 128125
+	 \/== Average gas used in submitVotersPK by voter: 122249
+  [32m  ✓[0m[90m Submit PKs by voters[0m[31m (1160ms)[0m
+	 \/== Gas used in buildRightMarkers4MPC batch in booth 0: 163489
+	 \/== Gas used in buildRightMarkers4MPC in booth 0: 163489
+	 \/== Gas used in buildRightMarkers4MPC: 163489
+  [32m  ✓[0m[90m Precompute right-side sum arrays for MPC keys[0m[31m (177ms)[0m
+	 \/== Gas used in compute MPC key in booth 0 batch 0: 326668
+	 \/== Gas used in compute MPC key in booth 0: 326668
+	 \/== Gas used in compute MPC key: 326668
+  [32m  ✓[0m[90m Compute MPC keys[0m[31m (697ms)[0m
+	 Processing candidate[0]...
+	 Processing candidate[1]...
+	 \/== Gas used in submitVote by voter[0]: 4267003
+	 Processing candidate[0]...
+	 Processing candidate[1]...
+	 \/== Gas used in submitVote by voter[1]: 4288712
+	 Processing candidate[0]...
+	 Processing candidate[1]...
+	 \/== Gas used in submitVote by voter[2]: 4420765
+	 \/== Average gas used in submitVote by voter: 4325493.333333333
+  [32m  ✓[0m[90m Submit votes[0m[31m (49983ms)[0m
+	 \/== Gas used in computeBlindedVotesSum batch in booth 0: 135888
+	 \/== Gas used in computeBlindedVotesSum by authority: 135888
+  [32m  ✓[0m[90m Compute sums of blinded votes in booth contracts[0m[31m (127ms)[0m
+Booth 0 tally (auth):  [ 2n, 1n ]
+	 \/== Gas used in computeTally by authority in group 0: 296663
+Booth  0  tally (sc):  [ '2', '1' ]
+	 \/== Gas used in computing tally by authority: 296663
+  [32m  ✓[0m[90m Compute group tallies[0m[31m (2433ms)[0m
+Final tally from authority:  [ 2n, 1n ]
+Final tally from contract:  [ '2', '1' ]
+  [32m  ✓[0m[90m Main collects tally[0m
+
+
+[92m [0m[32m 10 passing[0m[90m (56s)[0m
+

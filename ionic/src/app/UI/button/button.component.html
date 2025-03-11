@@ -1,0 +1,4 @@
+<button [disabled]="disabled" [ngClass]="result" [attr.type]="type" [disabled]="state === 'loading'">
+    <ng-content></ng-content>
+    <span *ngIf="state === 'loading'" class="loader"></span>
+</button>

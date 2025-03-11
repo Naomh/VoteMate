@@ -1,0 +1,8 @@
+<ng-container *ngIf="user(); else logIn">
+    <app-profile></app-profile>   
+</ng-container>
+
+<ng-template #logIn>
+    <app-login></app-login>
+</ng-template>
+<UI-snackbar #snackbar></UI-snackbar>

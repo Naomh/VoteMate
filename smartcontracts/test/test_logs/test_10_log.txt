@@ -1,0 +1,1607 @@
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--76406-lNFz982B8Ca3
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  152
+Cnt of faulty voters:  1
+Enroll batch size:  274
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  152
+RM_batch_size:  1000
+	 \/== Gas used in enrollVoters batch with start_idx 0: 6937027
+	 \/== Gas used in enrollVoters: 6937027
+  [32m  ✓[0m[90m Enroll voters[0m[31m (12300ms)[0m
+	 \/== Gas used in splitGroups batch with start_idx 0: 4185072
+	 \/== Gas used in splitGroups: 4185072
+	 \/== Gas used in deployBooths: 4585448
+  [32m  ✓[0m[90m Split to groups and deploy booth contracts[0m[31m (2310ms)[0m
+Booth  0  voter count:  152
+  [32m  ✓[0m[90m Call booth contract[0m[33m (43ms)[0m
+	 \/== Gas used in submitVotersPK by voter[0]: 117211
+	 \/== Gas used in submitVotersPK by voter[1]: 121411
+	 \/== Gas used in submitVotersPK by voter[2]: 121411
+	 \/== Gas used in submitVotersPK by voter[3]: 121411
+	 \/== Gas used in submitVotersPK by voter[4]: 121411
+	 \/== Gas used in submitVotersPK by voter[5]: 121399
+	 \/== Gas used in submitVotersPK by voter[6]: 121411
+	 \/== Gas used in submitVotersPK by voter[7]: 121411
+	 \/== Gas used in submitVotersPK by voter[8]: 121399
+	 \/== Gas used in submitVotersPK by voter[9]: 121399
+	 \/== Gas used in submitVotersPK by voter[10]: 121399
+	 \/== Gas used in submitVotersPK by voter[11]: 121411
+	 \/== Gas used in submitVotersPK by voter[12]: 121411
+	 \/== Gas used in submitVotersPK by voter[13]: 121411
+	 \/== Gas used in submitVotersPK by voter[14]: 121411
+	 \/== Gas used in submitVotersPK by voter[15]: 121411
+	 \/== Gas used in submitVotersPK by voter[16]: 121411
+	 \/== Gas used in submitVotersPK by voter[17]: 121411
+	 \/== Gas used in submitVotersPK by voter[18]: 121399
+	 \/== Gas used in submitVotersPK by voter[19]: 121411
+	 \/== Gas used in submitVotersPK by voter[20]: 121399
+	 \/== Gas used in submitVotersPK by voter[21]: 121411
+	 \/== Gas used in submitVotersPK by voter[22]: 121411
+	 \/== Gas used in submitVotersPK by voter[23]: 121399
+	 \/== Gas used in submitVotersPK by voter[24]: 121411
+	 \/== Gas used in submitVotersPK by voter[25]: 121411
+	 \/== Gas used in submitVotersPK by voter[26]: 121399
+	 \/== Gas used in submitVotersPK by voter[27]: 121399
+	 \/== Gas used in submitVotersPK by voter[28]: 121411
+	 \/== Gas used in submitVotersPK by voter[29]: 121411
+	 \/== Gas used in submitVotersPK by voter[30]: 121411
+	 \/== Gas used in submitVotersPK by voter[31]: 121411
+	 \/== Gas used in submitVotersPK by voter[32]: 121399
+	 \/== Gas used in submitVotersPK by voter[33]: 121411
+	 \/== Gas used in submitVotersPK by voter[34]: 121399
+	 \/== Gas used in submitVotersPK by voter[35]: 121411
+	 \/== Gas used in submitVotersPK by voter[36]: 121411
+	 \/== Gas used in submitVotersPK by voter[37]: 121411
+	 \/== Gas used in submitVotersPK by voter[38]: 121411
+	 \/== Gas used in submitVotersPK by voter[39]: 121411
+	 \/== Gas used in submitVotersPK by voter[40]: 121411
+	 \/== Gas used in submitVotersPK by voter[41]: 121411
+	 \/== Gas used in submitVotersPK by voter[42]: 121411
+	 \/== Gas used in submitVotersPK by voter[43]: 121411
+	 \/== Gas used in submitVotersPK by voter[44]: 121411
+	 \/== Gas used in submitVotersPK by voter[45]: 121411
+	 \/== Gas used in submitVotersPK by voter[46]: 121399
+	 \/== Gas used in submitVotersPK by voter[47]: 121411
+	 \/== Gas used in submitVotersPK by voter[48]: 121411
+	 \/== Gas used in submitVotersPK by voter[49]: 121411
+	 \/== Gas used in submitVotersPK by voter[50]: 121411
+	 \/== Gas used in submitVotersPK by voter[51]: 121411
+	 \/== Gas used in submitVotersPK by voter[52]: 121411
+	 \/== Gas used in submitVotersPK by voter[53]: 121411
+	 \/== Gas used in submitVotersPK by voter[54]: 121411
+	 \/== Gas used in submitVotersPK by voter[55]: 121411
+	 \/== Gas used in submitVotersPK by voter[56]: 121399
+	 \/== Gas used in submitVotersPK by voter[57]: 121411
+	 \/== Gas used in submitVotersPK by voter[58]: 121411
+	 \/== Gas used in submitVotersPK by voter[59]: 121399
+	 \/== Gas used in submitVotersPK by voter[60]: 121411
+	 \/== Gas used in submitVotersPK by voter[61]: 121399
+	 \/== Gas used in submitVotersPK by voter[62]: 121387
+	 \/== Gas used in submitVotersPK by voter[63]: 121399
+	 \/== Gas used in submitVotersPK by voter[64]: 121411
+	 \/== Gas used in submitVotersPK by voter[65]: 121411
+	 \/== Gas used in submitVotersPK by voter[66]: 121411
+	 \/== Gas used in submitVotersPK by voter[67]: 121411
+	 \/== Gas used in submitVotersPK by voter[68]: 121399
+	 \/== Gas used in submitVotersPK by voter[69]: 121399
+	 \/== Gas used in submitVotersPK by voter[70]: 121411
+	 \/== Gas used in submitVotersPK by voter[71]: 121411
+	 \/== Gas used in submitVotersPK by voter[72]: 121411
+	 \/== Gas used in submitVotersPK by voter[73]: 121399
+	 \/== Gas used in submitVotersPK by voter[74]: 121411
+	 \/== Gas used in submitVotersPK by voter[75]: 121411
+	 \/== Gas used in submitVotersPK by voter[76]: 121411
+	 \/== Gas used in submitVotersPK by voter[77]: 121399
+	 \/== Gas used in submitVotersPK by voter[78]: 121411
+	 \/== Gas used in submitVotersPK by voter[79]: 121411
+	 \/== Gas used in submitVotersPK by voter[80]: 121399
+	 \/== Gas used in submitVotersPK by voter[81]: 121399
+	 \/== Gas used in submitVotersPK by voter[82]: 121411
+	 \/== Gas used in submitVotersPK by voter[83]: 121411
+	 \/== Gas used in submitVotersPK by voter[84]: 121399
+	 \/== Gas used in submitVotersPK by voter[85]: 121411
+	 \/== Gas used in submitVotersPK by voter[86]: 121399
+	 \/== Gas used in submitVotersPK by voter[87]: 121411
+	 \/== Gas used in submitVotersPK by voter[88]: 121411
+	 \/== Gas used in submitVotersPK by voter[89]: 121411
+	 \/== Gas used in submitVotersPK by voter[90]: 121411
+	 \/== Gas used in submitVotersPK by voter[91]: 121411
+	 \/== Gas used in submitVotersPK by voter[92]: 121411
+	 \/== Gas used in submitVotersPK by voter[93]: 121387
+	 \/== Gas used in submitVotersPK by voter[94]: 121411
+	 \/== Gas used in submitVotersPK by voter[95]: 121411
+	 \/== Gas used in submitVotersPK by voter[96]: 121399
+	 \/== Gas used in submitVotersPK by voter[97]: 121411
+	 \/== Gas used in submitVotersPK by voter[98]: 121411
+	 \/== Gas used in submitVotersPK by voter[99]: 121411
+	 \/== Gas used in submitVotersPK by voter[100]: 121411
+	 \/== Gas used in submitVotersPK by voter[101]: 121411
+	 \/== Gas used in submitVotersPK by voter[102]: 121399
+	 \/== Gas used in submitVotersPK by voter[103]: 121411
+	 \/== Gas used in submitVotersPK by voter[104]: 121411
+	 \/== Gas used in submitVotersPK by voter[105]: 121399
+	 \/== Gas used in submitVotersPK by voter[106]: 121411
+	 \/== Gas used in submitVotersPK by voter[107]: 121411
+	 \/== Gas used in submitVotersPK by voter[108]: 121411
+	 \/== Gas used in submitVotersPK by voter[109]: 121411
+	 \/== Gas used in submitVotersPK by voter[110]: 121411
+	 \/== Gas used in submitVotersPK by voter[111]: 121411
+	 \/== Gas used in submitVotersPK by voter[112]: 121399
+	 \/== Gas used in submitVotersPK by voter[113]: 121411
+	 \/== Gas used in submitVotersPK by voter[114]: 121411
+	 \/== Gas used in submitVotersPK by voter[115]: 121411
+	 \/== Gas used in submitVotersPK by voter[116]: 121411
+	 \/== Gas used in submitVotersPK by voter[117]: 121399
+	 \/== Gas used in submitVotersPK by voter[118]: 121411
+	 \/== Gas used in submitVotersPK by voter[119]: 121411
+	 \/== Gas used in submitVotersPK by voter[120]: 121411
+	 \/== Gas used in submitVotersPK by voter[121]: 121411
+	 \/== Gas used in submitVotersPK by voter[122]: 121411
+	 \/== Gas used in submitVotersPK by voter[123]: 121411
+	 \/== Gas used in submitVotersPK by voter[124]: 121411
+	 \/== Gas used in submitVotersPK by voter[125]: 121411
+	 \/== Gas used in submitVotersPK by voter[126]: 121411
+	 \/== Gas used in submitVotersPK by voter[127]: 121411
+	 \/== Gas used in submitVotersPK by voter[128]: 121411
+	 \/== Gas used in submitVotersPK by voter[129]: 121411
+	 \/== Gas used in submitVotersPK by voter[130]: 121411
+	 \/== Gas used in submitVotersPK by voter[131]: 121399
+	 \/== Gas used in submitVotersPK by voter[132]: 121411
+	 \/== Gas used in submitVotersPK by voter[133]: 121411
+	 \/== Gas used in submitVotersPK by voter[134]: 121411
+	 \/== Gas used in submitVotersPK by voter[135]: 121411
+	 \/== Gas used in submitVotersPK by voter[136]: 121399
+	 \/== Gas used in submitVotersPK by voter[137]: 121411
+	 \/== Gas used in submitVotersPK by voter[138]: 121399
+	 \/== Gas used in submitVotersPK by voter[139]: 121411
+	 \/== Gas used in submitVotersPK by voter[140]: 121411
+	 \/== Gas used in submitVotersPK by voter[141]: 121399
+	 \/== Gas used in submitVotersPK by voter[142]: 121411
+	 \/== Gas used in submitVotersPK by voter[143]: 121399
+	 \/== Gas used in submitVotersPK by voter[144]: 121411
+	 \/== Gas used in submitVotersPK by voter[145]: 121411
+	 \/== Gas used in submitVotersPK by voter[146]: 121411
+	 \/== Gas used in submitVotersPK by voter[147]: 121399
+	 \/== Gas used in submitVotersPK by voter[148]: 121399
+	 \/== Gas used in submitVotersPK by voter[149]: 121411
+	 \/== Gas used in submitVotersPK by voter[150]: 121411
+	 \/== Gas used in submitVotersPK by voter[151]: 128101
+	 \/== Average gas used in submitVotersPK by voter: 121424.22368421052
+  [32m  ✓[0m[90m Submit PKs by voters[0m[31m (83313ms)[0m
+	 \/== Gas used in buildRightMarkers4MPC batch in booth 0: 1741223
+	 \/== Gas used in buildRightMarkers4MPC in booth 0: 1741223
+	 \/== Gas used in buildRightMarkers4MPC: 1741223
+  [32m  ✓[0m[90m Precompute right-side sum arrays for MPC keys[0m[31m (3167ms)[0m
+	 \/== Gas used in compute MPC key in booth 0 batch 0: 11816880
+	 \/== Gas used in compute MPC key in booth 0: 11816880
+	 \/== Gas used in compute MPC key: 11816880
+  [32m  ✓[0m[90m Compute MPC keys[0m[31m (41680ms)[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 6 passing[0m[90m (2m)[0m
+[36m [0m[36m 4 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--77362-VqxwbXR0fZyT
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  154
+Cnt of faulty voters:  1
+Enroll batch size:  274
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  154
+RM_batch_size:  1000
+	 \/== Gas used in enrollVoters batch with start_idx 0: 7027738
+	 \/== Gas used in enrollVoters: 7027738
+  [32m  ✓[0m[90m Enroll voters[0m[31m (10939ms)[0m
+	 \/== Gas used in splitGroups batch with start_idx 0: 4239262
+	 \/== Gas used in splitGroups: 4239262
+	 \/== Gas used in deployBooths: 4585448
+  [32m  ✓[0m[90m Split to groups and deploy booth contracts[0m[31m (1932ms)[0m
+Booth  0  voter count:  154
+  [32m  ✓[0m[90m Call booth contract[0m
+	 \/== Gas used in submitVotersPK by voter[0]: 117211
+	 \/== Gas used in submitVotersPK by voter[1]: 121411
+	 \/== Gas used in submitVotersPK by voter[2]: 121411
+	 \/== Gas used in submitVotersPK by voter[3]: 121411
+	 \/== Gas used in submitVotersPK by voter[4]: 121411
+	 \/== Gas used in submitVotersPK by voter[5]: 121411
+	 \/== Gas used in submitVotersPK by voter[6]: 121411
+	 \/== Gas used in submitVotersPK by voter[7]: 121411
+	 \/== Gas used in submitVotersPK by voter[8]: 121411
+	 \/== Gas used in submitVotersPK by voter[9]: 121411
+	 \/== Gas used in submitVotersPK by voter[10]: 121411
+	 \/== Gas used in submitVotersPK by voter[11]: 121399
+	 \/== Gas used in submitVotersPK by voter[12]: 121411
+	 \/== Gas used in submitVotersPK by voter[13]: 121399
+	 \/== Gas used in submitVotersPK by voter[14]: 121399
+	 \/== Gas used in submitVotersPK by voter[15]: 121399
+	 \/== Gas used in submitVotersPK by voter[16]: 121411
+	 \/== Gas used in submitVotersPK by voter[17]: 121387
+	 \/== Gas used in submitVotersPK by voter[18]: 121399
+	 \/== Gas used in submitVotersPK by voter[19]: 121411
+	 \/== Gas used in submitVotersPK by voter[20]: 121411
+	 \/== Gas used in submitVotersPK by voter[21]: 121411
+	 \/== Gas used in submitVotersPK by voter[22]: 121411
+	 \/== Gas used in submitVotersPK by voter[23]: 121411
+	 \/== Gas used in submitVotersPK by voter[24]: 121411
+	 \/== Gas used in submitVotersPK by voter[25]: 121411
+	 \/== Gas used in submitVotersPK by voter[26]: 121411
+	 \/== Gas used in submitVotersPK by voter[27]: 121411
+	 \/== Gas used in submitVotersPK by voter[28]: 121411
+	 \/== Gas used in submitVotersPK by voter[29]: 121411
+	 \/== Gas used in submitVotersPK by voter[30]: 121411
+	 \/== Gas used in submitVotersPK by voter[31]: 121411
+	 \/== Gas used in submitVotersPK by voter[32]: 121399
+	 \/== Gas used in submitVotersPK by voter[33]: 121411
+	 \/== Gas used in submitVotersPK by voter[34]: 121411
+	 \/== Gas used in submitVotersPK by voter[35]: 121411
+	 \/== Gas used in submitVotersPK by voter[36]: 121411
+	 \/== Gas used in submitVotersPK by voter[37]: 121411
+	 \/== Gas used in submitVotersPK by voter[38]: 121411
+	 \/== Gas used in submitVotersPK by voter[39]: 121411
+	 \/== Gas used in submitVotersPK by voter[40]: 121399
+	 \/== Gas used in submitVotersPK by voter[41]: 121411
+	 \/== Gas used in submitVotersPK by voter[42]: 121411
+	 \/== Gas used in submitVotersPK by voter[43]: 121411
+	 \/== Gas used in submitVotersPK by voter[44]: 121411
+	 \/== Gas used in submitVotersPK by voter[45]: 121411
+	 \/== Gas used in submitVotersPK by voter[46]: 121411
+	 \/== Gas used in submitVotersPK by voter[47]: 121399
+	 \/== Gas used in submitVotersPK by voter[48]: 121411
+	 \/== Gas used in submitVotersPK by voter[49]: 121411
+	 \/== Gas used in submitVotersPK by voter[50]: 121411
+	 \/== Gas used in submitVotersPK by voter[51]: 121411
+	 \/== Gas used in submitVotersPK by voter[52]: 121411
+	 \/== Gas used in submitVotersPK by voter[53]: 121411
+	 \/== Gas used in submitVotersPK by voter[54]: 121411
+	 \/== Gas used in submitVotersPK by voter[55]: 121411
+	 \/== Gas used in submitVotersPK by voter[56]: 121411
+	 \/== Gas used in submitVotersPK by voter[57]: 121411
+	 \/== Gas used in submitVotersPK by voter[58]: 121411
+	 \/== Gas used in submitVotersPK by voter[59]: 121399
+	 \/== Gas used in submitVotersPK by voter[60]: 121411
+	 \/== Gas used in submitVotersPK by voter[61]: 121411
+	 \/== Gas used in submitVotersPK by voter[62]: 121411
+	 \/== Gas used in submitVotersPK by voter[63]: 121399
+	 \/== Gas used in submitVotersPK by voter[64]: 121411
+	 \/== Gas used in submitVotersPK by voter[65]: 121399
+	 \/== Gas used in submitVotersPK by voter[66]: 121399
+	 \/== Gas used in submitVotersPK by voter[67]: 121399
+	 \/== Gas used in submitVotersPK by voter[68]: 121411
+	 \/== Gas used in submitVotersPK by voter[69]: 121411
+	 \/== Gas used in submitVotersPK by voter[70]: 121411
+	 \/== Gas used in submitVotersPK by voter[71]: 121399
+	 \/== Gas used in submitVotersPK by voter[72]: 121411
+	 \/== Gas used in submitVotersPK by voter[73]: 121399
+	 \/== Gas used in submitVotersPK by voter[74]: 121411
+	 \/== Gas used in submitVotersPK by voter[75]: 121411
+	 \/== Gas used in submitVotersPK by voter[76]: 121411
+	 \/== Gas used in submitVotersPK by voter[77]: 121411
+	 \/== Gas used in submitVotersPK by voter[78]: 121411
+	 \/== Gas used in submitVotersPK by voter[79]: 121411
+	 \/== Gas used in submitVotersPK by voter[80]: 121411
+	 \/== Gas used in submitVotersPK by voter[81]: 121411
+	 \/== Gas used in submitVotersPK by voter[82]: 121411
+	 \/== Gas used in submitVotersPK by voter[83]: 121411
+	 \/== Gas used in submitVotersPK by voter[84]: 121411
+	 \/== Gas used in submitVotersPK by voter[85]: 121411
+	 \/== Gas used in submitVotersPK by voter[86]: 121411
+	 \/== Gas used in submitVotersPK by voter[87]: 121411
+	 \/== Gas used in submitVotersPK by voter[88]: 121411
+	 \/== Gas used in submitVotersPK by voter[89]: 121399
+	 \/== Gas used in submitVotersPK by voter[90]: 121411
+	 \/== Gas used in submitVotersPK by voter[91]: 121411
+	 \/== Gas used in submitVotersPK by voter[92]: 121411
+	 \/== Gas used in submitVotersPK by voter[93]: 121411
+	 \/== Gas used in submitVotersPK by voter[94]: 121399
+	 \/== Gas used in submitVotersPK by voter[95]: 121411
+	 \/== Gas used in submitVotersPK by voter[96]: 121399
+	 \/== Gas used in submitVotersPK by voter[97]: 121399
+	 \/== Gas used in submitVotersPK by voter[98]: 121399
+	 \/== Gas used in submitVotersPK by voter[99]: 121399
+	 \/== Gas used in submitVotersPK by voter[100]: 121399
+	 \/== Gas used in submitVotersPK by voter[101]: 121411
+	 \/== Gas used in submitVotersPK by voter[102]: 121411
+	 \/== Gas used in submitVotersPK by voter[103]: 121411
+	 \/== Gas used in submitVotersPK by voter[104]: 121411
+	 \/== Gas used in submitVotersPK by voter[105]: 121411
+	 \/== Gas used in submitVotersPK by voter[106]: 121411
+	 \/== Gas used in submitVotersPK by voter[107]: 121387
+	 \/== Gas used in submitVotersPK by voter[108]: 121411
+	 \/== Gas used in submitVotersPK by voter[109]: 121399
+	 \/== Gas used in submitVotersPK by voter[110]: 121399
+	 \/== Gas used in submitVotersPK by voter[111]: 121411
+	 \/== Gas used in submitVotersPK by voter[112]: 121399
+	 \/== Gas used in submitVotersPK by voter[113]: 121387
+	 \/== Gas used in submitVotersPK by voter[114]: 121411
+	 \/== Gas used in submitVotersPK by voter[115]: 121399
+	 \/== Gas used in submitVotersPK by voter[116]: 121411
+	 \/== Gas used in submitVotersPK by voter[117]: 121411
+	 \/== Gas used in submitVotersPK by voter[118]: 121399
+	 \/== Gas used in submitVotersPK by voter[119]: 121399
+	 \/== Gas used in submitVotersPK by voter[120]: 121411
+	 \/== Gas used in submitVotersPK by voter[121]: 121411
+	 \/== Gas used in submitVotersPK by voter[122]: 121399
+	 \/== Gas used in submitVotersPK by voter[123]: 121411
+	 \/== Gas used in submitVotersPK by voter[124]: 121399
+	 \/== Gas used in submitVotersPK by voter[125]: 121411
+	 \/== Gas used in submitVotersPK by voter[126]: 121411
+	 \/== Gas used in submitVotersPK by voter[127]: 121411
+	 \/== Gas used in submitVotersPK by voter[128]: 121399
+	 \/== Gas used in submitVotersPK by voter[129]: 121411
+	 \/== Gas used in submitVotersPK by voter[130]: 121387
+	 \/== Gas used in submitVotersPK by voter[131]: 121411
+	 \/== Gas used in submitVotersPK by voter[132]: 121399
+	 \/== Gas used in submitVotersPK by voter[133]: 121411
+	 \/== Gas used in submitVotersPK by voter[134]: 121399
+	 \/== Gas used in submitVotersPK by voter[135]: 121411
+	 \/== Gas used in submitVotersPK by voter[136]: 121411
+	 \/== Gas used in submitVotersPK by voter[137]: 121411
+	 \/== Gas used in submitVotersPK by voter[138]: 121411
+	 \/== Gas used in submitVotersPK by voter[139]: 121411
+	 \/== Gas used in submitVotersPK by voter[140]: 121411
+	 \/== Gas used in submitVotersPK by voter[141]: 121411
+	 \/== Gas used in submitVotersPK by voter[142]: 121411
+	 \/== Gas used in submitVotersPK by voter[143]: 121411
+	 \/== Gas used in submitVotersPK by voter[144]: 121411
+	 \/== Gas used in submitVotersPK by voter[145]: 121411
+	 \/== Gas used in submitVotersPK by voter[146]: 121411
+	 \/== Gas used in submitVotersPK by voter[147]: 121411
+	 \/== Gas used in submitVotersPK by voter[148]: 121411
+	 \/== Gas used in submitVotersPK by voter[149]: 121411
+	 \/== Gas used in submitVotersPK by voter[150]: 121411
+	 \/== Gas used in submitVotersPK by voter[151]: 121411
+	 \/== Gas used in submitVotersPK by voter[152]: 121411
+	 \/== Gas used in submitVotersPK by voter[153]: 128125
+	 \/== Average gas used in submitVotersPK by voter: 121424.12987012987
+  [32m  ✓[0m[90m Submit PKs by voters[0m[31m (76939ms)[0m
+	 \/== Gas used in buildRightMarkers4MPC batch in booth 0: 1762534
+	 \/== Gas used in buildRightMarkers4MPC in booth 0: 1762534
+	 \/== Gas used in buildRightMarkers4MPC: 1762534
+  [32m  ✓[0m[90m Precompute right-side sum arrays for MPC keys[0m[31m (3314ms)[0m
+	 \/== Gas used in compute MPC key in booth 0 batch 0: 11971989
+	 \/== Gas used in compute MPC key in booth 0: 11971989
+	 \/== Gas used in compute MPC key: 11971989
+  [32m  ✓[0m[90m Compute MPC keys[0m[31m (44285ms)[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 6 passing[0m[90m (2m)[0m
+[36m [0m[36m 4 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--78205-Dh5jaBWoaV6L
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  156
+Cnt of faulty voters:  1
+Enroll batch size:  274
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  156
+RM_batch_size:  1000
+	 \/== Gas used in enrollVoters batch with start_idx 0: 7118449
+	 \/== Gas used in enrollVoters: 7118449
+  [32m  ✓[0m[90m Enroll voters[0m[31m (10881ms)[0m
+	 \/== Gas used in splitGroups batch with start_idx 0: 4293452
+	 \/== Gas used in splitGroups: 4293452
+	 \/== Gas used in deployBooths: 4585448
+  [32m  ✓[0m[90m Split to groups and deploy booth contracts[0m[31m (1944ms)[0m
+Booth  0  voter count:  156
+  [32m  ✓[0m[90m Call booth contract[0m[33m (38ms)[0m
+	 \/== Gas used in submitVotersPK by voter[0]: 117211
+	 \/== Gas used in submitVotersPK by voter[1]: 121411
+	 \/== Gas used in submitVotersPK by voter[2]: 121411
+	 \/== Gas used in submitVotersPK by voter[3]: 121411
+	 \/== Gas used in submitVotersPK by voter[4]: 121411
+	 \/== Gas used in submitVotersPK by voter[5]: 121399
+	 \/== Gas used in submitVotersPK by voter[6]: 121387
+	 \/== Gas used in submitVotersPK by voter[7]: 121411
+	 \/== Gas used in submitVotersPK by voter[8]: 121399
+	 \/== Gas used in submitVotersPK by voter[9]: 121411
+	 \/== Gas used in submitVotersPK by voter[10]: 121411
+	 \/== Gas used in submitVotersPK by voter[11]: 121399
+	 \/== Gas used in submitVotersPK by voter[12]: 121411
+	 \/== Gas used in submitVotersPK by voter[13]: 121411
+	 \/== Gas used in submitVotersPK by voter[14]: 121399
+	 \/== Gas used in submitVotersPK by voter[15]: 121411
+	 \/== Gas used in submitVotersPK by voter[16]: 121411
+	 \/== Gas used in submitVotersPK by voter[17]: 121399
+	 \/== Gas used in submitVotersPK by voter[18]: 121411
+	 \/== Gas used in submitVotersPK by voter[19]: 121411
+	 \/== Gas used in submitVotersPK by voter[20]: 121411
+	 \/== Gas used in submitVotersPK by voter[21]: 121411
+	 \/== Gas used in submitVotersPK by voter[22]: 121411
+	 \/== Gas used in submitVotersPK by voter[23]: 121411
+	 \/== Gas used in submitVotersPK by voter[24]: 121399
+	 \/== Gas used in submitVotersPK by voter[25]: 121411
+	 \/== Gas used in submitVotersPK by voter[26]: 121399
+	 \/== Gas used in submitVotersPK by voter[27]: 121411
+	 \/== Gas used in submitVotersPK by voter[28]: 121411
+	 \/== Gas used in submitVotersPK by voter[29]: 121411
+	 \/== Gas used in submitVotersPK by voter[30]: 121411
+	 \/== Gas used in submitVotersPK by voter[31]: 121411
+	 \/== Gas used in submitVotersPK by voter[32]: 121411
+	 \/== Gas used in submitVotersPK by voter[33]: 121411
+	 \/== Gas used in submitVotersPK by voter[34]: 121411
+	 \/== Gas used in submitVotersPK by voter[35]: 121411
+	 \/== Gas used in submitVotersPK by voter[36]: 121411
+	 \/== Gas used in submitVotersPK by voter[37]: 121411
+	 \/== Gas used in submitVotersPK by voter[38]: 121399
+	 \/== Gas used in submitVotersPK by voter[39]: 121411
+	 \/== Gas used in submitVotersPK by voter[40]: 121387
+	 \/== Gas used in submitVotersPK by voter[41]: 121411
+	 \/== Gas used in submitVotersPK by voter[42]: 121411
+	 \/== Gas used in submitVotersPK by voter[43]: 121399
+	 \/== Gas used in submitVotersPK by voter[44]: 121411
+	 \/== Gas used in submitVotersPK by voter[45]: 121399
+	 \/== Gas used in submitVotersPK by voter[46]: 121399
+	 \/== Gas used in submitVotersPK by voter[47]: 121399
+	 \/== Gas used in submitVotersPK by voter[48]: 121399
+	 \/== Gas used in submitVotersPK by voter[49]: 121399
+	 \/== Gas used in submitVotersPK by voter[50]: 121411
+	 \/== Gas used in submitVotersPK by voter[51]: 121411
+	 \/== Gas used in submitVotersPK by voter[52]: 121411
+	 \/== Gas used in submitVotersPK by voter[53]: 121411
+	 \/== Gas used in submitVotersPK by voter[54]: 121411
+	 \/== Gas used in submitVotersPK by voter[55]: 121411
+	 \/== Gas used in submitVotersPK by voter[56]: 121399
+	 \/== Gas used in submitVotersPK by voter[57]: 121411
+	 \/== Gas used in submitVotersPK by voter[58]: 121411
+	 \/== Gas used in submitVotersPK by voter[59]: 121399
+	 \/== Gas used in submitVotersPK by voter[60]: 121411
+	 \/== Gas used in submitVotersPK by voter[61]: 121411
+	 \/== Gas used in submitVotersPK by voter[62]: 121411
+	 \/== Gas used in submitVotersPK by voter[63]: 121399
+	 \/== Gas used in submitVotersPK by voter[64]: 121411
+	 \/== Gas used in submitVotersPK by voter[65]: 121411
+	 \/== Gas used in submitVotersPK by voter[66]: 121411
+	 \/== Gas used in submitVotersPK by voter[67]: 121411
+	 \/== Gas used in submitVotersPK by voter[68]: 121411
+	 \/== Gas used in submitVotersPK by voter[69]: 121411
+	 \/== Gas used in submitVotersPK by voter[70]: 121411
+	 \/== Gas used in submitVotersPK by voter[71]: 121411
+	 \/== Gas used in submitVotersPK by voter[72]: 121399
+	 \/== Gas used in submitVotersPK by voter[73]: 121399
+	 \/== Gas used in submitVotersPK by voter[74]: 121411
+	 \/== Gas used in submitVotersPK by voter[75]: 121411
+	 \/== Gas used in submitVotersPK by voter[76]: 121399
+	 \/== Gas used in submitVotersPK by voter[77]: 121411
+	 \/== Gas used in submitVotersPK by voter[78]: 121411
+	 \/== Gas used in submitVotersPK by voter[79]: 121411
+	 \/== Gas used in submitVotersPK by voter[80]: 121411
+	 \/== Gas used in submitVotersPK by voter[81]: 121411
+	 \/== Gas used in submitVotersPK by voter[82]: 121411
+	 \/== Gas used in submitVotersPK by voter[83]: 121399
+	 \/== Gas used in submitVotersPK by voter[84]: 121411
+	 \/== Gas used in submitVotersPK by voter[85]: 121411
+	 \/== Gas used in submitVotersPK by voter[86]: 121411
+	 \/== Gas used in submitVotersPK by voter[87]: 121399
+	 \/== Gas used in submitVotersPK by voter[88]: 121411
+	 \/== Gas used in submitVotersPK by voter[89]: 121399
+	 \/== Gas used in submitVotersPK by voter[90]: 121411
+	 \/== Gas used in submitVotersPK by voter[91]: 121399
+	 \/== Gas used in submitVotersPK by voter[92]: 121411
+	 \/== Gas used in submitVotersPK by voter[93]: 121411
+	 \/== Gas used in submitVotersPK by voter[94]: 121411
+	 \/== Gas used in submitVotersPK by voter[95]: 121411
+	 \/== Gas used in submitVotersPK by voter[96]: 121411
+	 \/== Gas used in submitVotersPK by voter[97]: 121399
+	 \/== Gas used in submitVotersPK by voter[98]: 121411
+	 \/== Gas used in submitVotersPK by voter[99]: 121411
+	 \/== Gas used in submitVotersPK by voter[100]: 121411
+	 \/== Gas used in submitVotersPK by voter[101]: 121411
+	 \/== Gas used in submitVotersPK by voter[102]: 121411
+	 \/== Gas used in submitVotersPK by voter[103]: 121411
+	 \/== Gas used in submitVotersPK by voter[104]: 121411
+	 \/== Gas used in submitVotersPK by voter[105]: 121411
+	 \/== Gas used in submitVotersPK by voter[106]: 121411
+	 \/== Gas used in submitVotersPK by voter[107]: 121411
+	 \/== Gas used in submitVotersPK by voter[108]: 121411
+	 \/== Gas used in submitVotersPK by voter[109]: 121411
+	 \/== Gas used in submitVotersPK by voter[110]: 121399
+	 \/== Gas used in submitVotersPK by voter[111]: 121399
+	 \/== Gas used in submitVotersPK by voter[112]: 121411
+	 \/== Gas used in submitVotersPK by voter[113]: 121411
+	 \/== Gas used in submitVotersPK by voter[114]: 121411
+	 \/== Gas used in submitVotersPK by voter[115]: 121411
+	 \/== Gas used in submitVotersPK by voter[116]: 121411
+	 \/== Gas used in submitVotersPK by voter[117]: 121399
+	 \/== Gas used in submitVotersPK by voter[118]: 121411
+	 \/== Gas used in submitVotersPK by voter[119]: 121411
+	 \/== Gas used in submitVotersPK by voter[120]: 121411
+	 \/== Gas used in submitVotersPK by voter[121]: 121411
+	 \/== Gas used in submitVotersPK by voter[122]: 121411
+	 \/== Gas used in submitVotersPK by voter[123]: 121411
+	 \/== Gas used in submitVotersPK by voter[124]: 121399
+	 \/== Gas used in submitVotersPK by voter[125]: 121411
+	 \/== Gas used in submitVotersPK by voter[126]: 121399
+	 \/== Gas used in submitVotersPK by voter[127]: 121411
+	 \/== Gas used in submitVotersPK by voter[128]: 121411
+	 \/== Gas used in submitVotersPK by voter[129]: 121411
+	 \/== Gas used in submitVotersPK by voter[130]: 121411
+	 \/== Gas used in submitVotersPK by voter[131]: 121411
+	 \/== Gas used in submitVotersPK by voter[132]: 121411
+	 \/== Gas used in submitVotersPK by voter[133]: 121411
+	 \/== Gas used in submitVotersPK by voter[134]: 121411
+	 \/== Gas used in submitVotersPK by voter[135]: 121411
+	 \/== Gas used in submitVotersPK by voter[136]: 121399
+	 \/== Gas used in submitVotersPK by voter[137]: 121411
+	 \/== Gas used in submitVotersPK by voter[138]: 121411
+	 \/== Gas used in submitVotersPK by voter[139]: 121411
+	 \/== Gas used in submitVotersPK by voter[140]: 121411
+	 \/== Gas used in submitVotersPK by voter[141]: 121411
+	 \/== Gas used in submitVotersPK by voter[142]: 121411
+	 \/== Gas used in submitVotersPK by voter[143]: 121399
+	 \/== Gas used in submitVotersPK by voter[144]: 121411
+	 \/== Gas used in submitVotersPK by voter[145]: 121411
+	 \/== Gas used in submitVotersPK by voter[146]: 121411
+	 \/== Gas used in submitVotersPK by voter[147]: 121411
+	 \/== Gas used in submitVotersPK by voter[148]: 121411
+	 \/== Gas used in submitVotersPK by voter[149]: 121399
+	 \/== Gas used in submitVotersPK by voter[150]: 121411
+	 \/== Gas used in submitVotersPK by voter[151]: 121411
+	 \/== Gas used in submitVotersPK by voter[152]: 121411
+	 \/== Gas used in submitVotersPK by voter[153]: 121411
+	 \/== Gas used in submitVotersPK by voter[154]: 121411
+	 \/== Gas used in submitVotersPK by voter[155]: 128113
+	 \/== Average gas used in submitVotersPK by voter: 121424.19230769231
+  [32m  ✓[0m[90m Submit PKs by voters[0m[31m (77339ms)[0m
+	 \/== Gas used in buildRightMarkers4MPC batch in booth 0: 1783847
+	 \/== Gas used in buildRightMarkers4MPC in booth 0: 1783847
+	 \/== Gas used in buildRightMarkers4MPC: 1783847
+  [32m  ✓[0m[90m Precompute right-side sum arrays for MPC keys[0m[31m (3534ms)[0m
+	 \/== Gas used in compute MPC key in booth 0 batch 0: 12127096
+	 \/== Gas used in compute MPC key in booth 0: 12127096
+	 \/== Gas used in compute MPC key: 12127096
+  [32m  ✓[0m[90m Compute MPC keys[0m[31m (44536ms)[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 6 passing[0m[90m (2m)[0m
+[36m [0m[36m 4 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--79046-qkoazSd2NPBo
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  158
+Cnt of faulty voters:  1
+Enroll batch size:  274
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  158
+RM_batch_size:  1000
+	 \/== Gas used in enrollVoters batch with start_idx 0: 7209160
+	 \/== Gas used in enrollVoters: 7209160
+  [32m  ✓[0m[90m Enroll voters[0m[31m (15526ms)[0m
+	 \/== Gas used in splitGroups batch with start_idx 0: 4347642
+	 \/== Gas used in splitGroups: 4347642
+	 \/== Gas used in deployBooths: 4585448
+  [32m  ✓[0m[90m Split to groups and deploy booth contracts[0m[31m (3288ms)[0m
+Booth  0  voter count:  158
+  [32m  ✓[0m[90m Call booth contract[0m[33m (69ms)[0m
+	 \/== Gas used in submitVotersPK by voter[0]: 117187
+	 \/== Gas used in submitVotersPK by voter[1]: 121411
+	 \/== Gas used in submitVotersPK by voter[2]: 121411
+	 \/== Gas used in submitVotersPK by voter[3]: 121411
+	 \/== Gas used in submitVotersPK by voter[4]: 121387
+	 \/== Gas used in submitVotersPK by voter[5]: 121411
+	 \/== Gas used in submitVotersPK by voter[6]: 121411
+	 \/== Gas used in submitVotersPK by voter[7]: 121411
+	 \/== Gas used in submitVotersPK by voter[8]: 121411
+	 \/== Gas used in submitVotersPK by voter[9]: 121411
+	 \/== Gas used in submitVotersPK by voter[10]: 121411
+	 \/== Gas used in submitVotersPK by voter[11]: 121411
+	 \/== Gas used in submitVotersPK by voter[12]: 121411
+	 \/== Gas used in submitVotersPK by voter[13]: 121411
+	 \/== Gas used in submitVotersPK by voter[14]: 121411
+	 \/== Gas used in submitVotersPK by voter[15]: 121411
+	 \/== Gas used in submitVotersPK by voter[16]: 121411
+	 \/== Gas used in submitVotersPK by voter[17]: 121411
+	 \/== Gas used in submitVotersPK by voter[18]: 121411
+	 \/== Gas used in submitVotersPK by voter[19]: 121411
+	 \/== Gas used in submitVotersPK by voter[20]: 121411
+	 \/== Gas used in submitVotersPK by voter[21]: 121411
+	 \/== Gas used in submitVotersPK by voter[22]: 121411
+	 \/== Gas used in submitVotersPK by voter[23]: 121399
+	 \/== Gas used in submitVotersPK by voter[24]: 121411
+	 \/== Gas used in submitVotersPK by voter[25]: 121411
+	 \/== Gas used in submitVotersPK by voter[26]: 121411
+	 \/== Gas used in submitVotersPK by voter[27]: 121411
+	 \/== Gas used in submitVotersPK by voter[28]: 121411
+	 \/== Gas used in submitVotersPK by voter[29]: 121411
+	 \/== Gas used in submitVotersPK by voter[30]: 121411
+	 \/== Gas used in submitVotersPK by voter[31]: 121411
+	 \/== Gas used in submitVotersPK by voter[32]: 121411
+	 \/== Gas used in submitVotersPK by voter[33]: 121411
+	 \/== Gas used in submitVotersPK by voter[34]: 121411
+	 \/== Gas used in submitVotersPK by voter[35]: 121411
+	 \/== Gas used in submitVotersPK by voter[36]: 121399
+	 \/== Gas used in submitVotersPK by voter[37]: 121411
+	 \/== Gas used in submitVotersPK by voter[38]: 121411
+	 \/== Gas used in submitVotersPK by voter[39]: 121399
+	 \/== Gas used in submitVotersPK by voter[40]: 121411
+	 \/== Gas used in submitVotersPK by voter[41]: 121411
+	 \/== Gas used in submitVotersPK by voter[42]: 121411
+	 \/== Gas used in submitVotersPK by voter[43]: 121411
+	 \/== Gas used in submitVotersPK by voter[44]: 121411
+	 \/== Gas used in submitVotersPK by voter[45]: 121411
+	 \/== Gas used in submitVotersPK by voter[46]: 121399
+	 \/== Gas used in submitVotersPK by voter[47]: 121411
+	 \/== Gas used in submitVotersPK by voter[48]: 121411
+	 \/== Gas used in submitVotersPK by voter[49]: 121411
+	 \/== Gas used in submitVotersPK by voter[50]: 121411
+	 \/== Gas used in submitVotersPK by voter[51]: 121411
+	 \/== Gas used in submitVotersPK by voter[52]: 121411
+	 \/== Gas used in submitVotersPK by voter[53]: 121411
+	 \/== Gas used in submitVotersPK by voter[54]: 121411
+	 \/== Gas used in submitVotersPK by voter[55]: 121411
+	 \/== Gas used in submitVotersPK by voter[56]: 121411
+	 \/== Gas used in submitVotersPK by voter[57]: 121411
+	 \/== Gas used in submitVotersPK by voter[58]: 121399
+	 \/== Gas used in submitVotersPK by voter[59]: 121411
+	 \/== Gas used in submitVotersPK by voter[60]: 121411
+	 \/== Gas used in submitVotersPK by voter[61]: 121411
+	 \/== Gas used in submitVotersPK by voter[62]: 121411
+	 \/== Gas used in submitVotersPK by voter[63]: 121411
+	 \/== Gas used in submitVotersPK by voter[64]: 121411
+	 \/== Gas used in submitVotersPK by voter[65]: 121411
+	 \/== Gas used in submitVotersPK by voter[66]: 121411
+	 \/== Gas used in submitVotersPK by voter[67]: 121411
+	 \/== Gas used in submitVotersPK by voter[68]: 121399
+	 \/== Gas used in submitVotersPK by voter[69]: 121411
+	 \/== Gas used in submitVotersPK by voter[70]: 121411
+	 \/== Gas used in submitVotersPK by voter[71]: 121411
+	 \/== Gas used in submitVotersPK by voter[72]: 121411
+	 \/== Gas used in submitVotersPK by voter[73]: 121411
+	 \/== Gas used in submitVotersPK by voter[74]: 121399
+	 \/== Gas used in submitVotersPK by voter[75]: 121411
+	 \/== Gas used in submitVotersPK by voter[76]: 121411
+	 \/== Gas used in submitVotersPK by voter[77]: 121411
+	 \/== Gas used in submitVotersPK by voter[78]: 121411
+	 \/== Gas used in submitVotersPK by voter[79]: 121411
+	 \/== Gas used in submitVotersPK by voter[80]: 121411
+	 \/== Gas used in submitVotersPK by voter[81]: 121411
+	 \/== Gas used in submitVotersPK by voter[82]: 121411
+	 \/== Gas used in submitVotersPK by voter[83]: 121411
+	 \/== Gas used in submitVotersPK by voter[84]: 121411
+	 \/== Gas used in submitVotersPK by voter[85]: 121399
+	 \/== Gas used in submitVotersPK by voter[86]: 121411
+	 \/== Gas used in submitVotersPK by voter[87]: 121411
+	 \/== Gas used in submitVotersPK by voter[88]: 121411
+	 \/== Gas used in submitVotersPK by voter[89]: 121411
+	 \/== Gas used in submitVotersPK by voter[90]: 121411
+	 \/== Gas used in submitVotersPK by voter[91]: 121399
+	 \/== Gas used in submitVotersPK by voter[92]: 121399
+	 \/== Gas used in submitVotersPK by voter[93]: 121411
+	 \/== Gas used in submitVotersPK by voter[94]: 121411
+	 \/== Gas used in submitVotersPK by voter[95]: 121399
+	 \/== Gas used in submitVotersPK by voter[96]: 121387
+	 \/== Gas used in submitVotersPK by voter[97]: 121399
+	 \/== Gas used in submitVotersPK by voter[98]: 121411
+	 \/== Gas used in submitVotersPK by voter[99]: 121411
+	 \/== Gas used in submitVotersPK by voter[100]: 121411
+	 \/== Gas used in submitVotersPK by voter[101]: 121411
+	 \/== Gas used in submitVotersPK by voter[102]: 121411
+	 \/== Gas used in submitVotersPK by voter[103]: 121411
+	 \/== Gas used in submitVotersPK by voter[104]: 121411
+	 \/== Gas used in submitVotersPK by voter[105]: 121411
+	 \/== Gas used in submitVotersPK by voter[106]: 121411
+	 \/== Gas used in submitVotersPK by voter[107]: 121411
+	 \/== Gas used in submitVotersPK by voter[108]: 121411
+	 \/== Gas used in submitVotersPK by voter[109]: 121399
+	 \/== Gas used in submitVotersPK by voter[110]: 121411
+	 \/== Gas used in submitVotersPK by voter[111]: 121399
+	 \/== Gas used in submitVotersPK by voter[112]: 121411
+	 \/== Gas used in submitVotersPK by voter[113]: 121411
+	 \/== Gas used in submitVotersPK by voter[114]: 121399
+	 \/== Gas used in submitVotersPK by voter[115]: 121411
+	 \/== Gas used in submitVotersPK by voter[116]: 121399
+	 \/== Gas used in submitVotersPK by voter[117]: 121411
+	 \/== Gas used in submitVotersPK by voter[118]: 121399
+	 \/== Gas used in submitVotersPK by voter[119]: 121411
+	 \/== Gas used in submitVotersPK by voter[120]: 121411
+	 \/== Gas used in submitVotersPK by voter[121]: 121411
+	 \/== Gas used in submitVotersPK by voter[122]: 121411
+	 \/== Gas used in submitVotersPK by voter[123]: 121411
+	 \/== Gas used in submitVotersPK by voter[124]: 121411
+	 \/== Gas used in submitVotersPK by voter[125]: 121411
+	 \/== Gas used in submitVotersPK by voter[126]: 121399
+	 \/== Gas used in submitVotersPK by voter[127]: 121411
+	 \/== Gas used in submitVotersPK by voter[128]: 121411
+	 \/== Gas used in submitVotersPK by voter[129]: 121411
+	 \/== Gas used in submitVotersPK by voter[130]: 121411
+	 \/== Gas used in submitVotersPK by voter[131]: 121411
+	 \/== Gas used in submitVotersPK by voter[132]: 121411
+	 \/== Gas used in submitVotersPK by voter[133]: 121411
+	 \/== Gas used in submitVotersPK by voter[134]: 121411
+	 \/== Gas used in submitVotersPK by voter[135]: 121411
+	 \/== Gas used in submitVotersPK by voter[136]: 121411
+	 \/== Gas used in submitVotersPK by voter[137]: 121411
+	 \/== Gas used in submitVotersPK by voter[138]: 121399
+	 \/== Gas used in submitVotersPK by voter[139]: 121399
+	 \/== Gas used in submitVotersPK by voter[140]: 121411
+	 \/== Gas used in submitVotersPK by voter[141]: 121411
+	 \/== Gas used in submitVotersPK by voter[142]: 121399
+	 \/== Gas used in submitVotersPK by voter[143]: 121399
+	 \/== Gas used in submitVotersPK by voter[144]: 121411
+	 \/== Gas used in submitVotersPK by voter[145]: 121411
+	 \/== Gas used in submitVotersPK by voter[146]: 121411
+	 \/== Gas used in submitVotersPK by voter[147]: 121411
+	 \/== Gas used in submitVotersPK by voter[148]: 121387
+	 \/== Gas used in submitVotersPK by voter[149]: 121399
+	 \/== Gas used in submitVotersPK by voter[150]: 121411
+	 \/== Gas used in submitVotersPK by voter[151]: 121399
+	 \/== Gas used in submitVotersPK by voter[152]: 121411
+	 \/== Gas used in submitVotersPK by voter[153]: 121399
+	 \/== Gas used in submitVotersPK by voter[154]: 121411
+	 \/== Gas used in submitVotersPK by voter[155]: 121411
+	 \/== Gas used in submitVotersPK by voter[156]: 121411
+	 \/== Gas used in submitVotersPK by voter[157]: 128125
+	 \/== Average gas used in submitVotersPK by voter: 121424.40506329114
+  [32m  ✓[0m[90m Submit PKs by voters[0m[31m (87765ms)[0m
+	 \/== Gas used in buildRightMarkers4MPC batch in booth 0: 1805165
+	 \/== Gas used in buildRightMarkers4MPC in booth 0: 1805165
+	 \/== Gas used in buildRightMarkers4MPC: 1805165
+  [32m  ✓[0m[90m Precompute right-side sum arrays for MPC keys[0m[31m (3155ms)[0m
+	 \/== Gas used in compute MPC key in booth 0 batch 0: 12282095
+	 \/== Gas used in compute MPC key in booth 0: 12282095
+	 \/== Gas used in compute MPC key: 12282095
+  [32m  ✓[0m[90m Compute MPC keys[0m[31m (44592ms)[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 6 passing[0m[90m (3m)[0m
+[36m [0m[36m 4 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--79982-rqfGw6hJCaA7
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  160
+Cnt of faulty voters:  1
+Enroll batch size:  274
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  160
+RM_batch_size:  1000
+	 \/== Gas used in enrollVoters batch with start_idx 0: 7299860
+	 \/== Gas used in enrollVoters: 7299860
+  [32m  ✓[0m[90m Enroll voters[0m[31m (11347ms)[0m
+	 \/== Gas used in splitGroups batch with start_idx 0: 4401832
+	 \/== Gas used in splitGroups: 4401832
+	 \/== Gas used in deployBooths: 4585448
+  [32m  ✓[0m[90m Split to groups and deploy booth contracts[0m[31m (2002ms)[0m
+Booth  0  voter count:  160
+  [32m  ✓[0m[90m Call booth contract[0m
+	 \/== Gas used in submitVotersPK by voter[0]: 117211
+	 \/== Gas used in submitVotersPK by voter[1]: 121399
+	 \/== Gas used in submitVotersPK by voter[2]: 121411
+	 \/== Gas used in submitVotersPK by voter[3]: 121399
+	 \/== Gas used in submitVotersPK by voter[4]: 121399
+	 \/== Gas used in submitVotersPK by voter[5]: 121411
+	 \/== Gas used in submitVotersPK by voter[6]: 121411
+	 \/== Gas used in submitVotersPK by voter[7]: 121411
+	 \/== Gas used in submitVotersPK by voter[8]: 121411
+	 \/== Gas used in submitVotersPK by voter[9]: 121411
+	 \/== Gas used in submitVotersPK by voter[10]: 121411
+	 \/== Gas used in submitVotersPK by voter[11]: 121411
+	 \/== Gas used in submitVotersPK by voter[12]: 121411
+	 \/== Gas used in submitVotersPK by voter[13]: 121399
+	 \/== Gas used in submitVotersPK by voter[14]: 121411
+	 \/== Gas used in submitVotersPK by voter[15]: 121399
+	 \/== Gas used in submitVotersPK by voter[16]: 121411
+	 \/== Gas used in submitVotersPK by voter[17]: 121411
+	 \/== Gas used in submitVotersPK by voter[18]: 121399
+	 \/== Gas used in submitVotersPK by voter[19]: 121411
+	 \/== Gas used in submitVotersPK by voter[20]: 121411
+	 \/== Gas used in submitVotersPK by voter[21]: 121411
+	 \/== Gas used in submitVotersPK by voter[22]: 121411
+	 \/== Gas used in submitVotersPK by voter[23]: 121411
+	 \/== Gas used in submitVotersPK by voter[24]: 121411
+	 \/== Gas used in submitVotersPK by voter[25]: 121399
+	 \/== Gas used in submitVotersPK by voter[26]: 121399
+	 \/== Gas used in submitVotersPK by voter[27]: 121411
+	 \/== Gas used in submitVotersPK by voter[28]: 121411
+	 \/== Gas used in submitVotersPK by voter[29]: 121411
+	 \/== Gas used in submitVotersPK by voter[30]: 121411
+	 \/== Gas used in submitVotersPK by voter[31]: 121411
+	 \/== Gas used in submitVotersPK by voter[32]: 121411
+	 \/== Gas used in submitVotersPK by voter[33]: 121411
+	 \/== Gas used in submitVotersPK by voter[34]: 121411
+	 \/== Gas used in submitVotersPK by voter[35]: 121411
+	 \/== Gas used in submitVotersPK by voter[36]: 121411
+	 \/== Gas used in submitVotersPK by voter[37]: 121411
+	 \/== Gas used in submitVotersPK by voter[38]: 121411
+	 \/== Gas used in submitVotersPK by voter[39]: 121411
+	 \/== Gas used in submitVotersPK by voter[40]: 121411
+	 \/== Gas used in submitVotersPK by voter[41]: 121399
+	 \/== Gas used in submitVotersPK by voter[42]: 121399
+	 \/== Gas used in submitVotersPK by voter[43]: 121411
+	 \/== Gas used in submitVotersPK by voter[44]: 121411
+	 \/== Gas used in submitVotersPK by voter[45]: 121411
+	 \/== Gas used in submitVotersPK by voter[46]: 121411
+	 \/== Gas used in submitVotersPK by voter[47]: 121411
+	 \/== Gas used in submitVotersPK by voter[48]: 121399
+	 \/== Gas used in submitVotersPK by voter[49]: 121399
+	 \/== Gas used in submitVotersPK by voter[50]: 121399
+	 \/== Gas used in submitVotersPK by voter[51]: 121411
+	 \/== Gas used in submitVotersPK by voter[52]: 121411
+	 \/== Gas used in submitVotersPK by voter[53]: 121411
+	 \/== Gas used in submitVotersPK by voter[54]: 121411
+	 \/== Gas used in submitVotersPK by voter[55]: 121411
+	 \/== Gas used in submitVotersPK by voter[56]: 121411
+	 \/== Gas used in submitVotersPK by voter[57]: 121411
+	 \/== Gas used in submitVotersPK by voter[58]: 121411
+	 \/== Gas used in submitVotersPK by voter[59]: 121399
+	 \/== Gas used in submitVotersPK by voter[60]: 121399
+	 \/== Gas used in submitVotersPK by voter[61]: 121411
+	 \/== Gas used in submitVotersPK by voter[62]: 121411
+	 \/== Gas used in submitVotersPK by voter[63]: 121411
+	 \/== Gas used in submitVotersPK by voter[64]: 121411
+	 \/== Gas used in submitVotersPK by voter[65]: 121411
+	 \/== Gas used in submitVotersPK by voter[66]: 121411
+	 \/== Gas used in submitVotersPK by voter[67]: 121411
+	 \/== Gas used in submitVotersPK by voter[68]: 121411
+	 \/== Gas used in submitVotersPK by voter[69]: 121399
+	 \/== Gas used in submitVotersPK by voter[70]: 121399
+	 \/== Gas used in submitVotersPK by voter[71]: 121411
+	 \/== Gas used in submitVotersPK by voter[72]: 121411
+	 \/== Gas used in submitVotersPK by voter[73]: 121411
+	 \/== Gas used in submitVotersPK by voter[74]: 121411
+	 \/== Gas used in submitVotersPK by voter[75]: 121399
+	 \/== Gas used in submitVotersPK by voter[76]: 121411
+	 \/== Gas used in submitVotersPK by voter[77]: 121411
+	 \/== Gas used in submitVotersPK by voter[78]: 121411
+	 \/== Gas used in submitVotersPK by voter[79]: 121411
+	 \/== Gas used in submitVotersPK by voter[80]: 121411
+	 \/== Gas used in submitVotersPK by voter[81]: 121411
+	 \/== Gas used in submitVotersPK by voter[82]: 121411
+	 \/== Gas used in submitVotersPK by voter[83]: 121411
+	 \/== Gas used in submitVotersPK by voter[84]: 121411
+	 \/== Gas used in submitVotersPK by voter[85]: 121411
+	 \/== Gas used in submitVotersPK by voter[86]: 121411
+	 \/== Gas used in submitVotersPK by voter[87]: 121411
+	 \/== Gas used in submitVotersPK by voter[88]: 121411
+	 \/== Gas used in submitVotersPK by voter[89]: 121411
+	 \/== Gas used in submitVotersPK by voter[90]: 121399
+	 \/== Gas used in submitVotersPK by voter[91]: 121411
+	 \/== Gas used in submitVotersPK by voter[92]: 121411
+	 \/== Gas used in submitVotersPK by voter[93]: 121411
+	 \/== Gas used in submitVotersPK by voter[94]: 121411
+	 \/== Gas used in submitVotersPK by voter[95]: 121411
+	 \/== Gas used in submitVotersPK by voter[96]: 121411
+	 \/== Gas used in submitVotersPK by voter[97]: 121399
+	 \/== Gas used in submitVotersPK by voter[98]: 121411
+	 \/== Gas used in submitVotersPK by voter[99]: 121411
+	 \/== Gas used in submitVotersPK by voter[100]: 121411
+	 \/== Gas used in submitVotersPK by voter[101]: 121411
+	 \/== Gas used in submitVotersPK by voter[102]: 121411
+	 \/== Gas used in submitVotersPK by voter[103]: 121411
+	 \/== Gas used in submitVotersPK by voter[104]: 121411
+	 \/== Gas used in submitVotersPK by voter[105]: 121411
+	 \/== Gas used in submitVotersPK by voter[106]: 121411
+	 \/== Gas used in submitVotersPK by voter[107]: 121411
+	 \/== Gas used in submitVotersPK by voter[108]: 121399
+	 \/== Gas used in submitVotersPK by voter[109]: 121399
+	 \/== Gas used in submitVotersPK by voter[110]: 121411
+	 \/== Gas used in submitVotersPK by voter[111]: 121411
+	 \/== Gas used in submitVotersPK by voter[112]: 121411
+	 \/== Gas used in submitVotersPK by voter[113]: 121411
+	 \/== Gas used in submitVotersPK by voter[114]: 121411
+	 \/== Gas used in submitVotersPK by voter[115]: 121411
+	 \/== Gas used in submitVotersPK by voter[116]: 121411
+	 \/== Gas used in submitVotersPK by voter[117]: 121411
+	 \/== Gas used in submitVotersPK by voter[118]: 121411
+	 \/== Gas used in submitVotersPK by voter[119]: 121399
+	 \/== Gas used in submitVotersPK by voter[120]: 121411
+	 \/== Gas used in submitVotersPK by voter[121]: 121411
+	 \/== Gas used in submitVotersPK by voter[122]: 121411
+	 \/== Gas used in submitVotersPK by voter[123]: 121399
+	 \/== Gas used in submitVotersPK by voter[124]: 121411
+	 \/== Gas used in submitVotersPK by voter[125]: 121411
+	 \/== Gas used in submitVotersPK by voter[126]: 121411
+	 \/== Gas used in submitVotersPK by voter[127]: 121411
+	 \/== Gas used in submitVotersPK by voter[128]: 121387
+	 \/== Gas used in submitVotersPK by voter[129]: 121399
+	 \/== Gas used in submitVotersPK by voter[130]: 121399
+	 \/== Gas used in submitVotersPK by voter[131]: 121399
+	 \/== Gas used in submitVotersPK by voter[132]: 121411
+	 \/== Gas used in submitVotersPK by voter[133]: 121411
+	 \/== Gas used in submitVotersPK by voter[134]: 121411
+	 \/== Gas used in submitVotersPK by voter[135]: 121411
+	 \/== Gas used in submitVotersPK by voter[136]: 121411
+	 \/== Gas used in submitVotersPK by voter[137]: 121411
+	 \/== Gas used in submitVotersPK by voter[138]: 121411
+	 \/== Gas used in submitVotersPK by voter[139]: 121399
+	 \/== Gas used in submitVotersPK by voter[140]: 121411
+	 \/== Gas used in submitVotersPK by voter[141]: 121411
+	 \/== Gas used in submitVotersPK by voter[142]: 121411
+	 \/== Gas used in submitVotersPK by voter[143]: 121399
+	 \/== Gas used in submitVotersPK by voter[144]: 121411
+	 \/== Gas used in submitVotersPK by voter[145]: 121411
+	 \/== Gas used in submitVotersPK by voter[146]: 121411
+	 \/== Gas used in submitVotersPK by voter[147]: 121411
+	 \/== Gas used in submitVotersPK by voter[148]: 121411
+	 \/== Gas used in submitVotersPK by voter[149]: 121411
+	 \/== Gas used in submitVotersPK by voter[150]: 121411
+	 \/== Gas used in submitVotersPK by voter[151]: 121399
+	 \/== Gas used in submitVotersPK by voter[152]: 121411
+	 \/== Gas used in submitVotersPK by voter[153]: 121399
+	 \/== Gas used in submitVotersPK by voter[154]: 121411
+	 \/== Gas used in submitVotersPK by voter[155]: 121411
+	 \/== Gas used in submitVotersPK by voter[156]: 121399
+	 \/== Gas used in submitVotersPK by voter[157]: 121411
+	 \/== Gas used in submitVotersPK by voter[158]: 121375
+	 \/== Gas used in submitVotersPK by voter[159]: 128125
+	 \/== Average gas used in submitVotersPK by voter: 121423.9375
+  [32m  ✓[0m[90m Submit PKs by voters[0m[31m (79140ms)[0m
+	 \/== Gas used in buildRightMarkers4MPC batch in booth 0: 1826486
+	 \/== Gas used in buildRightMarkers4MPC in booth 0: 1826486
+	 \/== Gas used in buildRightMarkers4MPC: 1826486
+  [32m  ✓[0m[90m Precompute right-side sum arrays for MPC keys[0m[31m (3420ms)[0m
+  [31m  1) Compute MPC keys[0m
+    > No events were emitted
+
+
+[92m [0m[32m 5 passing[0m[90m (3m)[0m
+[31m  1 failing[0m
+
+[0m  1) Contract: MainVotingC
+       Compute MPC keys:
+[0m[31m     Error: Returned error: VM Exception while processing transaction: revert computeMPCKeys() delegatecall failed. -- Reason given: computeMPCKeys() delegatecall failed..[0m[90m
+      at Context.<anonymous> (test/VotingC.js:220:35)
+      at runMicrotasks (<anonymous>)
+      at processTicksAndRejections (node:internal/process/task_queues:94:5)
+[0m
+
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--80898-duXKNn8uons8
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  162
+Cnt of faulty voters:  1
+Enroll batch size:  274
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  162
+RM_batch_size:  1000
+	 \/== Gas used in enrollVoters batch with start_idx 0: 7390571
+	 \/== Gas used in enrollVoters: 7390571
+  [32m  ✓[0m[90m Enroll voters[0m[31m (11282ms)[0m
+	 \/== Gas used in splitGroups batch with start_idx 0: 4456022
+	 \/== Gas used in splitGroups: 4456022
+	 \/== Gas used in deployBooths: 4585448
+  [32m  ✓[0m[90m Split to groups and deploy booth contracts[0m[31m (1854ms)[0m
+Booth  0  voter count:  162
+  [32m  ✓[0m[90m Call booth contract[0m[33m (38ms)[0m
+	 \/== Gas used in submitVotersPK by voter[0]: 117211
+	 \/== Gas used in submitVotersPK by voter[1]: 121399
+	 \/== Gas used in submitVotersPK by voter[2]: 121399
+	 \/== Gas used in submitVotersPK by voter[3]: 121411
+	 \/== Gas used in submitVotersPK by voter[4]: 121411
+	 \/== Gas used in submitVotersPK by voter[5]: 121411
+	 \/== Gas used in submitVotersPK by voter[6]: 121411
+	 \/== Gas used in submitVotersPK by voter[7]: 121411
+	 \/== Gas used in submitVotersPK by voter[8]: 121411
+	 \/== Gas used in submitVotersPK by voter[9]: 121411
+	 \/== Gas used in submitVotersPK by voter[10]: 121399
+	 \/== Gas used in submitVotersPK by voter[11]: 121411
+	 \/== Gas used in submitVotersPK by voter[12]: 121399
+	 \/== Gas used in submitVotersPK by voter[13]: 121375
+	 \/== Gas used in submitVotersPK by voter[14]: 121411
+	 \/== Gas used in submitVotersPK by voter[15]: 121411
+	 \/== Gas used in submitVotersPK by voter[16]: 121399
+	 \/== Gas used in submitVotersPK by voter[17]: 121411
+	 \/== Gas used in submitVotersPK by voter[18]: 121411
+	 \/== Gas used in submitVotersPK by voter[19]: 121411
+	 \/== Gas used in submitVotersPK by voter[20]: 121411
+	 \/== Gas used in submitVotersPK by voter[21]: 121411
+	 \/== Gas used in submitVotersPK by voter[22]: 121411
+	 \/== Gas used in submitVotersPK by voter[23]: 121411
+	 \/== Gas used in submitVotersPK by voter[24]: 121411
+	 \/== Gas used in submitVotersPK by voter[25]: 121411
+	 \/== Gas used in submitVotersPK by voter[26]: 121411
+	 \/== Gas used in submitVotersPK by voter[27]: 121411
+	 \/== Gas used in submitVotersPK by voter[28]: 121411
+	 \/== Gas used in submitVotersPK by voter[29]: 121399
+	 \/== Gas used in submitVotersPK by voter[30]: 121411
+	 \/== Gas used in submitVotersPK by voter[31]: 121411
+	 \/== Gas used in submitVotersPK by voter[32]: 121411
+	 \/== Gas used in submitVotersPK by voter[33]: 121399
+	 \/== Gas used in submitVotersPK by voter[34]: 121411
+	 \/== Gas used in submitVotersPK by voter[35]: 121399
+	 \/== Gas used in submitVotersPK by voter[36]: 121411
+	 \/== Gas used in submitVotersPK by voter[37]: 121399
+	 \/== Gas used in submitVotersPK by voter[38]: 121399
+	 \/== Gas used in submitVotersPK by voter[39]: 121399
+	 \/== Gas used in submitVotersPK by voter[40]: 121411
+	 \/== Gas used in submitVotersPK by voter[41]: 121411
+	 \/== Gas used in submitVotersPK by voter[42]: 121411
+	 \/== Gas used in submitVotersPK by voter[43]: 121411
+	 \/== Gas used in submitVotersPK by voter[44]: 121411
+	 \/== Gas used in submitVotersPK by voter[45]: 121411
+	 \/== Gas used in submitVotersPK by voter[46]: 121411
+	 \/== Gas used in submitVotersPK by voter[47]: 121399
+	 \/== Gas used in submitVotersPK by voter[48]: 121411
+	 \/== Gas used in submitVotersPK by voter[49]: 121411
+	 \/== Gas used in submitVotersPK by voter[50]: 121387
+	 \/== Gas used in submitVotersPK by voter[51]: 121411
+	 \/== Gas used in submitVotersPK by voter[52]: 121411
+	 \/== Gas used in submitVotersPK by voter[53]: 121411
+	 \/== Gas used in submitVotersPK by voter[54]: 121399
+	 \/== Gas used in submitVotersPK by voter[55]: 121399
+	 \/== Gas used in submitVotersPK by voter[56]: 121411
+	 \/== Gas used in submitVotersPK by voter[57]: 121411
+	 \/== Gas used in submitVotersPK by voter[58]: 121411
+	 \/== Gas used in submitVotersPK by voter[59]: 121399
+	 \/== Gas used in submitVotersPK by voter[60]: 121411
+	 \/== Gas used in submitVotersPK by voter[61]: 121399
+	 \/== Gas used in submitVotersPK by voter[62]: 121411
+	 \/== Gas used in submitVotersPK by voter[63]: 121399
+	 \/== Gas used in submitVotersPK by voter[64]: 121411
+	 \/== Gas used in submitVotersPK by voter[65]: 121411
+	 \/== Gas used in submitVotersPK by voter[66]: 121411
+	 \/== Gas used in submitVotersPK by voter[67]: 121411
+	 \/== Gas used in submitVotersPK by voter[68]: 121411
+	 \/== Gas used in submitVotersPK by voter[69]: 121399
+	 \/== Gas used in submitVotersPK by voter[70]: 121411
+	 \/== Gas used in submitVotersPK by voter[71]: 121411
+	 \/== Gas used in submitVotersPK by voter[72]: 121399
+	 \/== Gas used in submitVotersPK by voter[73]: 121411
+	 \/== Gas used in submitVotersPK by voter[74]: 121411
+	 \/== Gas used in submitVotersPK by voter[75]: 121411
+	 \/== Gas used in submitVotersPK by voter[76]: 121411
+	 \/== Gas used in submitVotersPK by voter[77]: 121411
+	 \/== Gas used in submitVotersPK by voter[78]: 121411
+	 \/== Gas used in submitVotersPK by voter[79]: 121399
+	 \/== Gas used in submitVotersPK by voter[80]: 121411
+	 \/== Gas used in submitVotersPK by voter[81]: 121399
+	 \/== Gas used in submitVotersPK by voter[82]: 121399
+	 \/== Gas used in submitVotersPK by voter[83]: 121411
+	 \/== Gas used in submitVotersPK by voter[84]: 121411
+	 \/== Gas used in submitVotersPK by voter[85]: 121411
+	 \/== Gas used in submitVotersPK by voter[86]: 121411
+	 \/== Gas used in submitVotersPK by voter[87]: 121411
+	 \/== Gas used in submitVotersPK by voter[88]: 121399
+	 \/== Gas used in submitVotersPK by voter[89]: 121411
+	 \/== Gas used in submitVotersPK by voter[90]: 121411
+	 \/== Gas used in submitVotersPK by voter[91]: 121411
+	 \/== Gas used in submitVotersPK by voter[92]: 121399
+	 \/== Gas used in submitVotersPK by voter[93]: 121411
+	 \/== Gas used in submitVotersPK by voter[94]: 121411
+	 \/== Gas used in submitVotersPK by voter[95]: 121399
+	 \/== Gas used in submitVotersPK by voter[96]: 121411
+	 \/== Gas used in submitVotersPK by voter[97]: 121411
+	 \/== Gas used in submitVotersPK by voter[98]: 121411
+	 \/== Gas used in submitVotersPK by voter[99]: 121411
+	 \/== Gas used in submitVotersPK by voter[100]: 121399
+	 \/== Gas used in submitVotersPK by voter[101]: 121411
+	 \/== Gas used in submitVotersPK by voter[102]: 121411
+	 \/== Gas used in submitVotersPK by voter[103]: 121411
+	 \/== Gas used in submitVotersPK by voter[104]: 121411
+	 \/== Gas used in submitVotersPK by voter[105]: 121411
+	 \/== Gas used in submitVotersPK by voter[106]: 121411
+	 \/== Gas used in submitVotersPK by voter[107]: 121411
+	 \/== Gas used in submitVotersPK by voter[108]: 121411
+	 \/== Gas used in submitVotersPK by voter[109]: 121411
+	 \/== Gas used in submitVotersPK by voter[110]: 121411
+	 \/== Gas used in submitVotersPK by voter[111]: 121411
+	 \/== Gas used in submitVotersPK by voter[112]: 121411
+	 \/== Gas used in submitVotersPK by voter[113]: 121411
+	 \/== Gas used in submitVotersPK by voter[114]: 121411
+	 \/== Gas used in submitVotersPK by voter[115]: 121411
+	 \/== Gas used in submitVotersPK by voter[116]: 121411
+	 \/== Gas used in submitVotersPK by voter[117]: 121411
+	 \/== Gas used in submitVotersPK by voter[118]: 121399
+	 \/== Gas used in submitVotersPK by voter[119]: 121411
+	 \/== Gas used in submitVotersPK by voter[120]: 121411
+	 \/== Gas used in submitVotersPK by voter[121]: 121411
+	 \/== Gas used in submitVotersPK by voter[122]: 121411
+	 \/== Gas used in submitVotersPK by voter[123]: 121411
+	 \/== Gas used in submitVotersPK by voter[124]: 121411
+	 \/== Gas used in submitVotersPK by voter[125]: 121411
+	 \/== Gas used in submitVotersPK by voter[126]: 121411
+	 \/== Gas used in submitVotersPK by voter[127]: 121411
+	 \/== Gas used in submitVotersPK by voter[128]: 121411
+	 \/== Gas used in submitVotersPK by voter[129]: 121411
+	 \/== Gas used in submitVotersPK by voter[130]: 121411
+	 \/== Gas used in submitVotersPK by voter[131]: 121411
+	 \/== Gas used in submitVotersPK by voter[132]: 121411
+	 \/== Gas used in submitVotersPK by voter[133]: 121399
+	 \/== Gas used in submitVotersPK by voter[134]: 121411
+	 \/== Gas used in submitVotersPK by voter[135]: 121411
+	 \/== Gas used in submitVotersPK by voter[136]: 121411
+	 \/== Gas used in submitVotersPK by voter[137]: 121411
+	 \/== Gas used in submitVotersPK by voter[138]: 121411
+	 \/== Gas used in submitVotersPK by voter[139]: 121399
+	 \/== Gas used in submitVotersPK by voter[140]: 121411
+	 \/== Gas used in submitVotersPK by voter[141]: 121411
+	 \/== Gas used in submitVotersPK by voter[142]: 121411
+	 \/== Gas used in submitVotersPK by voter[143]: 121399
+	 \/== Gas used in submitVotersPK by voter[144]: 121411
+	 \/== Gas used in submitVotersPK by voter[145]: 121411
+	 \/== Gas used in submitVotersPK by voter[146]: 121411
+	 \/== Gas used in submitVotersPK by voter[147]: 121411
+	 \/== Gas used in submitVotersPK by voter[148]: 121411
+	 \/== Gas used in submitVotersPK by voter[149]: 121411
+	 \/== Gas used in submitVotersPK by voter[150]: 121411
+	 \/== Gas used in submitVotersPK by voter[151]: 121411
+	 \/== Gas used in submitVotersPK by voter[152]: 121411
+	 \/== Gas used in submitVotersPK by voter[153]: 121411
+	 \/== Gas used in submitVotersPK by voter[154]: 121411
+	 \/== Gas used in submitVotersPK by voter[155]: 121411
+	 \/== Gas used in submitVotersPK by voter[156]: 121411
+	 \/== Gas used in submitVotersPK by voter[157]: 121399
+	 \/== Gas used in submitVotersPK by voter[158]: 121399
+	 \/== Gas used in submitVotersPK by voter[159]: 121399
+	 \/== Gas used in submitVotersPK by voter[160]: 121399
+	 \/== Gas used in submitVotersPK by voter[161]: 128113
+	 \/== Average gas used in submitVotersPK by voter: 121423.55555555556
+  [32m  ✓[0m[90m Submit PKs by voters[0m[31m (82221ms)[0m
+	 \/== Gas used in buildRightMarkers4MPC batch in booth 0: 1847810
+	 \/== Gas used in buildRightMarkers4MPC in booth 0: 1847810
+	 \/== Gas used in buildRightMarkers4MPC: 1847810
+  [32m  ✓[0m[90m Precompute right-side sum arrays for MPC keys[0m[31m (3849ms)[0m
+  [31m  1) Compute MPC keys[0m
+    > No events were emitted
+
+
+[92m [0m[32m 5 passing[0m[90m (3m)[0m
+[31m  1 failing[0m
+
+[0m  1) Contract: MainVotingC
+       Compute MPC keys:
+[0m[31m     Error: Returned error: VM Exception while processing transaction: revert computeMPCKeys() delegatecall failed. -- Reason given: computeMPCKeys() delegatecall failed..[0m[90m
+      at Context.<anonymous> (test/VotingC.js:220:35)
+      at runMicrotasks (<anonymous>)
+      at processTicksAndRejections (node:internal/process/task_queues:94:5)
+[0m
+
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--81890-3PW4GwbzLX3w
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+

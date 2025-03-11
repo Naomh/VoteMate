@@ -1,0 +1,11 @@
+{
+    "transport": {
+        "host": "smtp-relay.brevo.com",
+        "port": 587,
+        "auth": {
+            "user": "xsvond00@vutbr.cz",
+            "pass": "xsmtpsib-04354721c2a4cfeb4edd99f282ae72a05c6b48b93624c08740eae86f54ae5bf8-yKpcYfr5EmsJDI87"
+        }
+    },
+    "senderEmail": "info@sbvote.cz"
+}

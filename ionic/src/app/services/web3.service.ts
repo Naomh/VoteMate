@@ -1,0 +1,89 @@
+import { Injectable } from '@angular/core';
+import { ethers, JsonRpcProvider, Wallet } from 'ethers';
+import Web3, { Address, ContractAbi} from 'web3';
+import { isAddress } from 'web3-validator';
+
+const mainVotingContract = require('../../assets/contracts/MainVotingC.json');
+
+export interface IWallet{
+  mnemonic: string;
+  address: string;
+  privateKey: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class Web3Service {
+  private _web3: Web3 = new Web3('http://192.168.0.248:9545')
+  // ;
+  private ethersProvider: JsonRpcProvider = new ethers.JsonRpcProvider('http://192.168.0.248:9545')//('http://127.0.0.1:9545');
+
+  constructor(){
+  
+  }
+  
+
+  addWallet(pk: string){
+    this._web3.eth.accounts.wallet.add(pk);
+  }
+
+  async getWalletfromPk(pk:string, password:string){
+    const account = await this._web3.eth.accounts.privateKeyToAccount(pk);
+    this._web3.eth.accounts.wallet.add(account);
+
+    if(!(await this._web3.eth.getAccounts()).includes(account.address))
+    {
+      this._web3.eth.personal.importRawKey(account.privateKey, password)
+    }
+
+    console.log('čeksum', this._web3.utils.toChecksumAddress(account.address));
+    return account;
+  }
+
+  checkBalance(address:string){
+    return this._web3.eth.getBalance(address);
+  }
+
+  getAccounts(){
+   return this._web3.eth.getAccounts();
+  }
+
+  generateWallet(): IWallet {
+    const {mnemonic, address, privateKey} = ethers.Wallet.createRandom(this.ethersProvider);
+    this._web3.eth.accounts.wallet.add(privateKey);
+    return {
+      mnemonic: mnemonic!.phrase,
+      address,
+      privateKey
+    };
+  }
+
+  getWalletFromMnemonic(mnemomic:string): IWallet {
+    const wallet = Wallet.fromPhrase(mnemomic, this.ethersProvider);
+    
+    return {
+      address: wallet.address,
+      privateKey: wallet.privateKey,
+      mnemonic: mnemomic
+    };
+  }
+
+async isVoterEligible(address: Address, voterAddress: Address): Promise<boolean>{
+  try{
+    const contract = await this.getSmartContract(address, mainVotingContract.abi);
+    return contract.methods['isVoterEligible'](voterAddress).call();
+  }catch{
+    throw new Error('Invalid or unreachable smart contract address');
+  }
+
+}
+
+ getSmartContract(address: string, abi: ContractAbi){
+    if(!isAddress(address)){
+      throw new Error('Contract address doesn\'t exist');
+    }
+    return new this._web3.eth.Contract(abi, address);
+  }
+
+}

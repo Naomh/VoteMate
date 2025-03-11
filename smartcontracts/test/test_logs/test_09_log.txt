@@ -1,0 +1,1685 @@
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--45722-9MhE50OKKhph
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  100
+Cnt of faulty voters:  1
+Enroll batch size:  100
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 4578600
+	 \/== Gas used in enrollVoters: 4578600
+  [32m  ✓[0m[90m Enroll voters[0m[31m (7728ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (8s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--45918-dmuZ7uPE91zO
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  120
+Cnt of faulty voters:  1
+Enroll batch size:  120
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 5485697
+	 \/== Gas used in enrollVoters: 5485697
+  [32m  ✓[0m[90m Enroll voters[0m[31m (8474ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (9s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--46097-B5wTbeHmq5wE
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  140
+Cnt of faulty voters:  1
+Enroll batch size:  140
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 6392772
+	 \/== Gas used in enrollVoters: 6392772
+  [32m  ✓[0m[90m Enroll voters[0m[31m (10085ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (11s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--46280-GBY7LnmuY6fF
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  160
+Cnt of faulty voters:  1
+Enroll batch size:  160
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 7299860
+	 \/== Gas used in enrollVoters: 7299860
+  [32m  ✓[0m[90m Enroll voters[0m[31m (10982ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (12s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--46461-i73lobw7wcwv
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  180
+Cnt of faulty voters:  1
+Enroll batch size:  180
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 8206961
+	 \/== Gas used in enrollVoters: 8206961
+  [32m  ✓[0m[90m Enroll voters[0m[31m (12593ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (13s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--46658-zCDe4BDjJI6r
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  200
+Cnt of faulty voters:  1
+Enroll batch size:  200
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 9114053
+	 \/== Gas used in enrollVoters: 9114053
+  [32m  ✓[0m[90m Enroll voters[0m[31m (13824ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (15s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--46865-MfdBq6ubpz5f
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  220
+Cnt of faulty voters:  1
+Enroll batch size:  220
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 10021133
+	 \/== Gas used in enrollVoters: 10021133
+  [32m  ✓[0m[90m Enroll voters[0m[31m (16272ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (17s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--47507-PT5TPAK93x03
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  240
+Cnt of faulty voters:  1
+Enroll batch size:  240
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 10928252
+	 \/== Gas used in enrollVoters: 10928252
+  [32m  ✓[0m[90m Enroll voters[0m[31m (16578ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (17s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--47722-pkNf3Rdg6lBv
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  260
+Cnt of faulty voters:  1
+Enroll batch size:  260
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 11835348
+	 \/== Gas used in enrollVoters: 11835348
+  [32m  ✓[0m[90m Enroll voters[0m[31m (18386ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (19s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--47952-tXLlyn6vtBKA
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  280
+Cnt of faulty voters:  1
+Enroll batch size:  280
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+  [31m  1) Enroll voters[0m
+    > No events were emitted
+
+
+[92m [0m[32m 0 passing[0m[90m (23s)[0m
+[31m  1 failing[0m
+
+[0m  1) Contract: MainVotingC
+       Enroll voters:
+[0m[31m     Error: Returned error: VM Exception while processing transaction: out of gas[0m[90m
+      at Context.<anonymous> (test/VotingC.js:69:35)
+      at processTicksAndRejections (node:internal/process/task_queues:94:5)
+[0m
+
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--50386-Xq2z9LugPaKl
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  260
+Cnt of faulty voters:  1
+Enroll batch size:  260
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 11835348
+	 \/== Gas used in enrollVoters: 11835348
+  [32m  ✓[0m[90m Enroll voters[0m[31m (18141ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (19s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--50604-CroTTgzUGLzR
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  265
+Cnt of faulty voters:  1
+Enroll batch size:  265
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 12062116
+	 \/== Gas used in enrollVoters: 12062116
+  [32m  ✓[0m[90m Enroll voters[0m[31m (18667ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (19s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--50833-nNCmindpAQ60
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  270
+Cnt of faulty voters:  1
+Enroll batch size:  270
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 12288860
+	 \/== Gas used in enrollVoters: 12288860
+  [32m  ✓[0m[90m Enroll voters[0m[31m (19378ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (20s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--51062-2Xna0BDhPYd2
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  275
+Cnt of faulty voters:  1
+Enroll batch size:  275
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+  [31m  1) Enroll voters[0m
+    > No events were emitted
+
+
+[92m [0m[32m 0 passing[0m[90m (23s)[0m
+[31m  1 failing[0m
+
+[0m  1) Contract: MainVotingC
+       Enroll voters:
+[0m[31m     Error: Returned error: VM Exception while processing transaction: out of gas[0m[90m
+      at Context.<anonymous> (test/VotingC.js:69:35)
+      at processTicksAndRejections (node:internal/process/task_queues:94:5)
+[0m
+
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--51305-FNqjIFL3quwR
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  280
+Cnt of faulty voters:  1
+Enroll batch size:  280
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+  [31m  1) Enroll voters[0m
+    > No events were emitted
+
+
+[92m [0m[32m 0 passing[0m[90m (24s)[0m
+[31m  1 failing[0m
+
+[0m  1) Contract: MainVotingC
+       Enroll voters:
+[0m[31m     Error: Returned error: VM Exception while processing transaction: out of gas[0m[90m
+      at Context.<anonymous> (test/VotingC.js:69:35)
+      at processTicksAndRejections (node:internal/process/task_queues:94:5)
+[0m
+
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--51808-HhH6DTqCQ4TB
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  271
+Cnt of faulty voters:  1
+Enroll batch size:  271
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 12334216
+	 \/== Gas used in enrollVoters: 12334216
+  [32m  ✓[0m[90m Enroll voters[0m[31m (19173ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (20s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--52042-RTBjAOalwL9P
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  272
+Cnt of faulty voters:  1
+Enroll batch size:  272
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 12379572
+	 \/== Gas used in enrollVoters: 12379572
+  [32m  ✓[0m[90m Enroll voters[0m[31m (18834ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (20s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--52267-5Re2lZ6tLA7N
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  273
+Cnt of faulty voters:  1
+Enroll batch size:  273
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 12424928
+	 \/== Gas used in enrollVoters: 12424928
+  [32m  ✓[0m[90m Enroll voters[0m[31m (18995ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (20s)[0m
+[36m [0m[36m 9 pending[0m
+
+Using network 'advanced'.
+
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/DeployerC.sol
+> Compiling ./contracts/MainVotingC.sol
+> Compiling ./contracts/VotingBoothC.sol
+> Compiling ./contracts/VotingBoothDeployer.sol
+> Compiling ./contracts/VotingCalls.sol
+> Compiling ./contracts/VotingFunc.sol
+> Compiling ./contracts/lib/EC.sol
+> Compiling ./contracts/lib/FastEcMul.sol
+> Compilation warnings encountered:
+
+    /Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothDeployer.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/MainVotingC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/DeployerC.sol:2:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:199:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:233:7: Warning: Return value of low-level calls not used.
+      mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+      ^---------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:255:5: Warning: Return value of low-level calls not used.
+    mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+    ^-----------------------------------------------------------------------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:162:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi.encodeWithSignature("buildRightMarkers4MPC()"));
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:175:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(abi ...
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:192:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:223:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:239:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+,/Users/ivanastancikova/Eth/vote/contracts/VotingBoothC.sol:248:20: Warning: Unused local variable.
+    (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+                   ^---------------^
+
+> Artifacts written to /var/folders/pf/zl6c172d0j18y7w1tq4v84jh0000gn/T/test--52498-g3yEIS87uWvk
+> Compiled successfully using:
+   - solc: 0.5.8+commit.23d335f2.Emscripten.clang
+
+
+[0m[0m
+[0m  Contract: MainVotingC[0m
+MainVotingC deployed.
+
+Cnt of voters:  274
+Cnt of faulty voters:  1
+Enroll batch size:  274
+Cnt of groups/booths:  1
+Split group batch size:  200
+Cnt of candidates:  2
+MPC_batch_size:  150
+RM_batch_size:  100
+	 \/== Gas used in enrollVoters batch with start_idx 0: 12470285
+	 \/== Gas used in enrollVoters: 12470285
+  [32m  ✓[0m[90m Enroll voters[0m[31m (18886ms)[0m
+  [36m  - Split to groups and deploy booth contracts[0m
+  [36m  - Call booth contract[0m
+  [36m  - Submit PKs by voters[0m
+  [36m  - Precompute right-side sum arrays for MPC keys[0m
+  [36m  - Compute MPC keys[0m
+  [36m  - Submit votes[0m
+  [36m  - Compute sums of blinded votes in booth contracts[0m
+  [36m  - Compute group tallies[0m
+  [36m  - Main collects tally[0m
+
+
+[92m [0m[32m 1 passing[0m[90m (20s)[0m
+[36m [0m[36m 9 pending[0m
+

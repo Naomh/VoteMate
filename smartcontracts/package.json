@@ -1,0 +1,22 @@
+{
+    "dependencies": {
+        "@truffle/hdwallet-provider": "^1.2.3",
+        "ethers": "^6.5.1",
+        "simple-js-ec-math": "^2.0.1",
+        "underscore": "^1.13.4",
+        "web3": "^1.10.0"
+    },
+    "scripts": {
+        "start": "ganache-cli -p 8545 -i 1313 -l 12500000 -g 1000000000 -a 10",
+        "migrate": "truffle migrate --reset",
+        "test": "concurrently \"ganache-cli -p 8777 -i 1314 -l 12500000 -g 1000000000 -a 10\" \"truffle test -b --network advanced ./test/VotingC.js\" \"truffle test -b --network advanced ./test/VotingCfault.js\"",
+        "startTest": "ganache-cli -p 8777 -i 1314 -l 12500000 -g 1000000000 -a 10",
+        "testVoting": "truffle test -b --network advanced ./test/VotingC.js",
+        "testVotingFault": "truffle test -b --network advanced ./test/VotingCfault.js"
+    },
+    "devDependencies": {
+        "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+        "concurrently": "^8.2.0",
+        "hardhat": "^2.22.18"
+    }
+}

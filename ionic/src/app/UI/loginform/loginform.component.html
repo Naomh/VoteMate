@@ -1,0 +1,78 @@
+<div class="container">
+	<div class="screen">
+		<div class="screen__content">
+            <ng-container *ngIf="formTemplate === 'login'; else register">
+                    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login">
+                        <div class="login__field">
+                            <i class="login__icon fas fa-user"></i>
+                            <input formControlName="email" type="text" class="login__input" placeholder="Email">
+                        </div>
+                        <div class="login__field">
+                            <i class="login__icon fas fa-lock"></i>
+                            <input formControlName="password" type="password" class="login__input" placeholder="Password">
+                        </div>
+                        <button class="button login__submit" type="submit" [disabled]="loginForm.invalid">
+                            <span class="button__text">Log In Now</span>
+                            <i class="button__icon fas fa-chevron-right"></i>
+                        </button>
+                    </form>
+
+            </ng-container>
+			<div class="social-login">
+				<h3>Log in via</h3>
+				<div class="social-icons">
+					<a href="#" (click)="onGoogleLogin()" class="google"></a>
+				</div>
+			</div>
+            <a href="#" class="link__register" (click)="switchTemplate()">{{formTemplate === 'login' ? 'Register here!': 'Log in'}}</a>
+		</div>
+		<div class="screen__background">
+			<span class="screen__background__shape screen__background__shape4"></span>
+			<span class="screen__background__shape screen__background__shape3"></span>		
+			<span class="screen__background__shape screen__background__shape2"></span>
+			<span class="screen__background__shape screen__background__shape1"></span>
+		</div>		
+	</div>
+</div>
+
+
+
+
+<ng-template #register>
+    <form [formGroup]="registrationForm" (ngSubmit)="onRegistration()" class="register">
+        <div class="login__field">
+            <input formControlName="name" type="text" class="login__input" placeholder="Name">
+            <div *ngIf="registrationForm.controls['name'].invalid && registrationForm.controls['name'].touched">
+                <small *ngIf="registrationForm.controls['name'].errors?.['required']">Name is required.</small>
+            </div>
+        </div>
+        <div class="login__field">
+            <i class="login__icon fas fa-user"></i>
+            <input formControlName="email" type="text" class="login__input" placeholder="Email">
+            <div *ngIf="registrationForm.controls['email'].invalid && registrationForm.controls['email'].touched">
+                <small *ngIf="registrationForm.controls['email'].errors?.['required']">Email is required.</small>
+                <small *ngIf="registrationForm.controls['email'].errors?.['email']">Please enter a valid email address.</small>
+            </div>
+        </div>
+        <div class="login__field">
+            <i class="login__icon fas fa-lock"></i>
+            <input formControlName="password" type="password" class="login__input" placeholder="Password">
+            <div *ngIf="registrationForm.controls['password'].invalid && registrationForm.controls['password'].touched">
+                <small *ngIf="registrationForm.controls['password'].errors?.['required']">Password is required.</small>
+                <small *ngIf="registrationForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters long.</small>
+            </div>
+        </div>
+        <div class="login__field">
+            <i class="login__icon fas fa-lock"></i>
+            <input formControlName="confirmPassword" type="password" class="login__input" placeholder="Password confirm">
+            <div *ngIf="registrationForm.errors?.['mismatch']">
+                <small>Passwords do not match.</small>
+            </div>
+        </div>
+
+        <button type="submit" [disabled]="registrationForm.invalid" class="button login__submit">
+            <span class="button__text">register</span>
+            <i class="button__icon fas fa-chevron-right"></i>
+        </button>				
+    </form>
+</ng-template>

@@ -1,0 +1,13 @@
+<div class="card">
+    <div class="header">
+        <h1>
+            {{name}}
+        </h1>
+        <span class="stage-{{stage|electionstage}}">{{stage|electionstage}}</span>
+    </div>
+        <div class="content">{{description}}</div>
+        <div class="buttons">
+            <UI-button #enrollBtn [disabled]="isEligible" (click)="enroll(enrollBtn)">Enroll</UI-button>
+            <button [routerLink]="['/election', address]" routerLinkActive="router-link-active" > preview</button>
+        </div>
+    </div>

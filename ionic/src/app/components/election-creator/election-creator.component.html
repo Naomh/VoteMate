@@ -1,0 +1,39 @@
+<div class="container">
+
+  <form [formGroup]="electionForm" (ngSubmit)="submitForm(SubmitButton)">
+
+    <label for="name">
+      Název:
+      <input id="name" formControlName="name" required />
+    </label>
+    <hr>
+    <div class="uploads">
+      <label for="parties">
+        Parties:   
+        <input id="parties" formControlName="parties" type="file" (change)="loadParties($event)">
+      </label>
+      <label for="candidates">
+        Candidates
+        <input id="candidates" formControlName="candidates" type="file" (change)="loadCandidates($event)">
+      </label>
+    </div>
+    <label for>
+      Popis:<br>
+      <textarea id="description" formControlName="description"></textarea>
+    </label>
+    <br>
+    <br>
+    <label for="startDate">
+      Začátek:
+      <input id="startDate" type="datetime-local" formControlName="start" required />
+    </label>
+    
+    <label for="endDate">
+      Konec:
+      <input id="endDate" type="datetime-local" formControlName="end" required />
+    </label>
+    
+    <UI-button #SubmitButton type="submit">Odeslat</UI-button>
+  </form>
+</div>
+  

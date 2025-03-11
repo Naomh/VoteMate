@@ -1,0 +1,5 @@
+{
+    "ClientID": "515112126437-nmcvdpeuug52km4s1p3es1hpgan2d327.apps.googleusercontent.com",
+    "ClientSecret" : "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",
+    "RedirectURL": "http://localhost:3000/api/session/oauth/google"
+}
