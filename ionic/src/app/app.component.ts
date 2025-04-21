@@ -46,11 +46,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       const userInfo = await this.httpSVC.refreshSession();
     } catch{
       const login = await this.dexieSVC.getUser();
-      console.log('už jsem tady zas', login);
       if (login) {
         this.httpSVC.logIn({email: login.email, password: login.password});
       }
     }
+
     const elections = await this.httpSVC.getAvailableElections();
     if (elections) {
       this.dexieSVC.updateElections(elections);
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     const user = this.user();
     if (user && user.pk) {
-      console.log(await this.web3SVC.getWalletfromPk(user.pk, user.password));
+      await this.web3SVC.getWalletfromPk(user.pk, user.password);
     }
   }
 

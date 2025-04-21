@@ -24,11 +24,9 @@ export class ProfileComponent{
       if(!user || !user.wallet){
         throw new Error('No wallet found');
       }
-      console.log('login', await this.httpSVC.logIn({email: user!.email, password: user!.password}));
-      console.log('wallet', await this.httpSVC.registerWallet(user.wallet)) 
     
     }catch{
-      console.log('ups');
+      throw new Error('Wallet registration failed')
     }
   }
 

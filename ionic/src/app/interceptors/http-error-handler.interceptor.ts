@@ -16,7 +16,6 @@ export const httpErrorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
         }
   
         snackbarSVC.show(errorMessage);
-        console.log('blabal')
         return throwError(() => new Error(errorMessage));
       })
     );
