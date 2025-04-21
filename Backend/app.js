@@ -14,9 +14,7 @@ const cfg = require("./config.json");
 const sbVote = require("./SBvote.js");
 
 const web3 = new (require("web3"))(cfg.network);
-const authorityAcc = web3.eth.accounts.privateKeyToAccount(
-  "0xabde56b8d376b7efc5db0b848609dc58834078f4bc45528c38b09708bdc3eef9"
-); //(cfg.account_pk);
+const authorityAcc = web3.eth.accounts.privateKeyToAccount(cfg.account_pk);
 
 const app = express();
 
@@ -43,6 +41,7 @@ app.get("/api/session/oauth/google", googleOAuthHandler);
 app.get("/verify", verifyAccount);
 app.post("/register", register);
 app.post("/login", login);
+app.post("/resetPW", resetPassword)
 app.post("/verifyCookie", verifyCookie);
 app.post("/reissue", reissueSession);
 app.post("/enrollVoters", isAuthorized, enrollVoters);
@@ -50,9 +49,13 @@ app.post("/enrollVoter", isAuthorized, enrollVoter);
 app.post("/createElection", isAuthorized, createElection);
 app.post("/getElections", isAuthorized, getElections);
 
+app.post("/submitVote", isAuthorized, submitVote);
 app.post("/splitGroups", isAuthorized, splitGroups);
 app.post("/finishSetup", isAuthorized, finishSetup);
 app.post("/precomputeMPC", isAuthorized, precomputeMPC);
+app.post("/computeMPCs", isAuthorized, computeMPCs);
+app.post("/computeBlindedVotesSum", isAuthorized, ComputeBlindedVotesSum);
+app.post("/computeGroupTallies", isAuthorized, computeGrouptallies);
 
 async function init() {
   await db.connect();
@@ -133,6 +136,38 @@ async function login(req, res) {
   }
 }
 
+async function submitVote(req, res) {
+
+  try{
+    const { address, vote } = req.body;
+    const result = await sbVote.submitVote(address, vote);
+    res.status(200).json({ message: "OK" }).send();
+  }catch(e){
+    console.log(e);
+    return handleError(e, res);
+  }
+}
+
+async function resetPassword(req, res){
+  try{
+    const email = req.body.email;
+    const account = await db.findAccount({email})
+    if(account){
+      const token = await db.createResetPWToken(account._id)
+      mailer.sendResetPwEmail(email, token.resetToken);
+    }
+  }catch(e){
+    console.error(e);
+    return handleError(error, res);
+  }
+  finally{
+    res
+    .status(200)
+    .send();
+  }
+}
+
+
 async function verifyAccount(req, res) {
   try {
     const verificationCode = req.query.code;
@@ -147,7 +182,7 @@ async function verifyAccount(req, res) {
     }
 
     await setAccessCookie(req, res, user._id);
-    res.status(200).json({ message: "Ok" }).send();
+    res.status(200).json({ message: "Ok" }).redirect(config.url).send();
   } catch (error) {
     handleError(error, res);
   }
@@ -205,7 +240,7 @@ async function reissueSession(req, res) {
       throw { status: 401, message: "Refresh token expired" };
     }
     await db.removeSessions(uid);
-    const voter = await db.findVoter({ _id: uid });
+    const voter = await db.findAccount({ _id: uid });
     await setAccessCookie(req, res, uid);
     res
       .json({
@@ -260,7 +295,7 @@ async function verifyCookie(req, res) {
 
 async function registerWallet(req, res) {
   try {
-    const user = await db.findVoter({ uid: req.locals.uid });
+    const user = await db.findAccount({ uid: req.locals.uid });
 
     if (!user.status) {
       throw {
@@ -287,12 +322,13 @@ async function registerWallet(req, res) {
 
 function isAuthorized(req, res, next) {
   const token = req.cookies.accessToken;
+
   if (!token) {
     return anauthorized(req, res);
   }
   try {
     const { valid, expired, expirationDate } = JWTService.verifyJwt(token);
-    console.log(valid, expirationDate);
+    console.log(valid, expired, expirationDate);
     if (next) {
       next();
     }
@@ -388,7 +424,7 @@ async function enrollVoters(req, res) {
 async function splitGroups(req, res) {
   try {
     const address = req.body.address;
-    sbVote.splitGroups(address);
+    await sbVote.splitGroups(address);
     res.status(200);
     res.send();
   } catch (e) {
@@ -411,6 +447,54 @@ async function precomputeMPC(req, res) {
   }
 }
 
+async function computeMPCs(req, res) {
+  try {
+    const address = req.body.address;
+    const result = await sbVote.computeMPCKeys(address);
+    res.body = { result };
+    res.status(200);
+    res.send();
+  } catch (error) {
+    handleError(
+      { status: 500, message: "Operation failed due to an internal error" },
+      res
+    );
+  }
+}
+
+async function ComputeBlindedVotesSum(req, res) {
+  try {
+    console.log("computeBlindedVotesSum");
+    const address = req.body.address;
+    const result = await sbVote.computeBlindedVotesSum(address);
+    res.body = { result };
+    res.status(200);
+    res.send();
+  } catch (error) {
+    console.log(error);
+    handleError(
+      { status: 500, message: "Operation failed due to an internal error" },
+      res
+    );
+  }
+}
+
+async function computeGrouptallies(req, res) {
+  try {
+    const address = req.body.address;
+    const ECaddress = req.body.ECaddress;
+    const result = await sbVote.computeGroupTallies(address, ECaddress);
+    res.body = { result };
+    res.status(200);
+    res.send();
+  } catch (error) {
+    console.log(error);
+    handleError(
+      { status: 500, message: "Operation failed due to an internal error" },
+      res
+    );
+  }
+}
 
 async function finishSetup(req, res) {
   try {
