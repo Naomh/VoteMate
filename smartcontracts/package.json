@@ -4,14 +4,15 @@
         "ethers": "^6.5.1",
         "simple-js-ec-math": "^2.0.1",
         "underscore": "^1.13.4",
-        "web3": "^1.10.0"
+        "web3": "^1.2.1"
     },
     "scripts": {
-        "start": "ganache-cli -p 8545 -i 1313 -l 12500000 -g 1000000000 -a 10",
+        "start": "ganache-cli -p 9545 -i 1313 -l 400000000 -g 10000000000 -a 10 -d",
         "migrate": "truffle migrate --reset",
+        "compile": "truffle compile --network development && node moveContracts.js",
         "test": "concurrently \"ganache-cli -p 8777 -i 1314 -l 12500000 -g 1000000000 -a 10\" \"truffle test -b --network advanced ./test/VotingC.js\" \"truffle test -b --network advanced ./test/VotingCfault.js\"",
-        "startTest": "ganache-cli -p 8777 -i 1314 -l 12500000 -g 1000000000 -a 10",
-        "testVoting": "truffle test -b --network advanced ./test/VotingC.js",
+        "startTest": "ganache-cli -p 9545 -i 1313 -l 40000000 -g 1000000000 -a 10",
+        "testVoting": "truffle test -b --network development ./test/VotingC2.js",
         "testVotingFault": "truffle test -b --network advanced ./test/VotingCfault.js"
     },
     "devDependencies": {

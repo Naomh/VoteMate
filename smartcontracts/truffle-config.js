@@ -44,15 +44,16 @@ module.exports = {
     // options below to some value.
   //
     development: {
-      host: "0.0.0.0",     // Localhost (default: none)
+      host: "127.0.0.1",     // Localhost (default: none)
       port: 9545,            // Standard Ethereum port (default: none)
       network_id: "1313",       // Any network (default: none)
+      gas: 40000000,
       // ganache-cli -p 8545 -i 1313
     },
     sokol: {
       provider: () => new HDWalletProvider(mnemonic, "https://sokol.poa.network"), //"https://sokol.poa.network"),
       network_id: 77,
-      gas: 500000,
+      gas: 40000000,
       gasPrice: 1000000000,
       skipDryRun: true
     },
@@ -105,5 +106,5 @@ module.exports = {
       //  evmVersion: "byzantium"
     //  }
     }
-  }
+  },
 };
