@@ -8,6 +8,6 @@
         <div class="content">{{description}}</div>
         <div class="buttons">
             <UI-button #enrollBtn [disabled]="isEligible" (click)="enroll(enrollBtn)">Enroll</UI-button>
-            <button [routerLink]="['/election', address]" routerLinkActive="router-link-active" > preview</button>
+            <button [routerLink]="['/election', id]" routerLinkActive="router-link-active" (click)="selectElection()"> preview</button>
         </div>
     </div>
