@@ -11,11 +11,10 @@ import { RouterModule } from '@angular/router';
 type State = 'init' | 'mnemonic' | 'validation' | 'success' | 'recovery';
 
 @Component({
-  selector: 'UI-wallet-generator',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
-  templateUrl: './wallet-generator.component.html',
-  styleUrl: './wallet-generator.component.scss'
+    selector: 'UI-wallet-generator',
+    imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
+    templateUrl: './wallet-generator.component.html',
+    styleUrl: './wallet-generator.component.scss'
 })
 export class WalletGeneratorComponent {
   private web3SVC = inject(Web3Service);
