@@ -7,6 +7,7 @@ const electionModel = require("./db-models/election.model");
 const accountModel = require("./db-models/account.model");
 const sessionModel = require("./db-models/session.model");
 const walletModel = require("./db-models/wallet.model");
+const resetPasswordModel = require("./db-models/resetPasswordToken.model")
 
 class db {
   constructor() {
@@ -14,12 +15,10 @@ class db {
     this.accountModel = accountModel;
     this.sessionModel = sessionModel;
     this.walletModel = walletModel;
+    this.resetPasswordModel = resetPasswordModel;
   }
 
-  /**
-   * GENERAL
-   *
-   */
+  // #region GENERAL
   async connect() {
     const interval = setInterval(() => {
       mongo
@@ -46,11 +45,9 @@ class db {
   generatePasswordHash(password) {
     return crypto.createHash("sha512").update(password).digest("hex");
   }
+  // #endregion
 
-  /**
-   * ACCOUNT
-   *
-   */
+  // #region ACCOUNT
   async createVoter(name, email, password) {
     const voter = await this.accountModel.findOne({ email: email });
     if (voter) {
@@ -78,7 +75,7 @@ class db {
     return verificationCode;
   }
 
-  async findVoter(query) {
+  async findAccount(query) {
     return await this.accountModel.findOne(query).lean();
   }
 
@@ -119,12 +116,14 @@ class db {
     );
   }
 
+  createResetPWToken(uid){
+    const token = crypto.randomBytes(30).toString("hex");
+    const entry = new resetPasswordModel({uid, resetToken: this.generatePasswordHash(token) });
+    return entry.save();
+  }
+  // #endregion
 
-  /**
-   * SESSION
-   *
-   */
-
+  // #region SESSION
   async createSession(userId, ip, userAgent, refreshToken) {
     const session = await this.sessionModel.create({
       uid: userId,
@@ -153,12 +152,9 @@ class db {
   removeSessions(uid) {
     return this.sessionModel.deleteMany({ uid: uid });
   }
+  // #endregion
 
-  /**
-   * WALLET
-   *
-   */
-
+  // #region WALLET
   findWallet(query) {
     return this.walletModel.findOne(query);
   }
@@ -185,11 +181,9 @@ class db {
       return await this.walletModel.find().skip(skip);
     }
   }
-  /**
-   * ELECTION
-   *
-   */
+  // #endregion
 
+  // #region ELECTION
   async createElection(election) {
     try {
       const newElection = new this.electionModel({
@@ -216,7 +210,7 @@ class db {
           fastECmulAddress: election.fastECmulAddress,
           votingBoothDeployerAddress: election.votingBoothDeployerAddress,
           votingCallsAddress: election.votingCallsAddress,
-          votingFuncAddress: election.votingFuncAddressd,
+          votingFuncAddress: election.votingFuncAddress,
         },
         { upsert: true }
       );
@@ -270,6 +264,7 @@ class db {
       throw error;
     }
   }
+  // #endregion
 }
 
 module.exports = new db();
