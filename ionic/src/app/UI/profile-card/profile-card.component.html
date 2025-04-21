@@ -21,14 +21,12 @@
             </div>-->
         </div>
         <div class="body">
-            <div *ngIf="user.wallet; else WalletWizard">
+            @if(user.wallet){
+                
                 <router-outlet></router-outlet>
-            </div>
-
+            }@else {
+                <UI-wallet-generator></UI-wallet-generator>
+            }
         </div>
     </div>
 </div>
-
-<ng-template #WalletWizard>
-    <UI-wallet-generator></UI-wallet-generator>
-</ng-template>

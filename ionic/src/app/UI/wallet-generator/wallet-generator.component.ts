@@ -74,7 +74,7 @@ export class WalletGeneratorComponent {
       this.save();
       this.setState('success');
     }catch(e){
-      console.log(e)
+      throw new Error('Invalid mnemonic')
     }
   }
 
