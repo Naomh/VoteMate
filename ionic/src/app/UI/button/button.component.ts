@@ -7,11 +7,10 @@ import { SnackbarService } from '../../services/snackbar.service';
 
 
 @Component({
-  selector: 'UI-button',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './button.component.html',
-  styleUrl: './button.component.scss'
+    selector: 'UI-button',
+    imports: [CommonModule],
+    templateUrl: './button.component.html',
+    styleUrl: './button.component.scss'
 })
 export class ButtonComponent {
   @Input() type: string = 'button';

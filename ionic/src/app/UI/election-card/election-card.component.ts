@@ -11,11 +11,10 @@ const MainVotingC = require('../../../assets/contracts/MainVotingC.json')
 
 
 @Component({
-  selector: 'app-election-card',
-  standalone: true,
-  imports: [ElectionstagePipe, RouterModule, AsyncPipe, ButtonComponent],
-  templateUrl: './election-card.component.html',
-  styleUrl: './election-card.component.scss'
+    selector: 'app-election-card',
+    imports: [ElectionstagePipe, RouterModule, AsyncPipe, ButtonComponent],
+    templateUrl: './election-card.component.html',
+    styleUrl: './election-card.component.scss'
 })
 export class ElectionCardComponent implements OnInit {
   // #region Inputs and Outputs

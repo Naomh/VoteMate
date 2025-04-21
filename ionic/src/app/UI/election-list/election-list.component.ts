@@ -8,11 +8,10 @@ import { Web3Service } from '../../services/web3.service';
 import { ElectionStage } from '../../pipes/electionstage.pipe';
 
 @Component({
-  selector: 'UI-election-list',
-  standalone: true,
-  imports: [CommonModule, ElectionCardComponent],
-  templateUrl: './election-list.component.html',
-  styleUrl: './election-list.component.scss'
+    selector: 'UI-election-list',
+    imports: [CommonModule, ElectionCardComponent],
+    templateUrl: './election-list.component.html',
+    styleUrl: './election-list.component.scss'
 })
 export class ElectionListComponent {
   private changeDetector = inject(ChangeDetectorRef);

@@ -10,11 +10,10 @@ import {
 import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [LoginformComponent],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+    selector: 'app-login',
+    imports: [LoginformComponent],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   protected httpSVC = inject(HttpService);

@@ -5,11 +5,10 @@ import { WalletGeneratorComponent } from "../wallet-generator/wallet-generator.c
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'UI-profile-card',
-  standalone: true,
-  imports: [CommonModule, WalletGeneratorComponent, RouterModule],
-  templateUrl: './profile-card.component.html',
-  styleUrl: './profile-card.component.scss'
+    selector: 'UI-profile-card',
+    imports: [CommonModule, WalletGeneratorComponent, RouterModule],
+    templateUrl: './profile-card.component.html',
+    styleUrl: './profile-card.component.scss'
 })
 export class ProfileCardComponent {
 @Output() registerWallet: EventEmitter<void> = new EventEmitter();

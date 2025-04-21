@@ -10,11 +10,10 @@ interface JsonObject {
 }
 
 @Component({
-  selector: 'app-election-creator',
-  standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, ButtonComponent],
-  templateUrl: './election-creator.component.html',
-  styleUrl: './election-creator.component.scss'
+    selector: 'app-election-creator',
+    imports: [ReactiveFormsModule, FormsModule, CommonModule, ButtonComponent],
+    templateUrl: './election-creator.component.html',
+    styleUrl: './election-creator.component.scss'
 })
 export class ElectionCreatorComponent {
   protected httpSVC: HttpService = inject(HttpService); 
@@ -61,12 +60,10 @@ export class ElectionCreatorComponent {
 
   protected async loadParties(event: Event){
     this.parties = await this.loadJsonFile(event);
-    console.log(this.parties)
 }
 
   protected async loadCandidates(event: Event){
     this.candidates = await this.loadJsonFile(event);
-    console.log(this.candidates)
   }
 
 
@@ -115,7 +112,6 @@ protected loadJsonFile(event: Event): Promise<JSON>{
   }
 
   private async processCandidates(partyKeys: JsonObject): Promise<ICandidate[]>{
-    console.log(partyKeys);
     try{
       const candidates: ICandidate[] = this.candidates['polozky'].map((item: JsonObject, index:number) => {
         const name = `${item['TITULPRED'] ??''} ${item['JMENO']} ${item['PRIJMENI']} ${item['TITULZA'] ??''}`.trim()

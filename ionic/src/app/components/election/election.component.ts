@@ -16,11 +16,10 @@ const MainVotingC = require('../../../assets/contracts/MainVotingC.json');
 const VotingBoothC = require('../../../assets/contracts/VotingBoothC.json');
 
 @Component({
-  selector: 'app-election',
-  standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, DatePipe, ButtonComponent, ElectionstagePipe],
-  templateUrl: './election.component.html',
-  styleUrl: './election.component.scss'
+    selector: 'app-election',
+    imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, DatePipe, ButtonComponent, ElectionstagePipe],
+    templateUrl: './election.component.html',
+    styleUrl: './election.component.scss'
 })
 export class ElectionComponent implements OnInit{
 

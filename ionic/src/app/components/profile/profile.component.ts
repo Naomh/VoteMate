@@ -5,11 +5,10 @@ import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http.service';
 
 @Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [ProfileCardComponent, CommonModule],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+    selector: 'app-profile',
+    imports: [ProfileCardComponent, CommonModule],
+    templateUrl: './profile.component.html',
+    styleUrl: './profile.component.scss'
 })
 export class ProfileComponent{
   private dexieSVC = inject(DexieService);

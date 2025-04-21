@@ -23,11 +23,10 @@ export interface IEnterCodeForm{
 }
 
 @Component({
-  selector: 'UI-loginform',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './loginform.component.html',
-  styleUrl: './loginform.component.scss'
+    selector: 'UI-loginform',
+    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    templateUrl: './loginform.component.html',
+    styleUrl: './loginform.component.scss'
 })
 
 export class LoginformComponent {

@@ -17,17 +17,16 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { SnackbarService } from './services/snackbar.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    LoginComponent,
-    CommonModule,
-    ProfileComponent,
-    SnackbarComponent,
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+    selector: 'app-root',
+    imports: [
+        RouterOutlet,
+        LoginComponent,
+        CommonModule,
+        ProfileComponent,
+        SnackbarComponent,
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, AfterViewInit {
   private web3SVC = inject(Web3Service);
