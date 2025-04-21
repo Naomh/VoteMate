@@ -10,7 +10,6 @@ const accountSchema = new mongo.Schema({
       authType: {type: String, enum:['oauth', 'email'], required: true},
       password: String,
       status: Boolean,
-      walletStatus:Boolean,
       verificationCode: String,      
     });
 
