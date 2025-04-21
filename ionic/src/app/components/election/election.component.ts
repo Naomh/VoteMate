@@ -3,19 +3,22 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Web3Service } from '../../services/web3.service';
 import { DexieService } from '../../services/dexie.service';
 import { HttpService } from '../../services/http.service';
-import { Contract, ERR_PARAM } from 'web3';
+import { Address, Contract, ERR_PARAM } from 'web3';
 import { ICandidate, IElection } from '../../UI/election-list/election.interface';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Voter } from './voter';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from "../../UI/button/button.component";
+import { ESort } from '../../interfaces/sort.enum';
+import { ElectionstagePipe } from '../../pipes/electionstage.pipe';
+
 const MainVotingC = require('../../../assets/contracts/MainVotingC.json');
 const VotingBoothC = require('../../../assets/contracts/VotingBoothC.json');
 
 @Component({
   selector: 'app-election',
   standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, DatePipe, ButtonComponent],
+  imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, DatePipe, ButtonComponent, ElectionstagePipe],
   templateUrl: './election.component.html',
   styleUrl: './election.component.scss'
 })
@@ -32,10 +35,14 @@ export class ElectionComponent implements OnInit{
   private user = this.dexieSVC.user();
   private voter!: Voter;
 
-  protected contract!:Contract<any> | undefined;
+  private sort: ESort = ESort.none;
+
+  protected contract!:Contract<any>;
   protected election!: IElection | undefined;
   protected FilteredCandidates!: ICandidate[];
   protected isEligible!: boolean;
+  protected electionStage!: bigint;
+  protected finalTally!: number[];
 
   protected form = new FormGroup({
     selectedCandidate: new FormControl('', Validators.required), 
@@ -43,13 +50,19 @@ export class ElectionComponent implements OnInit{
 
 
   async ngOnInit(): Promise<void> {
-    const address = this.route.snapshot.paramMap.get('id');
-    if(!address || !this.user?.wallet){
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if(!id || !this.user?.wallet){
       this.router.navigate(['/list']);
-      return;
+      throw new Error('user not found or election id not found');
     }
-    this.address = address;
-    
+
+    await this.dexieSVC.selectElection(id)
+
+
+    this.address = this.dexieSVC.selectedElection()!.mainVotingAddress;
+    this.electionStage = await this.web3SVC.getStage(this.address);
+
     this.voter = new Voter(this.address, this.user.wallet, this.web3SVC, this.dexieSVC);
     
     this.contract = await this.web3SVC.getSmartContract(this.address, MainVotingC.abi);
@@ -60,7 +73,7 @@ export class ElectionComponent implements OnInit{
 
     this.isEligible = await this.web3SVC.isVoterEligible(this.address, this.user.wallet);
 
-    this.election = await this.dexieSVC.getElection(this.address);
+    this.election = this.dexieSVC.selectedElection();
     if(!this.election){
       this.router.navigate(['/list']);
       throw new Error('election doesn\'t exist');
@@ -90,6 +103,7 @@ export class ElectionComponent implements OnInit{
       return;
     }
     const boothContract = await this.web3SVC.getSmartContract(boothAddr,  VotingBoothC.abi);
+    await this.httpSVC.submitVote(boothAddr, Math.floor(Math.random() * 2));
     console.log(await boothContract.methods['getCntOfVoters']().call())
     console.log(await boothContract.methods['getBoothStage']().call())
   }
@@ -98,8 +112,20 @@ export class ElectionComponent implements OnInit{
     this.voter.submitPK();
   }
 
-  async computeMPCkeys(){
+  async precomputeMPCkeys(){
     await this.httpSVC.precomputeMPCKeys(this.address);
+  }
+
+  async computeMPCkeys(){
+    await this.httpSVC.computeMPCKeys(this.address);
+  }
+
+  async computeBlindedVotesSum(){
+    await this.httpSVC.computeBlindedVotesSum(this.address, this.election!.ECaddress);
+  }
+  
+  async computeGroupTallies(){
+    await this.httpSVC.computeGroupTallies(this.address, this.election!.fastECmulAddress);
   }
 
   async vote(button: ButtonComponent){
@@ -112,6 +138,13 @@ export class ElectionComponent implements OnInit{
 
       try{
         await this.voter.submitVote(candidate);
+
+        const votersGroup = await this.contract.methods['votersGroup'](this.dexieSVC.user()?.wallet).call();
+        const boothAddr: Address = await this.contract.methods['groupBoothAddr'](votersGroup).call();
+        console.log(boothAddr);
+        await this.httpSVC.submitVote(boothAddr, candidate);
+        
+        button.setSuccess('vote submitted!')
       }catch(e){
         console.error(e);
         button.setFailure();
@@ -138,11 +171,23 @@ export class ElectionComponent implements OnInit{
       return
     }
     const regexp = new RegExp(term, 'gi')
-    this.FilteredCandidates = this.election!.candidates.filter((candiate) => candiate.index.toString().match(term) || regexp.test(candiate.name))
+    this.FilteredCandidates = this.election!.candidates.filter((candiate) => candiate.index.toString().match(term) || regexp.test(candiate.name));
   }
   
-  enrollVoters(){
+  public enrollVoters(){
     this.httpSVC.enrollVoters(this.address);
   }
 
+  public toggleSort(){
+    this.sort = (this.sort + 1) % (Object.keys(ESort).length / 2);
   }
+
+  protected sortFn(candiateA: ICandidate, candiateB: ICandidate){
+    if(this.sort === ESort.none){
+      return 0
+    }
+    
+    const comparison = candiateA.name.localeCompare(candiateB.name);
+    return this.sort === ESort.up ? comparison : -comparison;
+  }
+}

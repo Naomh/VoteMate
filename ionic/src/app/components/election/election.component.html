@@ -1,51 +1,58 @@
 <div class="container">
     <div class="header">
-    <h1>
-        {{election?.name}}
-    </h1>
-    <p>
-       {{election?.description}}
-    </p>
-    <div class="dates">
-        <h3>starts on {{election?.start | date: 'short'}}</h3>
-        <h3>ends on {{election?.end | date: 'short'}}</h3>
-    </div>
+        <h1>
+            {{election?.name}}
+        </h1>
+        <p>
+            {{election?.description}}
+        </p>
+        <div class="dates">
+            <h3>starts on {{election?.start | date: 'short'}}</h3>
+            <h3>ends on {{election?.end | date: 'short'}}</h3>
+        </div>
     </div>
     <div class="formsHeader">
         <h2>Candidates:</h2>
         <div class="filters">
             <h3>Settings:</h3>
             <div>
-                <button>sort ↑↓</button>
+                <button (click)="toggleSort()">sort ↑↓</button>
                 Party:
                 <select (change)="filterParty($event)" id="parties">
                     <option></option>
                     <option *ngFor="let party of election?.parties">{{party.acronym}}</option>
-                </select>
-                <input placeholder="search" (input)="filter($event)">
+                    </select>
+                    <input placeholder="search" (input)="filter($event)">
             </div>
         </div>
         <hr>
     </div>
     <form [formGroup]="form" (ngSubmit)="vote(voteBtn)">
-        <div class="candidate" *ngFor="let candidate of FilteredCandidates">
-            <input type="radio" [id]="candidate.name" formControlName="selectedCandidate" [value]="candidate.index">
-            <label [for]="candidate.name">
-              <h3>
-                  {{candidate.index}}. {{candidate.name}} <span>/{{candidate.party}}/</span>
-              </h3>
-            </label>
-            <div>
-                {{candidate.bio}}
-            </div>
-        </div>
-        <UI-button #voteBtn [disabled]="!isEligible || !form.valid" type="submit">vote</UI-button>
+        @if (FilteredCandidates) {
+            @for (candidate of FilteredCandidates.sort(sortFn.bind(this)); track $index) {
+                <div class="candidate">
+                    <input type="radio" [id]="candidate.name" [disabled]="(electionStage | electionstage) !== 'voting'" formControlName="selectedCandidate" [value]="candidate.index">
+                    <label [for]="candidate.name">
+                        <h3>
+                            {{candidate.index}}. {{candidate.name}} <span>/{{candidate.party}}/</span>
+                        </h3>
+                    </label>
+                        <div>
+                            {{candidate.bio}}
+                        </div>
+                </div>
+            }
+        }
+        <UI-button #voteBtn [disabled]="!isEligible || !form.valid || (electionStage | electionstage) !== 'voting'" type="submit">vote</UI-button>
     </form>
     <button [routerLink]="['/list']" routerLinkActive="router-link-active">back</button>
     <button (click)="enrollVoters()">Enroll voters</button>
     <button (click)="splitGroups()">split groups</button>
     <button (click)="submitPK()">SubmitPK</button>
     <button (click)="finishSetupPhase()">finishSetupPhase</button>
+    <button (click)="precomputeMPCkeys()">PrecomputeMPC keys</button>
     <button (click)="computeMPCkeys()">ComputeMPC keys</button>
+    <button (click)="computeBlindedVotesSum()">compute blinded votes sums</button>
+    <button (click)="computeGroupTallies()">compute group tallies</button>
     <button (click)="logStats()">log stats</button>
 </div>

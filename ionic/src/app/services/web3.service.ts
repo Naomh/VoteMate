@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { ethers, JsonRpcProvider, Wallet } from 'ethers';
 import Web3, { Address, ContractAbi} from 'web3';
 import { isAddress } from 'web3-validator';
+const MainVotingC = require('../../assets/contracts/MainVotingC.json'); 
+
 
 const mainVotingContract = require('../../assets/contracts/MainVotingC.json');
 
@@ -15,7 +17,8 @@ export interface IWallet{
   providedIn: 'root'
 })
 export class Web3Service {
-  private _web3: Web3 = new Web3('http://192.168.0.248:9545')
+
+  private _web3: Web3 = new Web3('http://127.0.0.1:9545/')//('http://192.168.0.248:9545')
   // ;
   private ethersProvider: JsonRpcProvider = new ethers.JsonRpcProvider('http://192.168.0.248:9545')//('http://127.0.0.1:9545');
 
@@ -37,7 +40,6 @@ export class Web3Service {
       this._web3.eth.personal.importRawKey(account.privateKey, password)
     }
 
-    console.log('čeksum', this._web3.utils.toChecksumAddress(account.address));
     return account;
   }
 
@@ -84,6 +86,12 @@ async isVoterEligible(address: Address, voterAddress: Address): Promise<boolean>
       throw new Error('Contract address doesn\'t exist');
     }
     return new this._web3.eth.Contract(abi, address);
+  }
+
+  async getStage(address: string): Promise<bigint>{
+    const contract = await this.getSmartContract(address, MainVotingC.abi);
+    const stage = await contract.methods['stage']().call() as bigint;
+    return stage;
   }
 
 }
