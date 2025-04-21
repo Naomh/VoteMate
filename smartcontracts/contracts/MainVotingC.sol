@@ -1,6 +1,4 @@
-// SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-//pragma solidity ^0.8.17;
 pragma experimental ABIEncoderV2;
 
 import "./VotingBoothDeployer.sol";
@@ -27,11 +25,13 @@ contract MainVotingC {
     mapping(uint => address) public groupBoothAddr; // group => booth contract address
     mapping(address => bool) public isAddrBooth; // address => belongs to booth?
     mapping(address => bool) public boothsInStageTally; // booth addr => is in stage Tally?
+    mapping(address => bool) public boothsInStagePreVoting; // booth addr => is in stage Pre-Voting?
     mapping(address => bool) public boothTallyCollected; // booth addr => booth's tally collected?
 
     address boothDeployerAddr;
     VotingBoothC[] public booths;
 
+    uint boothsInStagePreVotingCnt = 0;
     uint boothsInTallyCnt = 0; // num of booths in stage TALLY
     uint talliesCollectedCnt = 0; // num of tallies from booths already collected
 
@@ -140,7 +140,7 @@ contract MainVotingC {
 
     // Deploy voting booth for each group
     // called repeatedly, done in batches
-    // start_idx - start batch with group with this idx
+    // start_idx - start batch with group witthih s idx
     // batch_group_cnt - number of booths to deploy in batch
     // votingfunc, votingcalls - addresses of contracts for delegatecalls
     function deployBooths(uint start_idx, uint batch_group_cnt, address votingfunc, address votingcalls)
@@ -179,6 +179,17 @@ contract MainVotingC {
         }
     }
 
+    function changeStageToPreVoting()
+        public
+        firstFromBooth()
+    {
+        boothsInStagePreVoting[msg.sender] = true;
+        boothsInStagePreVotingCnt += 1;
+
+        if(boothsInStagePreVotingCnt == booths.length){
+            stage = StageEnum.PRE_VOTING;
+        }
+    }
     // Called by booth to announce change of stage
     function changeStageToTally()
         public 

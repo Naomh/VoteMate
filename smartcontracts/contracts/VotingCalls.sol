@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-//pragma solidity ^0.8.17;
+
 import { EC } from "./lib/EC.sol";
 import { FastEcMul } from "./lib/FastEcMul.sol";
 
@@ -74,6 +73,7 @@ contract VotingCalls {
 
         // right_table contains right-side sum for every voter in current batch
         uint[3][] memory right_table = new uint[3][](MPC_batch);
+
 
         // build the right table using markers created before
         uint skipOffset = 0;

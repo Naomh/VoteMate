@@ -1,6 +1,5 @@
-// SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-//pragma solidity ^0.8.17;
+
 import { EC } from "./lib/EC.sol";
 import { FastEcMul } from "./lib/FastEcMul.sol";
 
@@ -60,19 +59,17 @@ contract VotingFunc {
     // Called repeatedly,
     // precomputes right-side values for MPC keys computation
     function buildRightMarkers4MPC() public {
-    
         require(RM_start != votersPKs.length, "RMs have already been built.");
         require(votersPKs.length >= MPC_batch, "MPC batch larger than the number of voters.");
 
         // build the markers in the right table only at the beginning, 
         // while right table would be built always for relevant voters only (using the markers)
+    
         uint[3] memory right_tmp = RM_act;
-
         uint RM_end = RM_start + RM_batch;
         if (RM_end > votersPKs.length) {
             RM_end = votersPKs.length;
         }
-
         // deal with a special case where votersPKs.length is not divisible by the batch size
         if(RM_start == 1 && 0 != votersPKs.length % MPC_batch) {
             MPC_right_markers.push(right_tmp);
@@ -334,7 +331,7 @@ contract VotingFunc {
         uint[2] memory proof_m1, 
         uint[2] memory proof_m2,
         uint[2] memory blindedKey
-    ) 
+) 
         private
         view
     {

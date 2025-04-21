@@ -1,6 +1,5 @@
-
-pragma solidity >=0.4.22 <0.9.0;
-//pragma solidity ^0.8.17;
+// pragma solidity ^0.5.8;
+pragma solidity >=0.5.8 <0.8.0;
 
 import "./EC.sol";
 
