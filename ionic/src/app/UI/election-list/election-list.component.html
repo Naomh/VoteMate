@@ -1,8 +1,26 @@
 <div class="container">
         <h1>Available Elections</h1>
+        <div class="filters">
+                <h3>Settings:</h3>
+                <div>
+                    <button (click)="toggleSort()">sort ↑↓</button>
+                    Stage:
+                    <select id="parties" (change)="filterStage($event)">
+                        <option></option>
+                        <option>unreachable</option>
+                        <option>setup</option>
+                        <option>signup</option>
+                        <option>pre voting</option>
+                        <option>voting</option>
+                        <option>fault repair</option>
+                        <option>tally</option>
+                    </select>
+                    <input placeholder="search" (input)="filterElections($event)">
+                </div>
+        </div>
         <hr>
         <div class="list">
-                <app-election-card *ngFor="let election of elections()" [user]="user()" [description]="election.description" [address]="election.mainVotingAddress" [name]="election.name"></app-election-card>
+                <app-election-card *ngFor="let election of elections().sort(sortFn.bind(this))" [user]="user()" [description]="election.description" [address]="election.mainVotingAddress" [id]="election.id" [name]="election.name"></app-election-card>
         </div>
 </div>
         
