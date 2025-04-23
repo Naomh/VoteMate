@@ -1,18 +1,18 @@
 @use "../../../mixins.scss" as mix;
 :host{
-    &:nth-child(n)>.card::after{
+    &:nth-child(4n +1)>.card::after{
         background: var(--linear-gradient-base);
     }
     
-    &:nth-child(2n)>.card::after{
+    &:nth-child(4n + 2)>.card::after{
         background: var(--linear-gradient-step1);
     }
 
-    &:nth-child(3n)>.card::after{
+    &:nth-child(4n + 3)>.card::after{
         background: var(--linear-gradient-step2);
     }
     
-    &:nth-child(4n)>.card::after{
+    &:nth-child(4n + 4)>.card::after{
         background: var(--linear-gradient-step3);
     }
 }
@@ -76,38 +76,49 @@
                 }
             }
             &-unreachable{
-                color: rgb(114, 114, 114);
+                color: var(--c-stage-unreachable);
                 &::after{
-                    background-color: rgb(114, 114, 114);
+                    background-color: var(--c-stage-unreachable);
                 }
 
             }
             &-setup{
-                color: blue;
+                color: var(--c-stage-setup);
                 &::after{
-                    background-color: blue;
+                    background-color: var(--c-stage-setup);
                 }
             }
-            &-signup{}
+            &-signup{
+                color: var(--c-stage-signup);
+                &::after{
+                    background-color: var(--c-stage-signup);
+                }
+            }
                 
             &-pre.voting{
-                color: rgb(76, 137, 194);
+                color: var(--c-stage-pre-voting);
                 &::after{
-                    background-color: rgb(76, 137, 194);
+                    background-color: var(--c-stage-pre-voting);
                 }
             }
             
             &-voting{
-
+                color: var(--c-stage-voting);
+                &::after{
+                    background-color: var(--c-stage-voting);
+                }
             }
                 
             &-fault .repair{
-
+                color: var(--c-stage-fault);
+                &::after{
+                    background-color: var(--c-stage-fault);
+                }
             }
             &-tally{
-                color: rgb(184, 76, 194);
+                color: var(--c-stage-tally);
                 &::after{
-                    background-color: rgb(184, 76, 194);
+                    background-color: var(--c-stage-tally);
                 }
             }
 
@@ -118,6 +129,8 @@
     margin-top: 5px;
     @include mix.truncate(3)
 }
+
+
 .buttons{
     position: absolute;
     bottom: 20px;

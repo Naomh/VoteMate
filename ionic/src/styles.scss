@@ -13,6 +13,13 @@
     --c-secondary: rgba(146,122,182,1);
     --c-tertiary: rgba(32,37,105,1);
     --c-quaternary: rgba(71,116,142,1);
+    --c-stage-unreachable: rgb(114, 114, 114);
+    --c-stage-setup: #27616E;
+    --c-stage-signup: #314677;
+    --c-stage-pre-voting: #4A3179;
+    --c-stage-voting: #9C3558;
+    --c-stage-fault: #7B2A71;
+    --c-stage-tally: rgb(184, 76, 194);
     --linear-gradient-base: linear-gradient(59deg, rgba(124,128,184,1) 41%, rgba(146,122,182,1) 82%);
     --linear-gradient-step1: linear-gradient(59deg, rgba(146,122,182,1) 41%, rgba(32,37,105,1) 82%);
     --linear-gradient-step2: linear-gradient(59deg, rgba(12,17,75,1) 41%, rgba(71,116,142,1) 82%);
