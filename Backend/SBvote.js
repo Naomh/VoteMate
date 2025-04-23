@@ -224,8 +224,8 @@ async function computeMPCKeys(address) {
       boothAddr
     );
     const boothVotersCnt = await boothContract.methods.getCntOfSubmitedPKs().call();
-
-
+    
+    
     const g_x = utils.toPaddedHex(config.Gx, 32);
     const g_y = utils.toPaddedHex(config.Gy, 32);
     let act_left = [g_x, g_y, 1];

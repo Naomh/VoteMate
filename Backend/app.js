@@ -450,8 +450,7 @@ async function precomputeMPC(req, res) {
 async function computeMPCs(req, res) {
   try {
     const address = req.body.address;
-    const result = await sbVote.computeMPCKeys(address);
-    res.body = { result };
+    await sbVote.computeMPCKeys(address);
     res.status(200);
     res.send();
   } catch (error) {
@@ -464,7 +463,6 @@ async function computeMPCs(req, res) {
 
 async function ComputeBlindedVotesSum(req, res) {
   try {
-    console.log("computeBlindedVotesSum");
     const address = req.body.address;
     const result = await sbVote.computeBlindedVotesSum(address);
     res.body = { result };
