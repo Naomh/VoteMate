@@ -1,23 +1,26 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, Signal, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Web3Service } from '../../services/web3.service';
 import { DexieService } from '../../services/dexie.service';
 import { HttpService } from '../../services/http.service';
 import { Address, Contract, ERR_PARAM } from 'web3';
 import { ICandidate, IElection } from '../../UI/election-list/election.interface';
-import { CommonModule, DatePipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { Voter } from './voter';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+
 import { ButtonComponent } from "../../UI/button/button.component";
 import { ESort } from '../../interfaces/sort.enum';
-import { ElectionstagePipe } from '../../pipes/electionstage.pipe';
+import { ElectionStage, ElectionstagePipe } from '../../pipes/electionstage.pipe';
+import { TallyChartComponent } from '../../UI/tally-chart/tally-chart.component';
 
 const MainVotingC = require('../../../assets/contracts/MainVotingC.json');
 const VotingBoothC = require('../../../assets/contracts/VotingBoothC.json');
 
 @Component({
     selector: 'app-election',
-    imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, DatePipe, ButtonComponent, ElectionstagePipe],
+    standalone: true,
+    imports: [RouterModule, ReactiveFormsModule, CommonModule, DatePipe, ButtonComponent, ElectionstagePipe, TallyChartComponent, AsyncPipe],
     templateUrl: './election.component.html',
     styleUrl: './election.component.scss'
 })
@@ -41,7 +44,9 @@ export class ElectionComponent implements OnInit{
   protected FilteredCandidates!: ICandidate[];
   protected isEligible!: boolean;
   protected electionStage!: bigint;
-  protected finalTally!: number[];
+
+  public finalTally!: Signal<number[] | undefined>;
+
 
   protected form = new FormGroup({
     selectedCandidate: new FormControl('', Validators.required), 
@@ -61,9 +66,9 @@ export class ElectionComponent implements OnInit{
 
     this.address = this.dexieSVC.selectedElection()!.mainVotingAddress;
     this.electionStage = await this.web3SVC.getStage(this.address);
-
     this.voter = new Voter(this.address, this.user.wallet, this.web3SVC, this.dexieSVC);
-    
+    this.finalTally = this.voter.finalTally;
+
     this.contract = await this.web3SVC.getSmartContract(this.address, MainVotingC.abi);
     if(!this.contract){
       this.router.navigate(['/list']);
@@ -188,5 +193,9 @@ export class ElectionComponent implements OnInit{
     
     const comparison = candiateA.name.localeCompare(candiateB.name);
     return this.sort === ESort.up ? comparison : -comparison;
+  }
+
+  protected async getTallies(): Promise<number[]>{
+    return await this.voter.getFinalTallies();
   }
 }

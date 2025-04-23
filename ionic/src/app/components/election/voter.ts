@@ -4,6 +4,7 @@ import { ec as EC, curve } from "elliptic";
 import BN from 'bn.js'
 import { randomBytes, shaX, xor, xorBNArray, BIarrayToHexUnaligned, addPaddingToHex, toHexString } from "../../services/utils";
 import { DexieService } from "../../services/dexie.service";
+import { signal } from "@angular/core";
 
 
 const mainVotingC = require('../../../assets/contracts/MainVotingC.json');
@@ -12,6 +13,7 @@ const fastECc = require('../../../assets/contracts/FastEcMul.json');
 
 
 export class Voter{
+    public finalTally = signal<number[] | undefined>(undefined);
 
     private web3SVC!: Web3Service;
     private dexieSVC!: DexieService
@@ -67,6 +69,11 @@ export class Voter{
                 this.sK = new BN(election.SK, 'hex');
                 this.pK = this.ec.g.mul(this.sK)
 
+            const stage = Number(await web3SVC.getStage(mainVotingAddress));
+            if(stage === 5){
+                this.getFinalTallies();
+            }
+            
             //this.computeMPCKeys();
             //this.computeMPCKey([this.sK])
             //this.getBlindedVote(1);
@@ -74,7 +81,7 @@ export class Voter{
         )();
     }
 
-    public async submitPK(){
+    async submitPK(){
         try{
             const pk_x = `0x` + this.pK.getX().toString('hex');
             const pk_y = `0x` + this.pK.getY().toString('hex');
@@ -238,7 +245,20 @@ export class Voter{
 
     }
 
-    computeBlindedKeyForVoter(pk: curve.base.BasePoint){
+    public async getFinalTallies(){
+        const finalTally = await this.mainVotingContract.methods['getFinalTally']().call({from: this.voterAddress}) as BigInt[];
+        const candidatesCnt = Number(await this.mainVotingContract.methods['getCntOfCandidates']().call());
+
+        let result = [];
+        for (let i = 0; i < candidatesCnt; i++) {
+            var comp = (BigInt(finalTally[2 * i].toString()) + BigInt(finalTally[2 * i + 1].toString()) * BigInt(this.lambda)) % BigInt(this.nn);
+            result.push(Number(comp))
+          }
+        this.finalTally.set(result);
+        return result;
+    }
+    
+    private computeBlindedKeyForVoter(pk: curve.base.BasePoint){
         const res = pk.mul(this.sK);
         return ['0x' + res.getX().toString('hex', 64), '0x' + res.getY().toString('hex', 64)];
     }
@@ -254,6 +274,9 @@ export class Voter{
     }
 
     private async getBoothContract(){
+        if(!this.mainVotingContract){
+            throw new Error('Main voting contract is not set')
+        }
         const votersGroup = await this.mainVotingContract.methods['votersGroup'](this.voterAddress).call();
         const boothAddr: Address = await this.mainVotingContract.methods['groupBoothAddr'](votersGroup).call();
         return this.web3SVC.getSmartContract(boothAddr, votingBoothC.abi);

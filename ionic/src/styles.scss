@@ -46,4 +46,7 @@ input:not([type="radio"]), select, button {
 }
 button{
     text-transform: uppercase;
+    &.imgbutton{
+        padding: 6px 10px;
+    }
 }
