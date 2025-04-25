@@ -1,0 +1,11 @@
+<div class="code-inputs">
+        <input
+        *ngFor="let control of controls; let i = index"
+        type="text"
+        maxlength="1"
+        [formControl]="control"
+        (input)="onInput($event, i)"
+        (keydown)="onKeyDown($event, i)"
+        (paste)="onPaste($event)"
+        >
+  </div>

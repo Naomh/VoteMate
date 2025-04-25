@@ -5,6 +5,7 @@ import { ButtonComponent } from "../button/button.component";
 import { SnackbarService } from '../../services/snackbar.service';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { CodeFormComponent } from "../code-form/code-form.component";
 
 export interface ILoginForm{
   email:string;
@@ -20,11 +21,12 @@ export interface IResetPwForm{
 }
 export interface IEnterCodeForm{
   code: string;
+  password: string;
 }
 
 @Component({
     selector: 'UI-loginform',
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, CodeFormComponent],
     templateUrl: './loginform.component.html',
     styleUrl: './loginform.component.scss'
 })
@@ -64,8 +66,10 @@ constructor(){
   })
 
   this.enterCodeForm = this.formBuilder.group({
-    code: ['', [Validators.required]],
-  })
+    code: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(6)]], 
+    confirmPassword: ['', Validators.required]
+  },{ validators: this.passwordMatchValidator })
 }
 
 protected switchTemplate(){
@@ -82,6 +86,15 @@ protected switchTemplatePw(){
     this.formTemplate = 'login'
   }
 }
+
+protected switchTemplateCode(){
+  if(this.formTemplate === 'resetPw'){
+    this.formTemplate = 'enterCode'
+  }else{
+    this.formTemplate = 'login'
+  }
+}
+
 protected onGoogleLogin(){
   this.googleLogin.emit();
 }
@@ -105,13 +118,13 @@ protected resetPassword(){
   if(email){
     this.resetPw.emit(email);
   }
+  this.formTemplate = 'enterCode';
 }
 
 protected checkCode(){
-  const code = this.enterCodeForm.value;
-  if(code){
-    this.resetPw.emit(code);
-  }
+  const codeForm = this.enterCodeForm.value as IEnterCodeForm;
+  this.enterCode.emit(codeForm);
+  this.formTemplate = 'login';
 }
 
 private passwordMatchValidator(formGroup: FormGroup) {
@@ -119,4 +132,8 @@ private passwordMatchValidator(formGroup: FormGroup) {
     ? null : { mismatch: true };
 }
 
+protected setCode(code: string) {
+  this.enterCodeForm.get('code')?.setValue(code);
+  this.enterCodeForm.get('code')?.markAsTouched();
+}
 }

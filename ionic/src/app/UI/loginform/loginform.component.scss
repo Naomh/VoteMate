@@ -236,8 +236,22 @@ small {
 	color: red;
 	font-size: 12px;
 	font-weight: bold;
-  }
+}
 
-  .resetText{
+.resetText{
 	margin: 200px 30px 0px 30px;
-  }
+}
+
+
+h3.enterCode{	
+	margin: 150px 30px 20px 30px;
+}
+
+form.enterCode{
+	margin: 0px 30px 0px 30px;
+	.form-group{
+		margin: 12px;
+	}
+}
+	
+

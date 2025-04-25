@@ -11,6 +11,9 @@
                   <ng-container *ngSwitchCase="'resetPw'">
                     <ng-container *ngTemplateOutlet="resetPw"></ng-container>
                   </ng-container>
+                    <ng-container *ngSwitchCase="'enterCode'">
+                        <ng-container *ngTemplateOutlet="enterCode"></ng-container>
+                    </ng-container>
             </ng-container>
             <a href="#" class="link__register" (click)="switchTemplate()">{{formTemplate === 'login' ? 'Register here!': 'Log in'}}</a>
 		</div>
@@ -99,30 +102,43 @@
     <form [formGroup]="resetPwForm" class="resetPw" (ngSubmit)="resetPassword()">
         <div class="login__field">
             <input formControlName="email" type="text" class="login__input" placeholder="Email">
-            <div *ngIf="resetPwForm.controls['email'].invalid && resetPwForm.controls['email'].touched">
+            @if(resetPwForm.controls['email'].invalid && resetPwForm.controls['email'].touched){
                 <small *ngIf="resetPwForm.controls['email'].errors?.['email']">Please enter a valid email address.</small>
-            </div>
+            }
         </div>
         <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Back to login</a>
         <button type="submit" class="button login__submit" [disabled]="resetPwForm.invalid">
             <span class="button__text">send</span>
         </button>
+        <button type="submit" class="button login__submit" (click)="switchTemplateCode()">submit a code</button>
     </form>
     </ng-template>
 
     <ng-template #enterCode>
-        <h3 class="resetText">Enter your email to reset</h3>
-
+        <h3 class="enterCode">Enter your code</h3>
     <form [formGroup]="enterCodeForm" class="enterCode" (ngSubmit)="checkCode()">
-        <div class="login__field">
-            <input formControlName="email" type="text" class="login__input" placeholder="Email">
-            <div *ngIf="enterCodeForm.controls['email'].invalid && enterCodeForm.controls['email'].touched">
-                <small *ngIf="enterCodeForm.controls['email'].errors?.['email']">Enter received code.</small>
+            <UI-code-form #codeForm [length]="6" (change)="setCode($event)"></UI-code-form>
+            @if(enterCodeForm.controls['code'].touched){
+                <small *ngIf="enterCodeForm.controls['code'].errors?.['required']">Code is required.</small>
+                <small *ngIf="enterCodeForm.controls['code'].errors?.['minlength']">The code has to be 6 letter long</small>
+            }
+            <div class="form-group">
+              <label for="password">New password</label>
+              <input formControlName="password" type="password" id="password" required>
+              @if(enterCodeForm.controls['password'].touched){
+                  <small *ngIf="enterCodeForm.controls['password'].errors?.['required']">Password is required.</small>
+                  <small *ngIf="enterCodeForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters long.</small>
+                }
             </div>
-        </div>
-        <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Back</a>
-        <button type="submit" class="button login__submit" [disabled]="enterCodeForm.invalid">
-            <span class="button__text">send</span>
-        </button>
+        
+            <div class="form-group">
+              <label for="confirmPassword">Confirm password</label>
+              <input formControlName="confirmPassword" type="password" id="confirmPassword" required>
+              @if(registrationForm.errors?.['mismatch']){
+                <small>Passwords do not match.</small>
+                }
+            </div>
+            <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Back to login</a>
+            <button type="submit" [disabled]="enterCodeForm.invalid">Submit</button>
     </form>
     </ng-template>
