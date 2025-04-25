@@ -1,3 +1,4 @@
+// #region Imports
 const OAuthConf = require("./OAuth/google.json");
 const { getGoogleOAuthTokens, getGoogleUser } = require("./OAuth/OAuth.js");
 const db = require("./database.js");
@@ -16,14 +17,13 @@ const sbVote = require("./SBvote.js");
 const web3 = new (require("web3"))(cfg.network);
 const authorityAcc = web3.eth.accounts.privateKeyToAccount(cfg.account_pk);
 
-const app = express();
-
 const Calendar = require("./utils/calendar");
 const calendar = new Calendar();
+// #endregion
 
+// #region Initialization
+const app = express();
 init();
-//deployElection('ElectionA', ['kocour','lišák', 'kohout','myšák'])
-//deployElection('ElectionB', ['Pepa','Honza', 'Adam', 'Rudolf', 'Květoslav'])
 
 app.use(
   cors({
@@ -35,13 +35,16 @@ app.use(
 app.use(cookieParser());
 app.use(bodyparser.json({ limit: "50mb" }));
 //app.use(deserializeUser);
+// #endregion
 
+// #region Routes
 app.get("/GoogleClient", getGoogleClient);
 app.get("/api/session/oauth/google", googleOAuthHandler);
 app.get("/verify", verifyAccount);
 app.post("/register", register);
 app.post("/login", login);
-app.post("/resetPW", resetPassword)
+app.post("/resetPW", resetPassword);
+app.post("/setNewPw", setNewPw);
 app.post("/verifyCookie", verifyCookie);
 app.post("/reissue", reissueSession);
 app.post("/enrollVoters", isAuthorized, enrollVoters);
@@ -56,15 +59,14 @@ app.post("/precomputeMPC", isAuthorized, precomputeMPC);
 app.post("/computeMPCs", isAuthorized, computeMPCs);
 app.post("/computeBlindedVotesSum", isAuthorized, ComputeBlindedVotesSum);
 app.post("/computeGroupTallies", isAuthorized, computeGrouptallies);
+// #endregion
 
+// #region Initialization Functions
 async function init() {
   await db.connect();
   web3.eth.accounts.wallet.add(authorityAcc);
-  //assignElections();
   await redeploy();
-  //db.createElection('Test', ['Jenda', 'Alena', 'Karel'], '0xA8aBf213F4E18c5796c66f4225E03Fc47D6977A3', '0x72Ca4FA730991EED9A2602a11921876bE1d04bdF', '0x973766DDc9Ff2faAeee43a9b6d0762d66Bb913a0', '0x123259B1451b9d88352BBDdfc8ACA66B681333a1', [], 3, 100)
 }
-
 
 async function redeploy() {
   try {
@@ -95,7 +97,9 @@ async function redeploy() {
     console.error(e);
   }
 }
+// #endregion
 
+// #region Utility Functions
 function getGoogleClient(req, res) {
   res.setHeader("Content-Type", "application/json");
   res.json({
@@ -111,7 +115,9 @@ function handleError(error, res) {
   }
   return res.status(error.status).json({ message: error.message });
 }
+// #endregion
 
+// #region Authentication
 async function register(req, res) {
   try {
     const userInfo = req.body;
@@ -136,37 +142,39 @@ async function login(req, res) {
   }
 }
 
-async function submitVote(req, res) {
-
-  try{
-    const { address, vote } = req.body;
-    const result = await sbVote.submitVote(address, vote);
-    res.status(200).json({ message: "OK" }).send();
-  }catch(e){
-    console.log(e);
+async function setNewPw(req, res) {
+  try {
+    const { code, password } = req.body;
+    console.log(password);
+    const token = await db.findResetPWToken(code);
+    const result = await db.setNewPassword(token, password);
+    console.log(result);
+    if (result) {
+      res.status(200).json({ message: "OK" }).send();
+    } else {
+      res.status(500).json({ message: "Error" }).send();
+    }
+  } catch (e) {
+    console.error(e);
     return handleError(e, res);
   }
 }
 
-async function resetPassword(req, res){
-  try{
+async function resetPassword(req, res) {
+  try {
     const email = req.body.email;
-    const account = await db.findAccount({email})
-    if(account){
-      const token = await db.createResetPWToken(account._id)
+    const account = await db.findAccount({ email });
+    if (account) {
+      const token = await db.createResetPWToken(account._id);
       mailer.sendResetPwEmail(email, token.resetToken);
+    } else {
+      res.status(500).send();
     }
-  }catch(e){
+  } catch (e) {
     console.error(e);
-    return handleError(error, res);
-  }
-  finally{
-    res
-    .status(200)
-    .send();
+    return handleError(e, res);
   }
 }
-
 
 async function verifyAccount(req, res) {
   try {
@@ -292,107 +300,17 @@ async function verifyCookie(req, res) {
   res.json(isAuthorized(req));
   res.send();
 }
+// #endregion
 
-async function registerWallet(req, res) {
+// #region Voting
+async function submitVote(req, res) {
   try {
-    const user = await db.findAccount({ uid: req.locals.uid });
-
-    if (!user.status) {
-      throw {
-        status: 401,
-        message:
-          "Only verified users can register a wallet. Please verify your account",
-      };
-    }
-
-    if (user.walletStatus) {
-      throw {
-        status: 401,
-        message: "A wallet has been already registered from this account.",
-      };
-    }
-
-    await db.createWallet(req.body.adress);
-    await db.findAndUpdateAccount({ uid: user.uid }, { walletStatus: true });
+    const { address, vote } = req.body;
+    const result = await sbVote.submitVote(address, vote);
     res.status(200).json({ message: "OK" }).send();
   } catch (e) {
-    handleError(e, res);
-  }
-}
-
-function isAuthorized(req, res, next) {
-  const token = req.cookies.accessToken;
-
-  if (!token) {
-    return anauthorized(req, res);
-  }
-  try {
-    const { valid, expired, expirationDate } = JWTService.verifyJwt(token);
-    console.log(valid, expired, expirationDate);
-    if (next) {
-      next();
-    }
-
-    return { valid: valid && !expired, expirationDate };
-  } catch (error) {
-    return anauthorized(req, res);
-  }
-}
-
-async function anauthorized(req, res) {
-  res.status(401);
-  res.json({ message: "You are anauthorized to perform this action" });
-}
-
-async function createElection(req, res) {
-  try {
-    const electionObject = req.body;
-    const election = await sbVote.deployContracts(electionObject);
-    db.createElection(election);
-    res.json({ address: election.mainVotingAddress });
-    res.status(200);
-    res.send();
-  } catch (e) {
-    handleError(e, res);
-  }
-}
-
-async function getElections(req, res) {
-  try {
-    const elections = await db.getAllElections();
-
-    if (elections) {
-      res.status(200);
-      res.json(
-        elections.map((election) => ({
-          id: election._id.toString(),
-          mainVotingAddress: election.mainVotingAddress,
-          ECaddress: election.ECaddress,
-          fastECmulAddress: election.fastECmulAddress,
-          votingFuncAddress: election.votingFuncAddress,
-          votingCallsAddress: election.votingCallsAddress,
-          description: election.description,
-          name: election.name,
-          mpcBatchSize: election.mpcBatchSize,
-          rmBatchSize: election.rmBatchSize,
-          candidates: election.candidates.map((candidate, index) => ({
-            name: candidate.name,
-            bio: candidate.bio,
-            party: candidate.party,
-            index,
-          })),
-          parties: election.parties,
-          start: election.start,
-          end: election.end,
-        }))
-      );
-    } else {
-      res.status(200);
-      res.json({ message: "no active elections found" });
-    }
-    res.send();
-  } catch (e) {
-    handleError(e);
+    console.log(e);
+    return handleError(e, res);
   }
 }
 
@@ -504,6 +422,86 @@ async function finishSetup(req, res) {
     handleError(e, res);
   }
 }
+// #endregion
+
+// #region Election Management
+async function createElection(req, res) {
+  try {
+    const electionObject = req.body;
+    const election = await sbVote.deployContracts(electionObject);
+    db.createElection(election);
+    res.json({ address: election.mainVotingAddress });
+    res.status(200);
+    res.send();
+  } catch (e) {
+    handleError(e, res);
+  }
+}
+
+async function getElections(req, res) {
+  try {
+    const elections = await db.getAllElections();
+
+    if (elections) {
+      res.status(200);
+      res.json(
+        elections.map((election) => ({
+          id: election._id.toString(),
+          mainVotingAddress: election.mainVotingAddress,
+          ECaddress: election.ECaddress,
+          fastECmulAddress: election.fastECmulAddress,
+          votingFuncAddress: election.votingFuncAddress,
+          votingCallsAddress: election.votingCallsAddress,
+          description: election.description,
+          name: election.name,
+          mpcBatchSize: election.mpcBatchSize,
+          rmBatchSize: election.rmBatchSize,
+          candidates: election.candidates.map((candidate, index) => ({
+            name: candidate.name,
+            bio: candidate.bio,
+            party: candidate.party,
+            index,
+          })),
+          parties: election.parties,
+          start: election.start,
+          end: election.end,
+        }))
+      );
+    } else {
+      res.status(200);
+      res.json({ message: "no active elections found" });
+    }
+    res.send();
+  } catch (e) {
+    handleError(e);
+  }
+}
+// #endregion
+
+// #region Middleware
+function isAuthorized(req, res, next) {
+  const token = req.cookies.accessToken;
+
+  if (!token) {
+    return anauthorized(req, res);
+  }
+  try {
+    const { valid, expired, expirationDate } = JWTService.verifyJwt(token);
+    console.log(valid, expired, expirationDate);
+    if (next) {
+      next();
+    }
+
+    return { valid: valid && !expired, expirationDate };
+  } catch (error) {
+    return anauthorized(req, res);
+  }
+}
+
+async function anauthorized(req, res) {
+  res.status(401);
+  res.json({ message: "You are anauthorized to perform this action" });
+}
 
 async function deserializeUser(req, res, next) {
   const accessToken =
@@ -547,5 +545,6 @@ async function deserializeUser(req, res, next) {
 
   return next();
 }
+// #endregion
 
 module.exports = app;

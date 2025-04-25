@@ -43,7 +43,7 @@ class mailer {
       html: `<p>Dear user,</p>
       We received a request to reset your password. If you made this request, please click the link below to reset your password:
       Reset Password
-      This <a href="${link}">link will</a> expire in 30 minutes. If you did not request a password reset, you can safely ignore this email.
+      Submit this code ${resetCode}. The code will expire in 30 minutes. If you did not request a password reset, you can safely ignore this email.
       If you have any questions, feel free to contact our support team.
       Best regards,
       VoteMate

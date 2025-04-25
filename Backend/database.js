@@ -1,5 +1,6 @@
 const mongo = require("mongoose");
-const connection = "mongodb://127.0.0.1/SBvote";
+const connection = "mongodb://127.0.0.1/SBvote"
+;
 const crypto = require("crypto");
 const { error } = require("console");
 
@@ -117,11 +118,41 @@ class db {
   }
 
   createResetPWToken(uid){
-    const token = crypto.randomBytes(30).toString("hex");
-    const entry = new resetPasswordModel({uid, resetToken: this.generatePasswordHash(token) });
+    const result = [];
+    while (result.length < 6) {
+      const code = Math.floor(Math.random() * 75) + 48;
+      if (
+        (code >= 48 && code <= 57) || 
+        (code >= 65 && code <= 90) || 
+        (code >= 97 && code <= 122)
+      ) {
+        result.push(String.fromCharCode(code));
+      }
+    }
+    const token = result.join('');
+
+    const entry = new resetPasswordModel({uid, resetToken: token });
     return entry.save();
   }
   // #endregion
+  async findResetPWToken(token) {
+    const PwToken = await this.resetPasswordModel.findOne({ resetToken: token }).lean();
+    if (!PwToken) {
+      throw { status: 404, message: "Token not found." };
+    }
+    await resetPasswordModel.deleteOne({ resetToken: token });
+    return PwToken;
+  }
+
+  setNewPassword(pwToken, newPassword) {
+    const uid = pwToken.uid;
+    const hash = this.generatePasswordHash(newPassword);
+    console.log("New password hash:", hash);
+    return this.accountModel.findOneAndUpdate(
+      { _id: uid },
+      { password: hash },
+      { new: true })
+  }
 
   // #region SESSION
   async createSession(userId, ip, userAgent, refreshToken) {
@@ -265,6 +296,7 @@ class db {
     }
   }
   // #endregion
+
 }
 
 module.exports = new db();
