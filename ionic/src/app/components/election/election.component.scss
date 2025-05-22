@@ -1,9 +1,14 @@
-
 @use "../../../mixins.scss" as mix;
 
+:host{
+    display: flex;
+    height: 100%;
+    background-color: var(--c-background);
+}
 form {
     align-self: center;
-    width: 80%;
+    width: 70vw;
+    min-width: 300px;
     padding: 5px 10px 5px 10px;
     display: flex;
     flex-direction: column;
@@ -19,23 +24,36 @@ input[type="radio"]{
     position: absolute !important;
     width: 1px !important;
     &:checked + label::before{
-        background: radial-gradient(0.75em circle at center, rgba(71,116,142,1) 20%, rgba(84,89,154,1) 45%, transparent 55%);
-        box-shadow: 0 0 0.7em 0 rgba(84,89,154,1);
+        background: var(--linear-gradient-step3);
+        box-shadow: 0 0 0.7em 0 var(--c-primary);
         border-color: currentColor;
+        transform: scale(0.7);
     }
     &:checked + label{
         text-decoration: 2px underline;
-        text-decoration-color: rgba(84,89,154,1);
+        text-decoration-color: var(--c-secondary);
+    }
+}
+.submit{
+    padding: 15px;
+    background-color: var(--c-background) ;
+    position: sticky;
+    bottom: 0;
+    height: fit-content;
+    flex: auto;
+    &>UI-button{
+        position: relative;
+        bottom: 0;
+        &[disabled="true"]{
+            pointer-events: none;
+        }
     }
 }
 
-button[type="submit"]{
-    width: fit-content;
-}
 
 label{
     text-transform: capitalize;
-    color: black;
+    color: var(--c-text-default);
     display: inline-flex;
     align-items: center;
     transition: all ease-in 150ms;
@@ -55,10 +73,22 @@ label{
         background: transparent;
         transition: all ease-in 150ms;
     }
+    &:hover{
+        color: var(--c-primary);
+    }
+
+    &.disabled{
+        pointer-events: none;
+        &::before{
+            display: none;
+        }
+    }
+
 }
 
+
 .header{
-    background: rgba(128, 128, 128, 0.116);
+    background: var(--c-background-darker);
     padding: 5px 20px 5px 20px;
     .dates{
         display: flex;
@@ -72,11 +102,29 @@ label{
         }
     }
 }
+.busy{
+    transition: all ease-in 300;
+    margin-top: 5px;
+    padding: 10px;
+    color: var(--c-text-highlight);
+    background-color: var(--c-tertiary);
+}
 .container{
     width: 100vw;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    background: white;
+    height: fit-content;
+}
+
+.candidates{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    height: fit-content;
+    max-height: 600px;
+    overflow-y: auto;
+    background-color: var(--c-background-disabled);
 }
 
 .candidate{
@@ -84,8 +132,11 @@ label{
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.281);
     position: relative;
+    min-width: 300px;
     //@include mix.truncate(6);
-
+    &.notFound{
+        text-align: center;
+    }
     &::before{
         position: absolute;
         display: block;
@@ -150,6 +201,21 @@ label{
     border-radius: 5px;
 }
 
-.filters{
-   
+.actions{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 20px;
+}
+
+.expander{
+    width: 100%;
+    display: flex;
+}
+
+@media (max-width: 768px) {
+    .expander {
+        width: 100%;
+        box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+    }
 }

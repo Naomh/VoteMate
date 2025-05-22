@@ -8,6 +8,7 @@ const accountSchema = new mongo.Schema({
       email: {type: String, required: true, unique: true},
       name: String,
       authType: {type: String, enum:['oauth', 'email'], required: true},
+      role: {type: String, enum: ['admin', 'member'], default: 'member'},
       password: String,
       status: Boolean,
       verificationCode: String,      

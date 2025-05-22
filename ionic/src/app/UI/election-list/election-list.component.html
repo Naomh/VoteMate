@@ -1,26 +1,45 @@
 <div class="container">
         <h1>Available Elections</h1>
         <div class="filters">
-                <h3>Settings:</h3>
-                <div>
-                    <button (click)="toggleSort()">sort ↑↓</button>
-                    Stage:
-                    <select id="parties" (change)="filterStage($event)">
-                        <option></option>
-                        <option>unreachable</option>
-                        <option>setup</option>
-                        <option>signup</option>
-                        <option>pre voting</option>
-                        <option>voting</option>
-                        <option>fault repair</option>
-                        <option>tally</option>
-                    </select>
-                    <input placeholder="search" (input)="filterElections($event)">
+                <div class="expander" (click)="toggleFilters()">
+                        <h3>Settings:</h3>
+                        <h3 class="arrow" *ngIf="isMobile">{{filtersExpanded? '↓':'↑'}}</h3>
                 </div>
+                @if(!isMobile || filtersExpanded){
+
+                <div>
+                        <button (click)="toggleSort()">sort ↑↓</button>
+                        <button (click)="refresh()" class="imgbutton"><img
+                                        src="../../../assets/images/refresh.svg"></button>
+                        <span>
+                                <label for="parties">Stage:</label>
+                                <select id="parties" (change)="filterStage($event)">
+                                        <option></option>
+                                        <option>unreachable</option>
+                                        <option>setup</option>
+                                        <option>signup</option>
+                                        <option>pre voting</option>
+                                        <option>voting</option>
+                                        <option>fault repair</option>
+                                        <option>tally</option>
+                                </select>
+                        </span>
+                        <input placeholder="search" (input)="filterElections($event)">
+                </div>
+                }
         </div>
-        <hr>
         <div class="list">
-                <app-election-card *ngFor="let election of elections().sort(sortFn.bind(this))" [user]="user()" [description]="election.description" [address]="election.mainVotingAddress" [id]="election.id" [name]="election.name"></app-election-card>
+                <ng-container *ngIf="elections().length > 0; else noElections">
+                        <ng-container *ngFor="let election of elections().sort(sortFn.bind(this))">
+                                <app-election-card [user]="user()" [description]="election.description"
+                                        [address]="election.mainVotingAddress" [id]="election.id" [name]="election.name"
+                                        [registered]="election.isRegistered"></app-election-card>
+                        </ng-container>
+                </ng-container>
+                <ng-template #noElections>
+                        <div class="noElections">
+                                <p>No elections available.</p>
+                        </div>
+                </ng-template>
         </div>
 </div>
-        

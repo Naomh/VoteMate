@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, input, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartTypeRegistry } from 'chart.js';
 import { BaseChartDirective} from 'ng2-charts';
 import { ICandidate } from '../election-list/election.interface';
@@ -20,6 +20,7 @@ export class TallyChartComponent implements OnInit{
 
     @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
+    protected hostEl = inject(ElementRef);
     protected chartType: keyof ChartTypeRegistry = 'bar';
     public get type(): keyof ChartTypeRegistry {
       return this.chartType;
@@ -42,7 +43,8 @@ export class TallyChartComponent implements OnInit{
           backgroundColor: [],
           borderColor: [],
           borderWidth: 1,
-          maxBarThickness: 60
+          maxBarThickness: 60,
+          barThickness: 40
         }]
       };
 
@@ -80,8 +82,7 @@ export class TallyChartComponent implements OnInit{
               size: 14,
               weight: 'bold',
               family: 'Raleway, sans-serif',
-            }
-          }
+              } }
         },
         y: {
           ticks: {
@@ -100,21 +101,33 @@ export class TallyChartComponent implements OnInit{
     };
 
     ngOnInit(): void {
-      this.candidateTallies = this.candidates.map((candidate, index) => {
-        return {
+      this.candidateTallies = this.candidates
+        .map((candidate, index) => ({
           ...candidate,
-          tally: this.tally[index] || 0 
-        };
-      });
+          tally: this.tally[index] || 0
+        }))
+        .filter(candidate => candidate.tally > 0); 
       this.prepareCandidateChartData();
+      const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        this.swapType();
+      }else{
+        this.adjustWidth();
+      }
     }
 
-    public prepareCandidateChartData(){
-      this.data.labels = this.candidateTallies.map((candidate) => candidate.name);
-      this.data.datasets[0].data = this.candidateTallies.map((candidate) => candidate.tally);
+    public prepareCandidateChartData() {
+      const filteredCandidates = this.candidateTallies.filter(candidate => candidate.tally > 0)
+      .map((candidate, index) => 
+        {
+          candidate.index = index
+          return candidate;
+        }); 
+      this.data.labels = filteredCandidates.map(candidate => candidate.name);
+      this.data.datasets[0].data = filteredCandidates.map(candidate => candidate.tally);
       this.data.datasets[0].label = 'Election results - Candidate tallies';
-      this.data.datasets[0].backgroundColor = this.candidateTallies.map((candidate) => this.generateColor(candidate.index, this.candidates.length));
-      this.data.datasets[0].borderColor = this.candidateTallies.map((candidate) => this.generateColor(candidate.index, this.candidates.length, true));
+      this.data.datasets[0].backgroundColor = filteredCandidates.map(candidate => this.generateColor(candidate.index, filteredCandidates.length));
+      this.data.datasets[0].borderColor = filteredCandidates.map(candidate => this.generateColor(candidate.index, filteredCandidates.length, true));
 
       this.chart?.update();
       this._view = 'candidate';
@@ -140,10 +153,27 @@ export class TallyChartComponent implements OnInit{
       this.chartType = this.chartType === 'bar' ? 'pie' : 'bar';
       if(this.chartType === 'pie'){
         this.chartPlugins = []
+        const container = this.hostEl.nativeElement.querySelector('.container');
+        if (container) {
+            container.style.width = `100%`;
+        }
       }else{
+        this.adjustWidth();
         this.chartPlugins = [ChartDataLabels]
       }
       this.chart?.update();
+    }
+
+    private adjustWidth(){
+      const container = this.hostEl.nativeElement.querySelector('.container');
+      const wrapper = this.hostEl.nativeElement.querySelector('.wrapper');
+      if (container && wrapper) {
+        const baseWidth = 40; // Base width per candidate in pixels
+        const calculatedWidth = this.candidates.length * baseWidth;
+        if (calculatedWidth > wrapper.offsetWidth) {
+          container.style.width = `${calculatedWidth}px`;
+        }
+      }
     }
 
     private generateColor(index: number, total: number, border:boolean = false): string {

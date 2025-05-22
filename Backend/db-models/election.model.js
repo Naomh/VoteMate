@@ -31,6 +31,8 @@ const electionSchema = new mongo.Schema({
   candidateGens: [{ type: Number }],
   mpcBatchSize: Number,
   rmBatchSize: Number,
+  
+  startSignUp: String,
   start: String,
   end: String,
   parties: {
@@ -39,6 +41,10 @@ const electionSchema = new mongo.Schema({
   },
   voters: {
     type: [{ type: String }],
+    default: [],
+  },
+  registeredUsers: {
+    type: [{ type: mongo.Schema.Types.ObjectId, ref: "Accounts" }],
     default: [],
   },
 });

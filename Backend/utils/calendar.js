@@ -1,5 +1,3 @@
-const { EventEmitter } = require("nodemailer/lib/xoauth2");
-
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -16,17 +14,17 @@ class Calendar{
             if(new Date(event.date) < Date.now()){
                 return false;
             }
-
             this.events.push(event);
             if(this.empty){
                 this.init();
             }
-            
+            this.sort();
             this.empty = false;
             return true;
         }else{
             return false;
         }
+    
     }
     
     sort(){
@@ -39,16 +37,48 @@ class Calendar{
     }
 
     async init(){
-        this.sort()
+        this.sort();
         while(this.events.length){
             const event = this.events.shift();
             const starDate = new Date(event.date);
-            await sleep(starDate - Date.now());
-            event.fn();
+            const timeToWait = starDate - Date.now();
+
+            if (timeToWait > 0) {
+                const interrupted = await Promise.race([
+                    sleep(timeToWait).then(() => false),
+                    new Promise(resolve => {
+                        const interval = setInterval(() => {
+                            if (this.events.length && new Date(this.events[0].date) < starDate) {
+                                console.log('interrupted');
+                                clearInterval(interval);
+                                resolve(true);
+                            }
+                        }, 1000);
+                    })
+                ]);
+
+                if (interrupted) {
+                    this.events.push(event); 
+                    this.sort();
+                    continue;
+                }
+            }
+            try{
+                event.fn();
+            }catch(e){
+                console.error(e);
+            }
         }
-        this.empty = true
-        
+        this.empty = true;
     }
 }
 
-module.exports = Calendar;
+function createEvent(fn, date){
+    return {
+        fn: fn,
+        date: date
+    }
+}
+
+
+module.exports = {Calendar, createEvent};

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, inject, signal, Signal, WritableSignal } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject, OnInit, OnDestroy, signal, Signal, WritableSignal } from '@angular/core';
 import { DexieService } from '../../services/dexie.service';
 import { CommonModule } from '@angular/common';
 import { ElectionCardComponent } from "../election-card/election-card.component";
@@ -13,7 +13,18 @@ import { ElectionStage } from '../../pipes/electionstage.pipe';
     templateUrl: './election-list.component.html',
     styleUrl: './election-list.component.scss'
 })
-export class ElectionListComponent {
+export class ElectionListComponent implements OnInit, OnDestroy {
+
+  ngOnInit(): void {
+    this.dexieSVC.refresh();
+    this.checkIfMobile();
+    window.addEventListener('resize', this.checkIfMobile.bind(this));
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.checkIfMobile.bind(this));
+  }
+  
   private changeDetector = inject(ChangeDetectorRef);
   private dexieSVC = inject(DexieService);
   private web3SVC = inject(Web3Service);
@@ -24,6 +35,15 @@ export class ElectionListComponent {
   
   protected user = this.dexieSVC.user;
   protected elections = computed(this.electionFn.bind(this));
+  protected filtersExpanded = false;
+  protected isMobile = false;
+
+  private checkIfMobile(): void {
+    this.isMobile = window.innerWidth <= 800;
+    if (!this.isMobile) {
+      this.filtersExpanded = true; 
+    }
+  }
 
   private electionFn(){
     const term = this.term();
@@ -47,6 +67,10 @@ export class ElectionListComponent {
     return stageFiltered
 }
 
+  protected refresh(){
+    this.dexieSVC.refresh()
+  }
+
   protected sortFn(elementA: IElection, elementB: IElection){
     if(this.sort === ESort.none){
       return 0
@@ -66,6 +90,12 @@ export class ElectionListComponent {
 
   protected filterStage(event: Event): void{
     this.stage.set((<HTMLSelectElement>event.target).value);
+  }
+
+  protected toggleFilters(): void {
+      if (this.isMobile) {
+          this.filtersExpanded = !this.filtersExpanded;
+      }
   }
 
 }

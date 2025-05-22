@@ -98,6 +98,10 @@ export function BIarrayToHexUnaligned(arr: BigInt[] | BN[]) {
 export function toHexString(num: BN | BigInt) {
     return '0x' + num.toString(16).padStart(64, '0');
 }
+export function ECPointsToHex(acc:string[], item: any){
+    acc.push(toHexString(item.getX()), toHexString(item.getY()));
+    return acc;
+}
 
 export function addPaddingToHex(e: string){           
     let isNegative = false;

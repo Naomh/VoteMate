@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ethers, JsonRpcProvider, Wallet } from 'ethers';
 import Web3, { Address, ContractAbi} from 'web3';
 import { isAddress } from 'web3-validator';
+import { environment } from '../../environments/environment';
 const MainVotingC = require('../../assets/contracts/MainVotingC.json'); 
 
 
@@ -18,9 +19,9 @@ export interface IWallet{
 })
 export class Web3Service {
 
-  private _web3: Web3 = new Web3('http://127.0.0.1:9545/')//('http://192.168.0.248:9545')
-  // ;
-  private ethersProvider: JsonRpcProvider = new ethers.JsonRpcProvider('http://192.168.0.248:9545')//('http://127.0.0.1:9545');
+  private _web3: Web3 = new Web3(environment.web3network)
+  private ethersProvider: JsonRpcProvider = new ethers.JsonRpcProvider(environment.web3network)//('http://127.0.0.1:9545');
+  public unlock!: () => void;
 
   constructor(){
   
@@ -37,14 +38,29 @@ export class Web3Service {
 
     if(!(await this._web3.eth.getAccounts()).includes(account.address))
     {
-      this._web3.eth.personal.importRawKey(account.privateKey, password)
+      this._web3.eth.personal.importRawKey(account.privateKey, password);
     }
 
+    this.unlock = async () =>{
+      const unlocked = await this._web3.eth.personal.unlockAccount(
+        account.address,
+        password,
+        86400
+      );
+      if (!unlocked) {
+      throw new Error('Failed to unlock account');
+      } 
+    }
+ 
+  
     return account;
   }
 
-  checkBalance(address:string){
-    return this._web3.eth.getBalance(address);
+  checkBalance(address: string) {
+    return this._web3.eth.getBalance(address).then(balance => {
+      const etherBalance = this._web3.utils.fromWei(balance, 'ether');
+      return parseFloat(parseFloat(etherBalance).toFixed(3));
+    });
   }
 
   getAccounts(){
@@ -93,5 +109,8 @@ async isVoterEligible(address: Address, voterAddress: Address): Promise<boolean>
     const stage = await contract.methods['stage']().call() as bigint;
     return stage;
   }
+
+
+  
 
 }

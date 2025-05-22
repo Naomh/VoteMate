@@ -2,9 +2,11 @@ import Web3, { Address, Contract, Uint256 } from "web3";
 import { Web3Service } from "../../services/web3.service";
 import { ec as EC, curve } from "elliptic";
 import BN from 'bn.js'
-import { randomBytes, shaX, xor, xorBNArray, BIarrayToHexUnaligned, addPaddingToHex, toHexString } from "../../services/utils";
+import { randomBytes, shaX, xor, xorBNArray, BIarrayToHexUnaligned, addPaddingToHex, toHexString, ECPointsToHex } from "../../services/utils";
 import { DexieService } from "../../services/dexie.service";
-import { signal } from "@angular/core";
+import { input, signal } from "@angular/core";
+import { Subscription } from "rxjs";
+import { utils } from "web3-validator";
 
 
 const mainVotingC = require('../../../assets/contracts/MainVotingC.json');
@@ -14,14 +16,15 @@ const fastECc = require('../../../assets/contracts/FastEcMul.json');
 
 export class Voter{
     public finalTally = signal<number[] | undefined>(undefined);
+    public pkSubmitted = signal<boolean>(false);
+    public stage = signal<bigint>(BigInt(0));
 
     private web3SVC!: Web3Service;
     private dexieSVC!: DexieService
     private mainVotingContract!: Contract<typeof mainVotingC.abi>;
     private fastECc!: Contract<typeof fastECc.abi>
 
-    private candidateGens_p!: bigint[]; 
-    
+    private readonly mainVotingAddress: Address;
     private readonly voterAddress: Address;
     private readonly lambda = BigInt('0x5363ad4cc05c30e0a5261c028812645a122e22ea20816678df02967c1b23bd72');
     private readonly nn = BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141');
@@ -37,6 +40,7 @@ export class Voter{
 
     private c!: string;
 
+
     
     constructor(mainVotingAddress: Address, voterAddress:Address, web3SVC: Web3Service, dexieSVC: DexieService){
         
@@ -50,16 +54,29 @@ export class Voter{
             throw new Error('Election record doesn\'t exist')
         }
      
-
+        this.mainVotingAddress = mainVotingAddress
         this.voterAddress = user.wallet;
         this.web3SVC = web3SVC;
         this.dexieSVC = dexieSVC;
     
 
         
-        (async () => {
+        const init = async () => {
             this.mainVotingContract = await this.web3SVC.getSmartContract(mainVotingAddress, mainVotingC.abi)   
-           
+
+            this.mainVotingContract.events['allEvents']({fromBlock: 0})
+            .on('data', (async (event: any) => {
+                const stage = Number(event.returnValues['stage']);
+                if(stage === 1){
+                    this.checkIfPKSubmitted();
+                }
+                else if(stage === 5){
+                    this.getFinalTallies();
+                }
+                this.stage.set(await web3SVC.getStage(mainVotingAddress));
+            }).bind(this));
+
+
             this.fastECc = await this.web3SVC.getSmartContract(election.fastECmulAddress, fastECc.abi)
 
             if(!election.SK){
@@ -69,16 +86,17 @@ export class Voter{
                 this.sK = new BN(election.SK, 'hex');
                 this.pK = this.ec.g.mul(this.sK)
 
-            const stage = Number(await web3SVC.getStage(mainVotingAddress));
-            if(stage === 5){
+            this.stage.set(await web3SVC.getStage(mainVotingAddress));
+            const stage = Number(this.stage())
+            if(stage === 1){
+                this.checkIfPKSubmitted();
+            }
+            else if(stage === 5){
                 this.getFinalTallies();
             }
             
-            //this.computeMPCKeys();
-            //this.computeMPCKey([this.sK])
-            //this.getBlindedVote(1);
         }   
-        )();
+        init();
     }
 
     async submitPK(){
@@ -91,11 +109,11 @@ export class Voter{
             const boothContract = await this.web3SVC.getSmartContract(boothAddr, votingBoothC.abi);
             
             const method = boothContract?.methods['submitVotersPK']([pk_x, pk_y])
+            await this.web3SVC.unlock();
             await this.sendTransaction(method)
             this.dexieSVC.setkeys(mainVotingC, this.sK.toString('hex'));
-
-        }catch(e){
-            console.error(e);
+        }finally{
+            this.checkIfPKSubmitted();   
         }
         
     }
@@ -233,8 +251,8 @@ export class Voter{
 
         const tmpPars = args.slice(1);
         const tmpPars1 = tmpPars[1];
-        const res2 = tmpPars[2]
-        const res3 = tmpPars[3]
+        const res2 = tmpPars[2];
+        const res3 = tmpPars[3];
 
         const boothContract = await this.getBoothContract();
 
@@ -257,7 +275,122 @@ export class Voter{
         this.finalTally.set(result);
         return result;
     }
-    
+
+    public async repairFaultyVotes() {
+        const boothContract = await this.getBoothContract();
+        const pkCnt = await boothContract.methods['getCntOfSubmitedPKs']().call();
+        const voted = await boothContract.methods['getCntOfBlindedVotes']().call();
+
+        const faultyVotesCnt = Number(pkCnt) - Number(voted);
+
+        let faultyIdxs = [];
+        let faultyPks = [];
+        let repairKeys = [];
+
+        // Retrieve faulty public keys and compute blinded keys
+        for (let i = 0; i < faultyVotesCnt; i++) {
+            const faultyPkIdx = await boothContract.methods['notVotedIdxs'](i).call();
+            const faultyPk_x = new BN(await boothContract.methods['votersPKs'](faultyPkIdx, 0).call());
+            const faultyPk_y = new BN(await boothContract.methods['votersPKs'](faultyPkIdx, 1).call());
+            const faultyPk = this.ec.curve.point(faultyPk_x, faultyPk_y);
+            const bvote = this.computeBlindedKeyForVoter(faultyPk);
+
+            faultyIdxs.push(faultyPkIdx);
+            faultyPks.push(faultyPk);
+            repairKeys.push(...bvote);
+        }
+
+        // Generate ZK proofs for faulty votes
+        let args = this.computeZKproofs4FT(faultyVotesCnt, faultyPks);
+
+        // Decompose scalars for ZK proofs
+        let decomp = [];
+        for (let i = 0; i < faultyVotesCnt; i++) {
+            const tmpItems = await this.fastECc.methods['decomposeScalar'](args[0][i], toHexString(this.ec.n as BN), toHexString(this.lambda)).call() as bigint[];
+            decomp.push(BigInt(tmpItems[0]));
+            decomp.push(BigInt(tmpItems[1]));
+        }
+        args[0] = BIarrayToHexUnaligned(decomp);
+
+        decomp = [];
+        for (let i = 0; i < faultyVotesCnt; i++) {
+            const tmpItems = await this.fastECc.methods['decomposeScalar'](args[1][i], toHexString(this.ec.n as BN), toHexString(this.lambda)).call() as bigint[];
+            decomp.push(BigInt(tmpItems[0]));
+            decomp.push(BigInt(tmpItems[1]));
+        }
+        args[1] = BIarrayToHexUnaligned(decomp);
+
+        const res0 = args[0];
+        const res1 = args[1];
+        const id = await boothContract.methods['votersPKidx'](this.voterAddress).call();
+
+        // Precompute modular inverses for the repair transaction
+        const invModArrs = await boothContract.methods['modInvCache4repairVote'](
+            faultyIdxs.map(e => Number(e)),
+            repairKeys,
+            Number(id),
+            res0,
+            res1
+        ).call({ from: this.voterAddress }) as bigint[];
+
+        // Batch repair transactions
+        const maxAtOnce = 7;
+        for (let i = 0; i < faultyVotesCnt; i += maxAtOnce) {
+            let end = Math.min(i + maxAtOnce, faultyVotesCnt);
+
+            const method = boothContract.methods['repairBlindedVote'](
+                BIarrayToHexUnaligned(invModArrs.slice(2 * i, 2 * end)),
+                res0.slice(2 * i, 2 * end),
+                res1.slice(2 * i, 2 * end),
+                args[2].slice(2 * i, 2 * end),
+                args[3].slice(2 * i, 2 * end),
+                repairKeys.slice(2 * i, 2 * end),
+                faultyIdxs.slice(i, end),
+                id
+            );
+            await this.sendTransaction(method);
+        }
+    }
+
+    private computeZKproofs4FT(faultyVoterCount: number, faultyPks: curve.base.BasePoint[]){
+        let proof_r = [];
+        let proof_m1 = [];
+        let proof_m2 = [];
+        let hashes = [];
+
+        for(let i = 0; i < faultyVoterCount; i++){
+
+            const B = faultyPks[i];
+            const w = randomBytes(this.ec.n as BN);
+            const m1 = this.ec.g.mul(w);
+            const m2 = B.mul(w);
+
+            proof_m1.push(m1);
+            proof_m2.push(m2);
+
+
+            let inputForHash = [];
+            inputForHash.push(this.pK.getX().toString('hex', 64), this.pK.getY().toString('hex', 64));
+            inputForHash.push(B.getX().toString('hex', 64), B.getY().toString('hex', 64));
+            inputForHash.push(m1.getX().toString('hex', 64), m1.getY().toString('hex', 64));
+            inputForHash.push(m2.getX().toString('hex', 64), m2.getY().toString('hex', 64));
+               
+            const c = new BN(shaX(inputForHash.map(toHexString), 32).slice(2), 'hex');
+            hashes.push(BigInt(c.toString(10)));
+
+            const cx = this.sK.mul(c).mod(this.ec.n as BN);
+            const r = cx.add(w).mod(this.ec.n as BN);
+            proof_r.push(BigInt(r.toString(10)));
+        }
+
+        return [
+            proof_r.map(toHexString),
+            hashes.map(toHexString),
+            proof_m1.reduce(ECPointsToHex, []),
+            proof_m2.reduce(ECPointsToHex, []),
+        ]
+    }
+
     private computeBlindedKeyForVoter(pk: curve.base.BasePoint){
         const res = pk.mul(this.sK);
         return ['0x' + res.getX().toString('hex', 64), '0x' + res.getY().toString('hex', 64)];
@@ -281,4 +414,15 @@ export class Voter{
         const boothAddr: Address = await this.mainVotingContract.methods['groupBoothAddr'](votersGroup).call();
         return this.web3SVC.getSmartContract(boothAddr, votingBoothC.abi);
     }
+
+    private async checkIfPKSubmitted(){
+        const boothContract = await this.getBoothContract();
+        const pkSubmitted = await boothContract.methods['votersWithPK'](this.voterAddress).call() as boolean;
+        this.pkSubmitted.set(pkSubmitted);
+    }
+
+    public async refresh(){
+        this.stage.set(await this.web3SVC.getStage(this.mainVotingAddress));
+    }
+
 }

@@ -36,7 +36,11 @@ class Utils {
 
     toPaddedHex = function (item, paddingBytes){
         let pi = W3.utils.padLeft(item, paddingBytes * 2);
-        return pi;
+        if(pi.startsWith('0x')){
+            return pi;
+        }else{
+            return '0x' + pi
+        }
     }
 
     shaX = function(a, newSizeB) {

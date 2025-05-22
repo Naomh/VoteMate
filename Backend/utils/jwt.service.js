@@ -39,7 +39,6 @@ class JWTService{
   }
 
   decode(token){
-    console.log(token)
     return jwt.decode(token);
   }
 

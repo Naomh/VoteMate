@@ -7,7 +7,6 @@ const FastECmulContract = require("./contracts/FastEcMul.json");
 
 const config = require("./config.json");
 const Authority = require("../smartcontracts/lib/authority.js");
-const Voter = require("../smartcontracts/lib/voter.js");
 const Utils = require("../smartcontracts/lib/utils.js");
 const ec = require('simple-js-ec-math');
 
@@ -15,20 +14,28 @@ const { deployContract, link } = require("./utils/contractDeployer.js");
 const db = require("./database.js");
 
 const Web3 = require("web3");
-const Booth = require("../smartcontracts/lib/booth.js");
 const web3 = new Web3(config.network);
 const authorityAcc = web3.eth.accounts.privateKeyToAccount(config.account_pk);
 const faucetAcc = web3.eth.accounts.privateKeyToAccount(config.faucet_pk);
 
 const utils = new Utils();
 const _ = require('lodash');
-const { countDocuments } = require("./db-models/election.model.js");
+const mailservice = require("./utils/mailservice.js");
+const { bruteforce } = require("./utils/bruteforce.js");
+
 
 const G = new ec.ModPoint(BigInt(config.Gx), BigInt(config.Gy));
 const curve = new ec.Curve(0n, 7n, BigInt(config.NN) , BigInt(config.PP), G);
 // #endregion
 
-// #region Utility Functions
+
+const stages = {SETUP: 0n, SIGNUP: 1n, PRE_VOTING: 2n, VOTING: 3n, FAULT_REPAIR: 4n, TALLY: 5n};
+// #region *Utility Functions*
+// ***
+// ***
+// ***
+
+// #region sendEth
 async function sendEth(address) {
   console.log("[sendEth] Entered");
   if (!Web3.utils.isAddress(address)) {
@@ -38,7 +45,7 @@ async function sendEth(address) {
   const tx = {
     from: faucetAcc.address,
     to: address,
-    value: web3.utils.toWei("1", "ether"),
+    value: config.gas_amount_to_user
   };
 
   try {
@@ -52,13 +59,66 @@ async function sendEth(address) {
     return false;
   }
 }
+// #endregion
 
+// #region sendStageEmail
+async function sendStageEmail(stage, address){
+  console.log('[sendStageEmail] entered');
+  const election = await db.findElection(address);
+  const voters = await db.getEmailsOfRegisteredUsers(address);
+  const name = election.name;
+  const id = election._id;
+  try{
+
+    for(const voter of voters){
+      switch(stage){
+        case stages.SETUP:{
+          mailservice.sendNewElectionNotification(voter, name, id, election.startSignUp);
+          break;
+        }
+        case stages.SIGNUP:{
+          mailservice.sendSignUpNotification(voter, name, id, election.start);
+          break;
+        }
+        case stages.VOTING:{
+          mailservice.sendVotingNotification(voter, name, id, election.end);
+          break;
+        }
+        case stages.FAULT_REPAIR:{
+          mailservice.sendFaultRepairNotification(voter, name, id);
+          break;
+        }
+        case stages.TALLY:{
+          mailservice.sendTallyNotification(voter, name, id);
+          break;
+        }
+      }
+    }
+  } catch(e){
+    console.error(e);
+  }
+  console.log('[sendStageEmail] Completed');
+}
+// #endregion
+
+// #region changeStage
+async function changeStage(address, stage) {
+  console.log("[changeStage] Entered"); 
+  const mainVotingC = new web3.eth.Contract(MainContract.abi, address);
+  const method = mainVotingC.methods.changeStage(stage);
+  const tx = sendTransaction(method);
+  sendStageEmail(stage, address);
+  console.log("[changeStage] Completed");
+  return tx;
+}
+// #endregion
+
+// #region sendTransaction
 async function sendTransaction(method, address = authorityAcc.address) {
   console.log("[sendTransaction] Entered");
   try {
     const gas = await method.estimateGas({ from: address });
     const tx = await method.send({ from: address, gas });
-    console.log('gas', gas);
     console.log("[sendTransaction] Completed");
     return tx;
   } catch (e) {
@@ -67,7 +127,9 @@ async function sendTransaction(method, address = authorityAcc.address) {
     return false;
   }
 }
+// #endregion
 
+// #region getboothCnt
 async function getboothCnt(mainVotingC) {
   console.log("[getboothCnt] Entered");
   const voterCnt = await mainVotingC.methods.getCntOfEligibleVoters().call();
@@ -77,7 +139,15 @@ async function getboothCnt(mainVotingC) {
 }
 // #endregion
 
-// #region Voting Functions
+// #endregion
+
+// #region *Voting Functions*
+// ***
+// ***
+// ***
+
+
+// #region computeBlindedVotesSum
 async function computeBlindedVotesSum(address) {
   console.log("[ComputeBlindedVotesSum] Entered");
   const mainVotingC = await new web3.eth.Contract(MainContract.abi, address);
@@ -101,40 +171,115 @@ async function computeBlindedVotesSum(address) {
   }
   console.log("[ComputeBlindedVotesSum] Completed");
 }
+// #endregion
 
-async function computeGroupTallies(address, fastECaddress) {
-  console.log("[computeGrouptallies] Entered");
+// #region bruteforceTally
+async function bruteforceTally(address, ECaddress){
+  console.log("[BruteforceTally] Entered");
+  const mainVotingC = await new web3.eth.Contract(MainContract.abi, address);
+  const ecC = await new web3.eth.Contract(ECcontract.abi, ECaddress);
+
+  const boothCnt = await getboothCnt(mainVotingC);
+  const candidatesCnt = Number(await mainVotingC.methods.getCntOfCandidates().call());
+  
+  const candGens = [];
+  for(let i = 0; i < candidatesCnt; i++){
+    const x = BigInt(await mainVotingC.methods.candidateGens(i, 0).call());
+    const y = BigInt(await mainVotingC.methods.candidateGens(i, 1).call());
+    candGens.push({x, y});
+  }
+
+
+  const boothTallies = [];
+  for(let i = 0; i < boothCnt; i++){
+    const boothAddr = await mainVotingC.methods.booths(i).call();
+    const boothContract = await new web3.eth.Contract(
+      BoothContract.abi,
+      boothAddr
+    );
+    
+    const voteCnt = Number(await boothContract.methods.getCntOfBlindedVotes().call());
+
+    const x = BigInt(await boothContract.methods.blindedVotesSum(0).call());
+    const y = BigInt(await boothContract.methods.blindedVotesSum(1).call());
+    const z = BigInt(await boothContract.methods.blindedVotesSum(2).call());
+    const {0: x_affine, 1: y_affine} = await ecC.methods.toAffine(x, y, z, config.PP).call();
+    const bvoteSum = {x: BigInt(x_affine), y: BigInt(y_affine)};
+
+    const generator = bruteforce(voteCnt, candidatesCnt);
+    for(const results of generator){
+      console.log(results);
+      let sum = curve.g;
+      for(let j = 0; j < results.length; j++){
+        const factor = BigInt(results[j]);
+        if(factor === 0n){
+          continue;
+        }
+        const partial = curve.multiply(candGens[j], factor);
+        sum = sum ? curve.add(sum, partial) : partial;
+      }
+      if(bvoteSum.x === sum.x && bvoteSum.y === sum.y){
+        boothTallies.push(results);
+        break;
+      }
+    }
+  }
+
+  console.log("[bruteforceTally] Completed");
+  return boothTallies;
+}
+// #endregion
+
+// #region computeGroupTallies
+async function computeGroupTallies(address, fastECaddress, ecAddress) {
+  console.log("[computeGroupTallies] Entered");
+  const tallies = await bruteforceTally(address, ecAddress);
+
   const mainVotingC = await new web3.eth.Contract(MainContract.abi, address);
   const fastEC = await new web3.eth.Contract(FastECmulContract.abi, fastECaddress);
 
   const candidatesCnt = await mainVotingC.methods.getCntOfCandidates().call();
-
   const boothCnt = await getboothCnt(mainVotingC);
 
-  for(let i = 0; i < boothCnt; i++){
-    const boothAddr = await mainVotingC.methods.booths(i).call(); 
+  for (let i = 0; i < boothCnt; i++) {
+    const boothAddr = await mainVotingC.methods.booths(i).call();
     const boothContract = await new web3.eth.Contract(
       BoothContract.abi,
       boothAddr
-    )
-    const booth = new Booth(boothAddr, i, G, curve);
-  
+    );
+
+    const boothTally = tallies[i];
     let decomp = [];
-    for(let j = 0; j < candidatesCnt; j++){
-      const boothTally = BigInt(await boothContract.methods.getVotes(j).call({from: authorityAcc.address}));
-      const tmpItems = await fastEC.methods.decomposeScalar(Web3.utils.numberToHex(boothTally.toString(10)), config.NN, config.lambda).call();
+    for (let j = 0; j < candidatesCnt; j++) {
+      const candidateTally = boothTally[j];
+      console.log(`[computeGroupTallies] Booth ${i}, Candidate ${j}, Booth Tally:`, candidateTally);
+
+      const tmpItems = await fastEC.methods.decomposeScalar(
+        Web3.utils.numberToHex(candidateTally.toString(10)),
+        config.NN,
+        config.lambda
+      ).call();
+
+      console.log(`[computeGroupTallies] Booth ${i}, Candidate ${j}, Decomposed:`, tmpItems);
       decomp.push(BigInt(tmpItems[0]));
       decomp.push(BigInt(tmpItems[1]));
-  
     }
 
-    const invModArrs = await boothContract.methods.modInvCache4Tally(utils.BIarrayToHexUnaligned(decomp)).call({from: authorityAcc.address});
-    const method = boothContract.methods.computeTally(utils.BIarrayToHexUnaligned(decomp), invModArrs);
-    const tx = await sendTransaction(method);
+    const invModArrs = await boothContract.methods.modInvCache4Tally(
+      utils.BIarrayToHexUnaligned(decomp)
+    ).call({ from: authorityAcc.address });
+
+    console.log(`[computeGroupTallies] Booth ${i}, invModArrs:`, invModArrs);
+
+    const method = boothContract.methods.computeTally(
+      utils.BIarrayToHexUnaligned(decomp),
+      invModArrs
+    );
+    await sendTransaction(method);
   }
 
-  let finalTallyStr = []
-  const finalTally = await mainVotingC.methods.getFinalTally().call({from: authorityAcc.address});
+  let finalTallyStr = [];
+  const finalTally = await mainVotingC.methods.getFinalTally().call({ from: authorityAcc.address });
   console.log(finalTally);
   for (let i = 0; i < candidatesCnt; i++) {
     var comp = (BigInt(finalTally[2 * i].toString()) + BigInt(finalTally[2 * i + 1].toString()) * BigInt(config.lambda)) % BigInt(config.NN);
@@ -142,17 +287,20 @@ async function computeGroupTallies(address, fastECaddress) {
   }
   console.log("Final Tally:", finalTallyStr);
 
-
-  console.log("[computeGrouptallies] Completed");
+  console.log("[computeGroupTallies] Completed");
 }
+// #endregion
 
+// #region submitVote
 async function submitVote(address, vote) {
   boothContract = await new web3.eth.Contract(BoothContract.abi, address);
   const method = boothContract.methods.recordVote(Number(vote));
   const tx = await sendTransaction(method);
   console.log(tx);
 }
+// #endregion
 
+// #region precomputeMPCkeys
 async function precomputeMPCkeys(address) {
   console.log("[precomputeMPCkeys] Entered");
   const mainVotingC = await new web3.eth.Contract(MainContract.abi, address);
@@ -175,8 +323,6 @@ async function precomputeMPCkeys(address) {
           if (!tx) {
             return false;
           }      
-          console.log('iteration', i);
-          console.log(tx);
         
           if (tx.events?.RightMarkersComputed) {
             console.log('***rightMarkersComputed');
@@ -189,7 +335,9 @@ async function precomputeMPCkeys(address) {
   }
   console.log("[precomputeMPCkeys] Completed");
 }
+// #endregion
 
+// #region finishSignUp
 async function finishSignUp(address) {
  // await submitPKs(address)
 
@@ -204,13 +352,19 @@ async function finishSignUp(address) {
       BoothContract.abi,
       boothAddr
     );
-
+    
+    const stage = boothContract.methods.getBoothStage().call()
+    if(stage === stages.SIGNUP){
     const method = boothContract.methods.changeStageToPreVoting();
     await sendTransaction(method);
   }
+  }
+  changeStage(address, stages.PRE_VOTING);
   console.log("[finishSignUp] Completed");
 }
+// #endregion
 
+// #region computeMPCKeys
 async function computeMPCKeys(address) {
   console.log("[computeMPCKeys] Entered");
   const mainVotingC = await new web3.eth.Contract(MainContract.abi, address);
@@ -224,8 +378,8 @@ async function computeMPCKeys(address) {
       boothAddr
     );
     const boothVotersCnt = await boothContract.methods.getCntOfSubmitedPKs().call();
-    
-    
+
+
     const g_x = utils.toPaddedHex(config.Gx, 32);
     const g_y = utils.toPaddedHex(config.Gy, 32);
     let act_left = [g_x, g_y, 1];
@@ -234,31 +388,31 @@ async function computeMPCKeys(address) {
       try {
 
         j = Math.min(j, boothVotersCnt - 1);
-        console.log('j:', j, ', act_left:', act_left);
         const invModArrsMPC = await boothContract.methods
         .modInvCache4MPCBatched(j, act_left)
         .call();
 
-        console.log("inv", invModArrsMPC);
         act_left = invModArrsMPC[2];
 
         const method = boothContract.methods.computeMPCKeys(
           invModArrsMPC[1],
           invModArrsMPC[0]
         );
-        console.log(await sendTransaction(method));
+        await sendTransaction(method);
       } catch (e) {
         console.error(e);
       }
     }
   }
-  console.log("[computeMPCKeys] Completed");
+  changeStage(address, stages.VOTING);
 }
+// #endregion
 
+// #region enrollVoters
 async function enrollVoters(address) {
   console.log("[enrollVoters] Entered");
   const election = await db.findElection(address);
-  const voters_c = election?.voters.length ?? 0;
+  const voters_c = election.voterCount;
   const mainVotingC = await new web3.eth.Contract(MainContract.abi, address);
 
   for (let i = 0; i < voters_c; i += config.enroll_batch) {
@@ -266,19 +420,24 @@ async function enrollVoters(address) {
       i + config.enroll_batch - 1 < voters_c
         ? config.enroll_batch
         : voters_c % config.enroll_batch;
-    let batch = election.voters.slice(i, cnt);
+
+    let batch = await db.getVotersByRange(address, i, cnt);
     const method = mainVotingC.methods.enrollVoters(batch);
 
     const result = await sendTransaction(method);
     if (result) {
-      batch.forEach(async (address) => await sendEth(address));
+      for(const address of batch){
+        await sendEth(address);
+      } 
     }
   }
 
  // await enrollVotersTest(address);
   console.log("[enrollVoters] Completed");
 }
+// #endregion
 
+// #region splitGroups
 async function splitGroups(address) {
   console.log("[splitGroups] Entered");
   const election = await db.findElection(address);
@@ -287,7 +446,6 @@ async function splitGroups(address) {
 
   for (let i = 0; i < voterCnt; i += config.split_batch) {
     const method = mainVotingC.methods.splitGroups(i, config.split_batch, 1);
-    console.log('requesting splitGroups', i, config.split_batch, 1);
     const tx = await sendTransaction(method);
   }
 
@@ -304,9 +462,50 @@ async function splitGroups(address) {
     );
     await sendTransaction(method);
   }
+  await changeStage(address, stages.SIGNUP);
   console.log("[splitGroups] Completed");
 }
+// #endregion
 
+
+
+// #region prepareToRepairVotes
+async function prepareToRepairVotes(address) {
+  console.log('[prepareToRepairVotes] Entered');
+  const mainVotingC = await new web3.eth.Contract(MainContract.abi, address);
+
+  let flag = false; // if any of the booth requires a recovery phase
+
+  const boothCnt = await getboothCnt(mainVotingC);
+  for (let i = 0; i < boothCnt; i++) {
+    const boothAddr = await mainVotingC.methods.booths(i).call();
+    const boothContract = await new web3.eth.Contract(
+      BoothContract.abi,
+      boothAddr
+    );
+
+    const pkCnt = await boothContract.methods.getCntOfSubmitedPKs().call();
+    const bvoteCnt = await boothContract.methods.getCntOfBlindedVotes().call();
+
+    if(pkCnt != bvoteCnt){
+      continue;
+    }
+      flag = true;
+      const method = boothContract.methods.changeStageToFaultRepair();
+      const tx = await sendTransaction(method);
+
+    const notVotedIDxs = tx.events['MissingVotesEvent'].returnValues.notVotedIdxs;
+    console.log(`[prepareToRepairVotes] Booth ${i}, notVotedIDxs:`, notVotedIDxs);
+  }
+  await changeStage(address, stages.FAULT_REPAIR);
+  
+
+  console.log('[prepareToRepairVotes] Completed');
+  return flag
+}
+// #endregion
+
+// #region deployContracts
 async function deployContracts(election) {
   console.log("[deployContracts] Entered");
   const candidates = election.candidates.map((candidate) => candidate.name);
@@ -368,65 +567,50 @@ async function deployContracts(election) {
   console.log("[deployContracts] Completed");
   return newElection;
 }
+// #endregion
 
-async function tally(address) {
-  console.log("[tally] Entered");
-  throw new Error("Not implemented");
-  console.log("[tally] Completed");
+// #endregion
+
+//#region *phases*
+// ***
+// ***
+// ***
+
+// #region initiateSignUpPhase
+function initiateSignUpPhase(address){
+  return async () => {
+    await enrollVoters(address);
+    await splitGroups(address);
+  }  
 }
 // #endregion
-// #region testing
 
-  async function enrollVotersTest(address) {
-    console.log("[enrollVotersTest] Entered");
-    const mainVotingC = new web3.eth.Contract(MainContract.abi, address);
-    const election = await db.findElection(address);
-    const voters = (await web3.eth.getAccounts()).slice(1).filter((voter) => !election.voters.includes(voter));
-    const method = mainVotingC.methods.enrollVoters(voters);
-    console.log(voters);
-    await sendTransaction(method);
-    console.log("[enrollVotersTest] Completed");
-    for (let account of voters) {
-      console.log(await mainVotingC.methods.isVoterEligible(account).call());
+// #region initiateVotingPhase
+function initiateVotingPhase(address){
+  return async () => {
+    await finishSignUp(address);
+    await precomputeMPCkeys(address);
+    await computeMPCKeys(address);
+  }  
+}
+// #endregion
+
+// #region initiateTallyPhase
+function initiateTallyPhase(address, fastECmulAddress, ecAddress){
+  return async () => {
+    const repair = await prepareToRepairVotes(address);
+    if(repair){
+      return {time: 60 * 60 * 1000} //postpone by an hour
     }
-  }
-
-    var auth = new Authority(
-      23, 
-      15,
-      config.Gx,
-      config.Gy,
-      config.PP,
-      config.NN,
-      config.GROUPS_CNT, 
-      0);
-
-  let PKs = [];
-  
-  async function submitPKs(address){
-    PKs = [];
-    const mainVotingC = new web3.eth.Contract(MainContract.abi, address);
-    const election = await db.findElection(address);
-    const voters = (await web3.eth.getAccounts()).slice(1).filter((voter) => !election.voters.includes(voter));
-    for(let i = 1; i < voters.length; i++){
-      const voter = new Voter(auth.G, auth.candidateGens_p, auth.candidates, auth.curve, voters[i], 0);
-      PKs.push(voter.pK_pair);
-      const votersGroup = await mainVotingC.methods.votersGroup(voters[i]).call();
-      votersBoothAddr = await mainVotingC.methods.groupBoothAddr(votersGroup).call();
-
-      const boothContract = new web3.eth.Contract(BoothContract.abi, votersBoothAddr);
-      const method = boothContract.methods.submitVotersPK([voter.pK_pair[0], voter.pK_pair[1]]);
-      await sendTransaction(method, voters[i]);
-      console.log('PK submitted', voters[i]);
-      console.log(votersGroup);
-      console.log(await boothContract.methods.getCntOfSubmitedPKs().call());  
-    }
-  }
-
-
-
+    await computeBlindedVotesSum(address);
+    await computeGroupTallies(address, fastECmulAddress, ecAddress);
+  }  
+}
+// #endregion
 
 // #endregion
+// ***
+
 // #region Exports
 module.exports = {
   finishSignUp,
@@ -435,9 +619,14 @@ module.exports = {
   splitGroups,
   precomputeMPCkeys,
   computeMPCKeys,
-  tally,
   computeBlindedVotesSum,
   computeGroupTallies,
-  submitVote
+  submitVote,
+  initiateSignUpPhase,
+  initiateVotingPhase,
+  initiateTallyPhase,
+  prepareToRepairVotes,
+  sendStageEmail,
+  stages
 };
 // #endregion

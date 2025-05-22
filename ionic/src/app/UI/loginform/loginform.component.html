@@ -28,7 +28,7 @@
 
 <ng-template #login>
     <ng-container>
-        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin(btn)" class="login">
             <div class="login__field">
                 <i class="login__icon fas fa-user"></i>
                 <input formControlName="email" type="text" class="login__input" placeholder="Email">
@@ -38,7 +38,7 @@
                 <input formControlName="password" type="password" class="login__input" placeholder="Password">
             </div>
             <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Forgot password?</a>
-            <button class="button login__submit" type="submit" [disabled]="loginForm.invalid">
+            <button #btn ui-button class="button login__submit" type="submit" [disabled]="loginForm.invalid">
                 <span class="button__text">Log in now</span>
                 <i class="button__icon fas fa-chevron-right"></i>
             </button>
@@ -55,7 +55,7 @@
 <ng-template #register>
     <ng-container>
 
-    <form [formGroup]="registrationForm" (ngSubmit)="onRegistration()" class="register">
+    <form [formGroup]="registrationForm" (ngSubmit)="onRegistration(btn)" class="register">
         <div class="login__field">
             <input formControlName="name" type="text" class="login__input" placeholder="Name">
             @if(registrationForm.controls['name'].invalid && registrationForm.controls['name'].touched) {   
@@ -87,7 +87,7 @@
             }
         </div>
 
-        <button type="submit" [disabled]="registrationForm.invalid" class="button login__submit">
+        <button #btn ui-button type="submit" [disabled]="registrationForm.invalid" class="button login__submit">
             <span class="button__text">register</span>
             <i class="button__icon fas fa-chevron-right"></i>
         </button>				
@@ -99,7 +99,7 @@
     <ng-template #resetPw>
         <h3 class="resetText">Enter your email to reset</h3>
 
-    <form [formGroup]="resetPwForm" class="resetPw" (ngSubmit)="resetPassword()">
+    <form [formGroup]="resetPwForm" class="resetPw" (ngSubmit)="resetPassword(btn)">
         <div class="login__field">
             <input formControlName="email" type="text" class="login__input" placeholder="Email">
             @if(resetPwForm.controls['email'].invalid && resetPwForm.controls['email'].touched){
@@ -107,7 +107,7 @@
             }
         </div>
         <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Back to login</a>
-        <button type="submit" class="button login__submit" [disabled]="resetPwForm.invalid">
+        <button #btn ui-button type="submit" class="button login__submit" [disabled]="resetPwForm.invalid">
             <span class="button__text">send</span>
         </button>
         <button type="submit" class="button login__submit" (click)="switchTemplateCode()">submit a code</button>
@@ -116,7 +116,7 @@
 
     <ng-template #enterCode>
         <h3 class="enterCode">Enter your code</h3>
-    <form [formGroup]="enterCodeForm" class="enterCode" (ngSubmit)="checkCode()">
+    <form [formGroup]="enterCodeForm" class="enterCode" (ngSubmit)="checkCode(btn)">
             <UI-code-form #codeForm [length]="6" (change)="setCode($event)"></UI-code-form>
             @if(enterCodeForm.controls['code'].touched){
                 <small *ngIf="enterCodeForm.controls['code'].errors?.['required']">Code is required.</small>
@@ -139,6 +139,6 @@
                 }
             </div>
             <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Back to login</a>
-            <button type="submit" [disabled]="enterCodeForm.invalid">Submit</button>
+            <button #btn ui-button type="submit" [disabled]="enterCodeForm.invalid">Submit</button>
     </form>
     </ng-template>

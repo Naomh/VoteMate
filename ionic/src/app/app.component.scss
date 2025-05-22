@@ -1,8 +1,185 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
-
+:host{
+	overflow: hidden;
+}
 * {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;	
 	font-family: Raleway, sans-serif;
+}
+
+.objects{
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	z-index: -2;
+
+	@media (max-width: 400px) { 
+		display: none;
+	}
+}
+
+.object{
+	position: absolute;
+	height: 300px;
+	width: 500px;
+	background: url(../assets/images/logo.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+	&:nth-child(even){
+		background: url(../assets/images/logo2.png);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: contain;
+	}
+	&:nth-child(1){
+		opacity: 0.6;
+		bottom: 20%;
+		right: 0;
+		transform: scale(1.1) rotate(30deg);
+	}
+	&:nth-child(2){
+		bottom: 15%;
+		left: 0%;
+		transform: rotate(-15deg);
+		opacity: 0.6;
+	}
+	&:nth-child(3){
+		top: 12%;
+		left: -5%;
+		transform: scale(0.8) rotate(45deg);
+		opacity: 0.5;
+	}
+	&:nth-child(4){
+		right: 5%;
+		top: 10%;
+		transform: scale(0.7) rotate(-30deg);
+		opacity: 0.4;
+	}
+	&:nth-child(5){
+		right: 30%;
+		bottom: -10%;
+		transform: scale(0.7) rotate(-30deg);
+		opacity: 0.4;
+	}
+
+	// Responsive adjustments
+	@media (max-width: 800px) { // Tablets and smaller devices
+		&:nth-child(1) {
+			bottom: 10%;
+			right: -20%;
+			transform: scale(1) rotate(20deg);
+		}
+		&:nth-child(2) {
+			bottom: 15%;
+			left: -50%;
+			transform: scale(0.4) rotate(-15deg);
+			opacity: 0.6;
+		}
+		&:nth-child(3) {
+			top: 20%;
+			left: -30%;
+			transform: scale(0.8) rotate(45deg);
+			opacity: 0.5;
+		
+		}
+		&:nth-child(4) {
+			right: -50%;
+			top: 25%
+		}
+		&:nth-child(5){
+			display: none;
+		}
+	}
+
+	@media (max-width: 590px) { // Mobile devices
+		&:nth-child(1) {
+			bottom: 10%;
+			right: -20%;
+			transform: scale(1) rotate(20deg);
+		}
+		&:nth-child(2) {
+			bottom: 15%;
+			left: -50%;
+			transform: scale(0.4) rotate(-15deg);
+			opacity: 0.6;
+		}
+		&:nth-child(3) {
+			top: 20%;
+			left: -30%;
+			transform: scale(0.8) rotate(45deg);
+			opacity: 0.5;
+		
+		}
+		&:nth-child(4) {
+			right: -50%;
+			top: 25%
+		}
+		&:nth-child(5){
+			display: none;
+		}
+	}
+
+	// Responsive adjustments for different heights
+	@media (max-height: 800px) { // Shorter devices
+			&:nth-child(1) {
+				bottom: 15%;
+				right: 5%;
+				transform: scale(1) rotate(25deg);
+				
+			}
+			&:nth-child(2) {
+				bottom: 10%;
+				left: 5%;
+				transform: rotate(-10deg);
+			}
+			&:nth-child(3) {
+				top: 8%;
+				left: 10%;
+				transform: scale(0.7) rotate(35deg);
+			}
+			&:nth-child(4) {
+				right: 8%;
+				top: 5%;
+				transform: scale(0.6) rotate(-25deg);
+			}
+			&:nth-child(5) {
+				right: 25%;
+				bottom: -5%;
+				transform: scale(0.6) rotate(-20deg);
+			}
+	}
+
+	@media (max-height: 600px) { // Very short devices
+			&:nth-child(1) {
+				bottom: 10%;
+				right: 2%;
+				transform: scale(0.7) rotate(15deg);
+			}
+			&:nth-child(2) {
+				bottom: 5%;
+				left: 2%;
+				transform: scale(0.5) rotate(-5deg);
+			}
+			&:nth-child(3) {
+				top: 20%;
+				left: 8%;
+				transform: scale(0.5) rotate(20deg);
+			}
+			&:nth-child(4) {
+				right: 5%;
+				top: 20%;
+				transform: scale(0.4) rotate(-15deg);
+			}
+			&:nth-child(5) {
+				right: 20%;
+				bottom: -2%;
+				transform: scale(0.5) rotate(-10deg);
+			}
+		
+	}
 }

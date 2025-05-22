@@ -24,19 +24,25 @@ export interface IEnterCodeForm{
   password: string;
 }
 
+export interface IButtonEvent{
+  form: Record<string, string>, 
+  button:ButtonComponent
+}
+
+
 @Component({
     selector: 'UI-loginform',
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, CodeFormComponent],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, CodeFormComponent, ButtonComponent],
     templateUrl: './loginform.component.html',
     styleUrl: './loginform.component.scss'
 })
 
 export class LoginformComponent {
 @Output() googleLogin = new EventEmitter<void>();
-@Output() login = new EventEmitter<ILoginForm>();
-@Output() register = new EventEmitter<IRegisterForm>();
-@Output() resetPw = new EventEmitter<IResetPwForm>();
-@Output() enterCode = new EventEmitter<IEnterCodeForm>();
+@Output() login = new EventEmitter<IButtonEvent>();
+@Output() register = new EventEmitter<IButtonEvent>();
+@Output() resetPw = new EventEmitter<IButtonEvent>();
+@Output() enterCode = new EventEmitter<IButtonEvent>();
 
 private formBuilder = inject(FormBuilder);
 private route = inject(ActivatedRoute);
@@ -98,32 +104,33 @@ protected switchTemplateCode(){
 protected onGoogleLogin(){
   this.googleLogin.emit();
 }
-protected onLogin(){
+protected onLogin(btn: ButtonComponent){
+  btn.state = 'loading';
   const user = this.loginForm.value;
   if(user){
-    this.login.emit(user as ILoginForm);
+    this.login.emit({form: user, button: btn});
   }
 
 }
-protected onRegistration(){
+protected onRegistration(btn: ButtonComponent){
   const user = this.registrationForm.value;
   if(user){
-    this.register.emit(user as IRegisterForm);
+    this.register.emit({form: user, button: btn});
   }
 
 }
 
-protected resetPassword(){
+protected resetPassword(btn: ButtonComponent){
   const email = this.resetPwForm.value;
   if(email){
-    this.resetPw.emit(email);
+    this.resetPw.emit({form: email, button: btn});
   }
   this.formTemplate = 'enterCode';
 }
 
-protected checkCode(){
-  const codeForm = this.enterCodeForm.value as IEnterCodeForm;
-  this.enterCode.emit(codeForm);
+protected checkCode(btn: ButtonComponent){
+  const codeForm = this.enterCodeForm.value;
+  this.enterCode.emit({form: codeForm, button: btn});
   this.formTemplate = 'login';
 }
 

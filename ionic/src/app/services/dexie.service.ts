@@ -5,6 +5,7 @@ import { IWallet, Web3Service } from './web3.service';
 import { IElection } from '../UI/election-list/election.interface';
 import { Address } from 'web3';
 import { id } from 'ethers';
+import { HttpService } from './http.service';
 
 //#region Interfaces
 export interface IUser {
@@ -19,12 +20,18 @@ export interface IUser {
 }
 //#endregion
 
+
 @Injectable({
   providedIn: 'root',
 })
 export class DexieService extends Dexie {
   private web3SVC = inject(Web3Service);
+  private httpSVC = inject(HttpService);
 
+  private _isAdmin = signal<boolean>(false);
+  get isAdmin(){
+    return this._isAdmin
+  }
   //#region Signals
   private userSignal = signal<IUser | undefined>(undefined);
   get user() {
@@ -65,6 +72,19 @@ export class DexieService extends Dexie {
       wallet: wallet.address,
       pk: wallet.privateKey,
     });
+  }
+
+  public async logout() {
+    try {
+      await this.users.clear();
+      await this.elections.clear();
+      this.userSignal.set(undefined);
+      this.electionsSignal.set([]);
+      this.electionSignal.set(undefined);
+      this._isAdmin.set(false);
+    } catch (e) {
+      console.error('Error during logout:', e);
+    }
   }
 
   public async updateUser(user: IUser) {
@@ -112,17 +132,15 @@ export class DexieService extends Dexie {
       console.log(
         `Záznam s adresou "${election.mainVotingAddress}" byl aktualizován.`
       );
-      return;
     } else {
       await this.elections.add({...election });
       console.log(`Nový záznam přidán s ID: ${election.mainVotingAddress}`);
-      return;
     }
   }
 
-  public updateElections(elections: IElection[]) {
+  public async updateElections(elections: IElection[]) {
     for (const election of elections) {
-      this.addOrUpdateElectionRecord(election);
+     await this.addOrUpdateElectionRecord(election);
     }
   }
 
@@ -145,21 +163,37 @@ export class DexieService extends Dexie {
 
   //#region Refresh Methods
   public async refresh() {
-    this.userSignal.set(await this.getUser());
-    this.updateElectionsSignal();
+    try{
+      const elections = await this.httpSVC.getAvailableElections();
+      await this.updateElections(elections);
+    }catch(e){
+      console.error(e);
+    }
+    const user = await this.getUser();
+    if(user?.pk && user.password){
+      this.web3SVC.getWalletfromPk(user?.pk, user?.password)
+    }
+    this.userSignal.set(user);
+    await this.updateElectionsSignal();
+    if(user){
+      this._isAdmin.set((await this.httpSVC.isAdmin(user)).isAdmin);
+    }
   }
 
-  private async updateElectionsSignal() {
-    const elections = await this.getElectionsFromDexie();
-    
-    const electionsWithStage = await Promise.all(
-      elections.map(async (election) => {
-        const stage = Number(await this.web3SVC.getStage(election.mainVotingAddress) ?? -1); // async funkce
-        return {...election, stage};
-      })
-    );
-
-    this.electionsSignal.set(electionsWithStage);
+  public async updateElectionsSignal(reloadStage = true) {
+    let elections = await this.getElectionsFromDexie();
+    if(reloadStage){  
+       elections = await Promise.all(
+        elections.map(async (election) => {
+          const stage = Number(await this.web3SVC.getStage(election.mainVotingAddress) ?? -1);
+          return {...election, stage};
+        })
+      );
+    }else{
+      elections = this.electionsSignal().map((election, index) => ({...elections[index], stage: election.stage}))
+    }
+     
+    this.electionsSignal.set(elections as (IElection&{stage:number})[]);
   }
   //#endregion
 }

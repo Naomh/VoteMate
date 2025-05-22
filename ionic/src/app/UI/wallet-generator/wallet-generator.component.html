@@ -81,7 +81,7 @@
             We cannot recover your wallet if you lose your recovery phrase.
       </div>
       <div class="button-container">
-        <button [routerLink]="['/list']" routerLinkActive="router-link-active" >finish!</button>
+        <button (click)="navigateToList()">finish!</button>
     </div>
     </div>
     <div *ngSwitchCase="'recovery'">

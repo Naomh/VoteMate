@@ -213,18 +213,27 @@ Voter.prototype.computeZKproofs4FT = function(nonVotingIDXes, voters) {
       const m2 = this._curve.multiply(B, w);
       proof_m1.push(m1);
       proof_m2.push(m2);
-  
+      console.log('------------------------------------------')
+      console.log('B', B)
+      console.log('w', w)
+      console.log('m1', m1)
+      console.log('m2', m2)
+      console.log('------------------------------------------')
+
       let inputForHash = [];
       inputForHash.push(utils.toPaddedHex(this.pK.x.toString(16), 32), utils.toPaddedHex(this.pK.y.toString(16), 32));
       inputForHash.push(utils.toPaddedHex(B.x.toString(16), 32), utils.toPaddedHex(B.y.toString(16), 32));
       inputForHash.push(utils.toPaddedHex(m1.x.toString(16), 32), utils.toPaddedHex(m1.y.toString(16), 32));
       inputForHash.push(utils.toPaddedHex(m2.x.toString(16), 32), utils.toPaddedHex(m2.y.toString(16), 32));
+      console.log('input for haš', inputForHash);
       let c = W3.utils.toBN(utils.shaX(inputForHash, this._sizeP));
+      console.log('cčko', BigInt(c));
       hashes.push(BigInt(c));
       //console.log(`\t\t h(A, B, m1, m2) = ${c.toString(16)} | type = `, typeof(c));
   
       let cx = (this.sK * BigInt(c)) % this._curve.n;
       let r = (cx + w) % this._curve.n;
+      console.log('erko', r);
       proof_r.push(r);
     }
   

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Signal, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Web3Service } from '../../services/web3.service';
 import { DexieService } from '../../services/dexie.service';
@@ -9,7 +9,7 @@ import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { Voter } from './voter';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
-import { ButtonComponent } from "../../UI/button/button.component";
+import { ButtonComponent, ButtonHandler } from "../../UI/button/button.component";
 import { ESort } from '../../interfaces/sort.enum';
 import { ElectionStage, ElectionstagePipe } from '../../pipes/electionstage.pipe';
 import { TallyChartComponent } from '../../UI/tally-chart/tally-chart.component';
@@ -24,7 +24,7 @@ const VotingBoothC = require('../../../assets/contracts/VotingBoothC.json');
     templateUrl: './election.component.html',
     styleUrl: './election.component.scss'
 })
-export class ElectionComponent implements OnInit{
+export class ElectionComponent extends ButtonHandler implements OnInit{
 
   private web3SVC = inject(Web3Service);
   private dexieSVC = inject(DexieService);
@@ -43,9 +43,12 @@ export class ElectionComponent implements OnInit{
   protected election!: IElection | undefined;
   protected FilteredCandidates!: ICandidate[];
   protected isEligible!: boolean;
+  protected isAdmin = this.dexieSVC.isAdmin;
   protected electionStage!: bigint;
 
   public finalTally!: Signal<number[] | undefined>;
+  public PkSubmitted!: Signal<boolean>;
+  public stage!: Signal<bigint>;
 
 
   protected form = new FormGroup({
@@ -61,13 +64,20 @@ export class ElectionComponent implements OnInit{
       throw new Error('user not found or election id not found');
     }
 
-    await this.dexieSVC.selectElection(id)
-
+    await this.dexieSVC.selectElection(id);
 
     this.address = this.dexieSVC.selectedElection()!.mainVotingAddress;
-    this.electionStage = await this.web3SVC.getStage(this.address);
     this.voter = new Voter(this.address, this.user.wallet, this.web3SVC, this.dexieSVC);
+    
     this.finalTally = this.voter.finalTally;
+    this.PkSubmitted = this.voter.pkSubmitted;
+
+    this.isEligible = await this.web3SVC.isVoterEligible(this.address, this.user.wallet);
+    this.electionStage = await this.web3SVC.getStage(this.address);
+    
+    if(Number(this.electionStage) !== ElectionStage.voting && !this.isEligible){
+      this.form.disable();
+    }
 
     this.contract = await this.web3SVC.getSmartContract(this.address, MainVotingC.abi);
     if(!this.contract){
@@ -75,7 +85,6 @@ export class ElectionComponent implements OnInit{
       throw new Error('smart the smat contract is unreachable');
     }
 
-    this.isEligible = await this.web3SVC.isVoterEligible(this.address, this.user.wallet);
 
     this.election = this.dexieSVC.selectedElection();
     if(!this.election){
@@ -107,13 +116,12 @@ export class ElectionComponent implements OnInit{
       return;
     }
     const boothContract = await this.web3SVC.getSmartContract(boothAddr,  VotingBoothC.abi);
-    await this.httpSVC.submitVote(boothAddr, Math.floor(Math.random() * 2));
     console.log(await boothContract.methods['getCntOfVoters']().call())
     console.log(await boothContract.methods['getBoothStage']().call())
   }
 
   async submitPK(){
-    this.voter.submitPK();
+      await this.voter.submitPK();
   }
 
   async precomputeMPCkeys(){
@@ -129,34 +137,16 @@ export class ElectionComponent implements OnInit{
   }
   
   async computeGroupTallies(){
-    await this.httpSVC.computeGroupTallies(this.address, this.election!.fastECmulAddress);
+    await this.httpSVC.computeGroupTallies(this.address, this.election!.fastECmulAddress, this.election!.ECaddress);
   }
 
-  async vote(button: ButtonComponent){
+  async vote(){
     if (!this.form.valid) {
-      button.setFailure('Select your candidate.')
-      return
+      throw new Error('Select your candidate.')
     }
-      button.state = 'loading';
-      const candidate = parseInt(this.form.value.selectedCandidate as string, 10);
+    const candidate = parseInt(this.form.value.selectedCandidate as string, 10);
 
-      try{
-        await this.voter.submitVote(candidate);
-
-        const votersGroup = await this.contract.methods['votersGroup'](this.dexieSVC.user()?.wallet).call();
-        const boothAddr: Address = await this.contract.methods['groupBoothAddr'](votersGroup).call();
-        console.log(boothAddr);
-        await this.httpSVC.submitVote(boothAddr, candidate);
-        
-        button.setSuccess('vote submitted!')
-      }catch(e){
-        console.error(e);
-        button.setFailure();
-      }
-      finally{
-        button.state = 'ready';
-      }
- 
+    await this.voter.submitVote(candidate);
   }
 
   public filterParty(event: Event){
@@ -178,8 +168,21 @@ export class ElectionComponent implements OnInit{
     this.FilteredCandidates = this.election!.candidates.filter((candiate) => candiate.index.toString().match(term) || regexp.test(candiate.name));
   }
   
+  protected refresh(){
+    this.voter.refresh()
+  }
+
   public enrollVoters(){
     this.httpSVC.enrollVoters(this.address);
+  }
+
+  
+  public async repair(){
+    await this.httpSVC.repairVoters(this.address);
+  }
+
+  public async repairVotes(){  
+    await this.voter.repairFaultyVotes();
   }
 
   public toggleSort(){

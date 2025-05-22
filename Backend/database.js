@@ -1,14 +1,14 @@
 const mongo = require("mongoose");
-const connection = "mongodb://127.0.0.1/SBvote"
-;
+const connection = "mongodb://127.0.0.1/SBvote";
 const crypto = require("crypto");
 const { error } = require("console");
+const { Types } = require("mongoose");
 
 const electionModel = require("./db-models/election.model");
 const accountModel = require("./db-models/account.model");
 const sessionModel = require("./db-models/session.model");
 const walletModel = require("./db-models/wallet.model");
-const resetPasswordModel = require("./db-models/resetPasswordToken.model")
+const resetPasswordModel = require("./db-models/resetPasswordToken.model");
 
 class db {
   constructor() {
@@ -155,9 +155,10 @@ class db {
   }
 
   // #region SESSION
-  async createSession(userId, ip, userAgent, refreshToken) {
+  async createSession(userId, isAdmin, ip, userAgent, refreshToken) {
     const session = await this.sessionModel.create({
       uid: userId,
+      isAdmin: isAdmin,
       userAgent: userAgent,
       ipAddress: ip,
       refreshToken: refreshToken,
@@ -222,7 +223,7 @@ class db {
       });
 
       const savedElection = await newElection.save();
-      console.log("Election created:", savedElection);
+      console.log("Election created");
       return savedElection;
 
     } catch (error) {
@@ -253,19 +254,29 @@ class db {
     }
   }
 
-  async addVoter(contractAddress, voterAddress) {
-    try {
-      const updatedElection = await this.electionModel.findOneAndUpdate(
-        { mainVotingAddress: contractAddress },
-        { $addToSet: { voters: voterAddress } },
-        { new: true }
-      );
-      console.log("Voter added:", updatedElection);
-      return updatedElection;
-    } catch (error) {
-      console.error("Error adding voter:", error);
-      throw error;
+  async addVoter(contractAddress, voterAddress, uid) {
+    const election = await this.electionModel.findOne({
+      mainVotingAddress: contractAddress,
+      registeredUsers: { $elemMatch: { $eq: uid } }
+    }, { voters: 0 });
+    if (election) {
+      throw { status: 401, message: "User is already registered for this election." };
     }
+
+    const updatedElection = await this.electionModel.findOneAndUpdate(
+      { mainVotingAddress: contractAddress },
+      { 
+        $addToSet: { voters: voterAddress, registeredUsers: uid } 
+      },
+      { 
+        new: true,
+        returnDocument: "after",
+        fields: { registeredUsers: 0, voters: 0 } 
+      }
+    );
+
+    console.log("Voter added");
+    return {...updatedElection.toObject(), isRegistered: true};
   }
 
   deleteElection(address) {
@@ -279,20 +290,83 @@ class db {
     }
   }
 
-  getAllElections() {
-    try {
-      return this.electionModel.find();
-    } catch (error) {
-      console.error("Error fetching all elections:", error);
-      throw error;
+  getAllElections(uid) {
+    if (!uid) {
+      return this.electionModel.find({}, {
+          registeredUsers: 0,
+          voters: 0
+        }
+      );
     }
+
+    const objectIdUid = Types.ObjectId.isValid(uid) ? new Types.ObjectId(uid) : uid;
+
+    return this.electionModel.aggregate([
+      {
+        $addFields: {
+          isRegistered: {
+            $cond: {
+              if: { $isArray: "$registeredUsers" },
+              then: { $in: [objectIdUid, "$registeredUsers"] },
+              else: false
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          registeredUsers: 0,
+          voters: 0
+        }
+      }
+    ]);
   }
+
   async findElection(address) {
+    const results = await this.electionModel.aggregate([
+      { $match: { mainVotingAddress: address } },
+      {
+        $addFields: {
+          voterCount: { $size: { $ifNull: ["$voters", []] } }
+        }
+      },
+      {
+        $project: {
+          voters: 0,
+          registeredUsers: 0,
+        }
+      }
+    ]);
+    return results[0] || null; // Return the first item or null if no results
+  }
+
+  async getVotersByRange(address, startIndex, endIndex) {
+      const results = await this.electionModel.aggregate([
+        { $match: { mainVotingAddress: address } },
+        {
+          $project: {
+            voters: { $slice: ["$voters", startIndex, endIndex - startIndex] },
+            _id: 0
+          }
+        }
+      ]);
+      return results[0]?.voters || [];
+  }
+
+  async getEmailsOfRegisteredUsers(address) {
     try {
-      return this.electionModel.findOne({ mainVotingAddress: address });
+      const election = await this.electionModel.findOne({mainVotingAddress: address}, { registeredUsers: 1 }).lean();
+      if (!election || !election.registeredUsers || election.registeredUsers.length === 0) {
+        return [];
+      }
+      const emails = await this.accountModel.find(
+        { _id: { $in: election.registeredUsers } },
+        { email: 1, _id: 0 }
+      ).lean();
+
+      return emails.map(user => user.email);
     } catch (error) {
-      console.error("Error fetching election:", error);
-      throw error;
+      this.throwInternalError(error);
     }
   }
   // #endregion

@@ -16,7 +16,7 @@ export const httpErrorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
         }
 
         // Zobrazení snackbaru
-        snackbarSVC.show(errorMessage);
+        //snackbarSVC.show(errorMessage);
         //return of(new HttpResponse({ status: 500, body: { message: 'Fallback data' } }))
         return throwError(() => new Error(errorMessage));
       })

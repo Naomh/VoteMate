@@ -1,24 +1,29 @@
 <div class="container">
 	<div class="screen">
         <div class="header">
-          <!--  <div class="status">
-            <span [class.positive]="onlineStatus">
-                Online
-            </span>
-            <span [class.positive]="user.status">
-                Verified
-            </span>
-            <span [class.positive]="user.walletStatus">
-                Registered
-            </span>
-        </div> -->
             <div class="user-details">
-                <div class="email"><h2>{{user.email}}</h2></div>
-                <div class="wallet">{{user.wallet ?? 'Not assigned'}}</div>
+                <div class="dropdown" (click)="toggleAccounts()">
+                    <div class="logo"></div>
+                    <div>
+                        <div class="email">
+                            {{user.email}}
+                        </div>
+                        <div class="wallet">
+                            {{user.wallet ?? 'Not assigned'}}
+                        </div>
+                    </div>
+                </div>
+                <div class="accounts" *ngIf="showAccounts">
+                    <div class="account">
+                        @if(balance !== null){
+                            <span class="balance">balance: {{balance}} ETH</span>
+                        }
+                    </div>
+                    <button class="add-account" (click)="logOut.emit()">
+                        log out
+                    </button>
+                </div>
             </div>
-            <!--§<div>
-                <button [disabled]="user.walletStatus || !user.status" (click)="registerWallet.emit()">Register wallet</button>
-            </div>-->
         </div>
         <div class="body">
             @if(user.wallet){

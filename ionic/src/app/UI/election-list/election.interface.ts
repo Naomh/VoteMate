@@ -13,6 +13,8 @@ export interface IElection{
     parties: IParty[],
     mpcBatchSize?: Number,
     rmBatchSize?: Number,
+    isRegistered: boolean,
+    startSignUp: string,
     start: string,
     end: string,
     SK?: string,
@@ -38,6 +40,7 @@ export interface IElectionQuery{
     candidates: ICandidate[],
     parties: IParty[],
     start: string,
+    startSignUp: string
     end: string,
     SK?: string,
 }

@@ -19,7 +19,6 @@ import { SnackbarService } from './services/snackbar.service';
 @Component({
     selector: 'app-root',
     imports: [
-        RouterOutlet,
         LoginComponent,
         CommonModule,
         ProfileComponent,

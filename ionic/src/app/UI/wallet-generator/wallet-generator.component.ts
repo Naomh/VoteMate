@@ -6,7 +6,7 @@ import { Form, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsMo
 import { DexieService } from '../../services/dexie.service';
 import { HttpService } from '../../services/http.service';
 import { Mnemonic, Wallet } from 'ethers';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 type State = 'init' | 'mnemonic' | 'validation' | 'success' | 'recovery';
 
@@ -17,6 +17,7 @@ type State = 'init' | 'mnemonic' | 'validation' | 'success' | 'recovery';
     styleUrl: './wallet-generator.component.scss'
 })
 export class WalletGeneratorComponent {
+  private router = inject(Router);
   private web3SVC = inject(Web3Service);
   private dexieSVC = inject(DexieService);
   private httpSVC = inject(HttpService);
@@ -81,6 +82,11 @@ export class WalletGeneratorComponent {
     return Math.random() > 0.35;
   }
   
+  navigateToList(){
+    this.dexieSVC.refresh();
+    this.router.navigate(['/list']);
+  }
+
   protected async save(){
     await this.dexieSVC.setWallet(this.wallet);
   }

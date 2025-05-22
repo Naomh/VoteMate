@@ -1,1 +1,8 @@
-<UI-loginform (googleLogin)="handleLogin()" (login)="onLogin($event)" (register)="onRegister($event)" (resetPw)="onResetPassword($event)"></UI-loginform>
+<UI-loginform 
+(googleLogin)="handleLogin()" 
+(login)="handleButtonAction($event.button, undefined, 'login failed!', onLogin.bind(this), $event.form)" 
+(register)="handleButtonAction($event.button, undefined, 'Registration failed!',  onRegister.bind(this), $event.form)" 
+(resetPw)="handleButtonAction($event.button, undefined, undefined, onResetPassword.bind(this), $event.form)"
+(enterCode)="handleButtonAction($event.button, undefined, undefined, onEnterCode.bind(this), $event.form)"
+/>
+

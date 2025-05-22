@@ -4,36 +4,39 @@ import { HttpService } from '../../services/http.service';
 import { DexieService, IUser } from '../../services/dexie.service';
 import { ElectionstagePipe } from '../../pipes/electionstage.pipe';
 import { RouterModule } from '@angular/router';
-import { Address } from 'web3';
-import { AsyncPipe } from '@angular/common';
-import { ButtonComponent } from "../button/button.component";
+import { ButtonComponent, ButtonHandler } from "../button/button.component";
+import { StageToActionPipe } from "../../pipes/stage-to-action.pipe";
+import { SnackbarService } from '../../services/snackbar.service';
 const MainVotingC = require('../../../assets/contracts/MainVotingC.json') 
 
 
 @Component({
     selector: 'app-election-card',
-    imports: [ElectionstagePipe, RouterModule, AsyncPipe, ButtonComponent],
+    imports: [ElectionstagePipe, RouterModule, ButtonComponent, StageToActionPipe],
     templateUrl: './election-card.component.html',
     styleUrl: './election-card.component.scss'
 })
-export class ElectionCardComponent implements OnInit {
+export class ElectionCardComponent extends ButtonHandler implements OnInit{
   // #region Inputs and Outputs
   @Input() name!: string;
   @Input() address!: string;
   @Input() id!: string;
   @Input() user!: IUser | undefined;
   @Input() description: string = "";
+  @Input() registered: boolean = false;
   @Output() preview = new EventEmitter<string>();
   // #endregion
 
   // #region Services and Contract
-  private web3SVC: Web3Service = inject(Web3Service);
-  private httpSVC: HttpService = inject(HttpService);
+  private web3SVC = inject(Web3Service);
+  private httpSVC = inject(HttpService);
   private dexieSVC = inject(DexieService);
+  private snackbarSVC = inject(SnackbarService)
   private contract!: any;
   // #endregion
 
   // #region State Variables
+  protected isAdmin = this.dexieSVC.isAdmin;
   protected stage: number = -1;
   protected isEligible!: boolean;
   // #endregion
@@ -51,20 +54,16 @@ export class ElectionCardComponent implements OnInit {
     this.dexieSVC.selectElection(this.id);
   }
 
-  public async enroll(button: ButtonComponent) {
+  public async enroll() {
     if (!this.user || !this.user.wallet) {
-      button.setFailure();
-      return;
+      
+      throw Error('Your account is not set-up properly');
     }
-
-    try {
-      button.state = 'loading';
-      await this.httpSVC.enrollVoter(this.address, this.user.wallet);
-      button.setSuccess();
-    } catch (e) {
-      button.setFailure();
-    }
-    button.state = 'ready';
+    const response = await this.httpSVC.enrollVoter(this.address, this.user.wallet);
+    this.registered = true;
+    this.dexieSVC.addOrUpdateElectionRecord(response.election);
+    //await this.dexieSVC.updateElectionsSignal(false);
+    this.snackbarSVC.show('Enrolled', 'success');
   }
 
   public async toPreview() {
