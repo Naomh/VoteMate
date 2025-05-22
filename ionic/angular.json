@@ -35,17 +35,25 @@
             "scripts": []
           },
           "configurations": {
+            "capacitor": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.capacitor.ts"
+                }
+              ]
+            },
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "10",
+                  "maximumError": "15kb"
                 }
               ],
               "outputHashing": "all"

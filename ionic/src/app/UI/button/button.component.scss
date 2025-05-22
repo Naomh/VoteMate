@@ -1,4 +1,4 @@
-button{
+:host{
     gap: 5px;
     min-height: 25px;
     position: relative;
@@ -19,6 +19,15 @@ button{
         border-radius: 100%;
         animation: growAndFadeSuccess 1s linear;
     }
+
+    &:disabled {
+        background-color: var(--c-background-disabled) !important;
+        color: var(--c-foreground-disabled) !important;
+        cursor: default !important;
+        box-shadow: none !important;
+        pointer-events: none !important;
+    }
+    
 }
 .loader {
     width: 18px;

@@ -117,6 +117,7 @@ Voter.prototype.computeMpcPK = function(ephemeralPKs){
     }
 
     this._mpcKey = this._curve.subtract(sum_left, sum_right);
+    console.log('MPC KEY = ', this._mpcKey);
     //console.log(`\t The voter[${this._id}] computed his MPC PK  (i.e. h) =  ${this._mpcKey}`);
   }
 
@@ -125,11 +126,12 @@ Voter.prototype.getBlindedVote = function() {
     this._vote = Math.floor(Math.random() * this._candidates.length);
 
     this._bvote = this._curve.add(this._curve.multiply(this._mpcKey, this._sK), this._candidateGens[this._vote]);
+    console.log('blinded vote = ', this._bvote);
     //console.log(`\t The voter[${this._id}] votes for candidate ${this._vote} | bvote = ${this._bvote}`)
 
     // correctness proof
     let w = BigInt(utils.randomBytes(this._curve.n));
-
+    console.log("w = ", w);
     for (let i = 0; i < this._candidates.length; i++) {
         console.log(`\t Processing candidate[${i}]...`)
         if(i != this._vote){
@@ -152,6 +154,7 @@ Voter.prototype.getBlindedVote = function() {
             var b = this._curve.multiply(this._mpcKey, w);
             var r = undefined;
             var d = 0n;
+
         }
         this._a.push(a);
         this._b.push(b);
@@ -164,19 +167,20 @@ Voter.prototype.getBlindedVote = function() {
         inputForHash.push(utils.toPaddedHex(e.x.toString(16), 32));
         inputForHash.push(utils.toPaddedHex(e.y.toString(16), 32));
     });
-
+    console.log('input for hash a', inputForHash);
     this._b.forEach(e => {
         inputForHash.push(utils.toPaddedHex(e.x.toString(16), 32));
         inputForHash.push(utils.toPaddedHex(e.y.toString(16), 32));
     });
-
+;   console.log('input for hash b', inputForHash);
     this._c = W3.utils.toBN(utils.shaX(inputForHash, this._sizeP));
-
+    console.log('c = ', utils.toPaddedHex(this._c, 32));
     // adjust d, r for selected candidate
     let tmpXor = utils.xorBIArray(this._d, 32);
     this._d[this._vote] = BigInt(utils.xor(utils.toPaddedHex(this._c, 32), tmpXor));
+    console.log('d = ', this._d);
     this._r[this._vote] = (this._sK * this._d[this._vote] + w) % this._curve.n;
-
+    console.log('r = ', this._r);
     return [
         utils.BIarrayToHex(this._d, this._sizeP),
         utils.ECPointsArrayToHex(this._a, this._sizeP),

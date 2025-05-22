@@ -9,7 +9,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const httpSVC = inject(HttpService);
   
   const queryparams = route.queryParams;
-  
   if(queryparams['email']){
     const cookies = await httpSVC.verifyCookies();
     if(cookies){
@@ -21,7 +20,6 @@ export const authGuard: CanActivateFn = async (route, state) => {
   if(user){
     return true;
   }else{
-
     return false;
   }
 };

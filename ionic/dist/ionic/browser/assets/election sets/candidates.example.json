@@ -1,0 +1,38 @@
+{
+    "items": [
+      {
+        "partyId": "p1",
+        "firstName": "John",
+        "lastName": "Smith",
+        "titleBefore": "Dr.",
+        "titleAfter": "Ph.D.",
+        "profession": "Teacher"
+      },
+      {
+        "partyId": "p2",
+        "firstName": "Emily",
+        "lastName": "Clark",
+        "profession": "Doctor"
+      },
+      {
+        "partyId": "p3",
+        "firstName": "Michael",
+        "lastName": "Johnson",
+        "titleBefore": "Eng.",
+        "profession": "Engineer"
+      },
+      {
+        "partyId": "p4",
+        "firstName": "Sarah",
+        "lastName": "Williams",
+        "titleAfter": "MBA",
+        "profession": "Economist"
+      },
+      {
+        "partyId": "p5",
+        "firstName": "David",
+        "lastName": "Brown",
+        "profession": "Lawyer"
+      }
+    ]
+  }

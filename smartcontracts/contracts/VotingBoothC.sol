@@ -1,6 +1,4 @@
-// SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
-//pragma solidity ^0.8.17;
 pragma experimental ABIEncoderV2;
 
 // Authors: authors of BBB-voting (https://arxiv.org/pdf/2010.09112.pdf), Ivana Stančíková
@@ -54,6 +52,7 @@ contract VotingBoothC {
     mapping(uint => uint) public lastRepairedIdx; // last faulty index repaired by voter
     mapping(uint => bool) public submittedRepairKeys;
     mapping(uint => uint[2]) public blindedVotes;
+    mapping(uint => uint) votes;
 
     // Events
     event SingUpFinished();
@@ -65,8 +64,8 @@ contract VotingBoothC {
     event TallyCompleted(int[] tally);
 
     // Addrs of contracts and authority
-    address votingFuncAddr;
-    address votingCallsAddr;
+    address public votingFuncAddr;
+    address public votingCallsAddr;
     address mainVotingC;
     address authority;
 
@@ -135,13 +134,31 @@ contract VotingBoothC {
         votersCnt = _votersCnt;
 
         for (uint i = 0; i < _candidates.length; i++) {
-        candidates.push(_candidates[i]);
-        candidateGens.push([_candidateGens[2*i], _candidateGens[2*i + 1]]);
-        tally.push(0);
-        tally.push(0);
+            candidates.push(_candidates[i]);
+            votes[i] = 0;
+            candidateGens.push([_candidateGens[2*i], _candidateGens[2*i + 1]]);
+            tally.push(0);
+            tally.push(0);
         }
 
         stage = StageEnum.SIGNUP;
+    }
+
+    // Helper function to handle delegatecall and revert with detailed error message
+    function handleDelegateCall(address target, bytes memory data) internal returns (bytes memory) {
+        (bool success, bytes memory returnData) = target.delegatecall(data);
+        if (!success) {
+            if (returnData.length > 0) {
+                // Extract revert reason from return data
+                assembly {
+                    let returndata_size := mload(returnData)
+                    revert(add(returnData, 32), returndata_size)
+                }
+            } else {
+                revert("delegatecall failed without error message.");
+            }
+        }
+        return returnData;
     }
 
     // Called by each voter to submit her public key
@@ -164,8 +181,12 @@ contract VotingBoothC {
     function changeStageToPreVoting()
         public
         inStage(StageEnum.SIGNUP)
+        fromAuthority()
     {
         stage = StageEnum.PRE_VOTING;
+        (bool success, bytes memory data) = mainVotingC.call(abi.encodeWithSignature("changeStageToPreVoting()"));
+        require(success, "delegatecall failed.");
+
         emit SingUpFinished();
     }
   
@@ -175,12 +196,9 @@ contract VotingBoothC {
         public
         fromAuthority()
         inStage(StageEnum.PRE_VOTING)
-    {
-        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
-            abi.encodeWithSignature("buildRightMarkers4MPC()")
-        );
-        
-        require(success, "buildRightMarkers4MPC() delegatecall failed.");
+    {   
+        require(votingFuncAddr != address(0), "votingFuncAddr is not set");
+        handleDelegateCall(votingFuncAddr, abi.encodeWithSignature("buildRightMarkers4MPC()"));
 
         if (RM_start == votersPKs.length) {
             emit RightMarkersComputed();
@@ -197,19 +215,26 @@ contract VotingBoothC {
         fromAuthority()
         inStage(StageEnum.PRE_VOTING)
     {
-
-        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+        handleDelegateCall(
+            votingFuncAddr,
             abi.encodeWithSignature("computeMPCKeys(uint256[],uint256[])", inv_mod_mpc2, inv_mod_mpc1)
         );
 
-        require(success, "computeMPCKeys() delegatecall failed.");
-   
         if (votersCnt == MpcPKs.length) {
             stage = StageEnum.VOTING;
             emit MPCKeysComputedEvent();
         }
     }
-  
+    
+    function recordVote(uint vote) 
+        public
+        fromAuthority() 
+    {
+        require(vote < candidates.length, 'invalid candidate');
+        votes[vote]++;
+    }
+    
+
     // Called by voter to submit her vote,
     // requires elements of 1-of-k zero-knowledge proof
     // requires modular inverses for values comapred in proof validation
@@ -225,15 +250,18 @@ contract VotingBoothC {
         voterSubmittedPK(msg.sender)
         inStage(StageEnum.VOTING)
     {
-        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
-            abi.encodeWithSignature("submitVote(uint256[],uint256[],int256[],int256[],uint256[2],uint256[])", 
-            proof_A, proof_B, proof_r, proof_d, vote, mod_invs)
+        handleDelegateCall(
+            votingFuncAddr,
+            abi.encodeWithSignature(
+                "submitVote(uint256[],uint256[],int256[],int256[],uint256[2],uint256[])",
+                proof_A, proof_B, proof_r, proof_d, vote, mod_invs
+            )
         );
-        require(success, "submitVote() delegatecall failed.");
 
         if (votersPKs.length == blindedVotesCnt) {
             stage = StageEnum.TALLY;
-            mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+            (bool s, ) = mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+            require(s, "changeStageToTally() call failed.");
         }
     }
 
@@ -270,12 +298,12 @@ contract VotingBoothC {
         inStage(StageEnum.FAULT_REPAIR)
         notSubmittedRepairKeyYet(myIdx) 
     {
-        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+        handleDelegateCall(
+            votingFuncAddr,
             abi.encodeWithSignature(
                 "repairBlindedVote(uint256[],int256[],int256[],uint256[],uint256[],uint256[],uint256[],uint256)", 
                 mod_invs, proof_r, h_decomp, proof_m1, proof_m2, blindedKeys, faultyIdx, myIdx)
         );
-        require(success, "repairBlindedVote() delegatecall failed.");
 
         if(submittedRepairKeys[myIdx] == true) {
             emit RepairedBVoteEvent(blindedVotes[myIdx]);
@@ -284,17 +312,14 @@ contract VotingBoothC {
         // all active voters repaired their blinded votes
         if(votersPKs.length - notVotedIdxs.length == submittedVotersRepair) {
             stage = StageEnum.TALLY;
-            mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+            (bool s, ) = mainVotingC.call(abi.encodeWithSignature("changeStageToTally()"));
+            require(s, "changeStageToTally() call failed.");
         }
     }
 
     // Called repeatedly to compute sum of all blinded votes
     function computeBlindedVotesSum() public {
-        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
-            abi.encodeWithSignature("computeBlindedVotesSum()")
-        );
-
-        require(success, "computeBlindedVotesSum() delegatecall failed.");
+        handleDelegateCall(votingFuncAddr, abi.encodeWithSignature("computeBlindedVotesSum()"));
 
         if (VS_start == votersPKs.length) {
             emit BlindedVotesSumComputed();
@@ -308,22 +333,25 @@ contract VotingBoothC {
         fromAuthority()
         inStage(StageEnum.TALLY)
     {
-        (bool success, bytes memory data) = votingFuncAddr.delegatecall(
+        handleDelegateCall(
+            votingFuncAddr,
             abi.encodeWithSignature("computeTally(int256[],uint256[2])", c_decom, modinv)
         );
-        require(success, "computeTally() delegatecall failed.");
 
         // inform voters
         emit TallyCompleted(tally);
 
         // pass result to main contract
-        mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+        (bool s, ) =  mainVotingC.call(abi.encodeWithSignature("provideBoothTally(int256[])", tally));
+        require(s, "changeStageToTally() call failed.");
     }
-
 
     // // // Calls // // //
     function getCntOfVoters() public view returns (uint) {
         return votersCnt;
+    }
+    function getCntOfSubmitedPKs() public view returns (uint) {
+        return votersPKs.length;
     }
 
     function getCntOfMarkersMPC() public view returns (uint) {
@@ -346,6 +374,10 @@ contract VotingBoothC {
         return uint(stage);
     }
 
+    function getVotes(uint id) public view  fromAuthority() returns (uint) {
+        return votes[id];
+    }
+
     // Precomp of modular inverses for MPC key computation
     // use .call()
     function modInvCache4MPCBatched(uint start_idx, uint[3] memory last_left)
@@ -356,8 +388,8 @@ contract VotingBoothC {
         (bool success, bytes memory data) = votingCallsAddr.delegatecall(
             abi.encodeWithSignature("modInvCache4MPCBatched(uint256,uint256[3])", start_idx, last_left)
         );
-
-        require(success, "modInvCache4MPCBatched() delegatecall failed.");
+    
+        require(success,  "delegatecall failed.");
 
         (uint[] memory a, uint[] memory b, uint[3] memory c) = abi.decode(data, (uint[], uint[], uint[3]));
 
@@ -381,7 +413,7 @@ contract VotingBoothC {
                 proof_B, proof_r, proof_d, vote)
             );
 
-        require(success, "modInvCache4SubmitVote() delegatecall failed.");
+        require(success, "delegatecall failed.");
 
         uint[] memory ret = abi.decode(data, (uint[]));
 
@@ -396,7 +428,7 @@ contract VotingBoothC {
             abi.encodeWithSignature("modInvCache4Tally(int256[])", c_decom)
         );
 
-        require(success, "modInvCache4Tally() delegatecall failed.");
+        require(success, "delegatecall failed.");
 
         uint[2] memory ret = abi.decode(data, (uint[2]));
 
@@ -421,7 +453,7 @@ contract VotingBoothC {
             faultyIdx, blindedKeys, myIdx, proof_r, h_decomp)
         );
 
-        require(success, "modInvCache4repairVote() delegatecall failed.");
+        require(success, "delegatecall failed.");
 
         uint[] memory ret = abi.decode(data, (uint[]));
 

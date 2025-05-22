@@ -1,0 +1,34 @@
+{
+    "items": [
+      {
+        "partyId": "p1",
+        "acronym": "ABC",
+        "fullName": "Alliance for Better Communities",
+        "voterId": "v1001"
+      },
+      {
+        "partyId": "p2",
+        "acronym": "XYZ",
+        "fullName": "Xenial Youth Zone",
+        "voterId": "v1002"
+      },
+      {
+        "partyId": "p3",
+        "acronym": "GNP",
+        "fullName": "Green National Party",
+        "voterId": "v1003"
+      },
+      {
+        "partyId": "p4",
+        "acronym": "LDP",
+        "fullName": "Liberal Democratic Platform",
+        "voterId": "v1004"
+      },
+      {
+        "partyId": "p5",
+        "acronym": "PFA",
+        "fullName": "Progress For All",
+        "voterId": "v1005"
+      }
+    ]
+  }

@@ -1,25 +1,30 @@
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Web3Service } from '../../services/web3.service';
 import { DexieService } from '../../services/dexie.service';
 import { HttpService } from '../../services/http.service';
-import { Contract, ERR_PARAM } from 'web3';
+import { Address, Contract, ERR_PARAM } from 'web3';
 import { ICandidate, IElection } from '../../UI/election-list/election.interface';
-import { CommonModule, DatePipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { Voter } from './voter';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonComponent } from "../../UI/button/button.component";
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+
+import { ButtonComponent, ButtonHandler } from "../../UI/button/button.component";
+import { ESort } from '../../interfaces/sort.enum';
+import { ElectionStage, ElectionstagePipe } from '../../pipes/electionstage.pipe';
+import { TallyChartComponent } from '../../UI/tally-chart/tally-chart.component';
+
 const MainVotingC = require('../../../assets/contracts/MainVotingC.json');
 const VotingBoothC = require('../../../assets/contracts/VotingBoothC.json');
 
 @Component({
-  selector: 'app-election',
-  standalone: true,
-  imports: [RouterModule, CommonModule, FormsModule, ReactiveFormsModule, DatePipe, ButtonComponent],
-  templateUrl: './election.component.html',
-  styleUrl: './election.component.scss'
+    selector: 'app-election',
+    standalone: true,
+    imports: [RouterModule, ReactiveFormsModule, CommonModule, DatePipe, ButtonComponent, ElectionstagePipe, TallyChartComponent, AsyncPipe],
+    templateUrl: './election.component.html',
+    styleUrl: './election.component.scss'
 })
-export class ElectionComponent implements OnInit{
+export class ElectionComponent extends ButtonHandler implements OnInit{
 
   private web3SVC = inject(Web3Service);
   private dexieSVC = inject(DexieService);
@@ -32,10 +37,19 @@ export class ElectionComponent implements OnInit{
   private user = this.dexieSVC.user();
   private voter!: Voter;
 
-  protected contract!:Contract<any> | undefined;
+  private sort: ESort = ESort.none;
+
+  protected contract!:Contract<any>;
   protected election!: IElection | undefined;
   protected FilteredCandidates!: ICandidate[];
   protected isEligible!: boolean;
+  protected isAdmin = this.dexieSVC.isAdmin;
+  protected electionStage!: bigint;
+
+  public finalTally!: Signal<number[] | undefined>;
+  public PkSubmitted!: Signal<boolean>;
+  public stage!: Signal<bigint>;
+
 
   protected form = new FormGroup({
     selectedCandidate: new FormControl('', Validators.required), 
@@ -43,24 +57,36 @@ export class ElectionComponent implements OnInit{
 
 
   async ngOnInit(): Promise<void> {
-    const address = this.route.snapshot.paramMap.get('id');
-    if(!address || !this.user?.wallet){
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if(!id || !this.user?.wallet){
       this.router.navigate(['/list']);
-      return;
+      throw new Error('user not found or election id not found');
     }
-    this.address = address;
-    
+
+    await this.dexieSVC.selectElection(id);
+
+    this.address = this.dexieSVC.selectedElection()!.mainVotingAddress;
     this.voter = new Voter(this.address, this.user.wallet, this.web3SVC, this.dexieSVC);
     
+    this.finalTally = this.voter.finalTally;
+    this.PkSubmitted = this.voter.pkSubmitted;
+
+    this.isEligible = await this.web3SVC.isVoterEligible(this.address, this.user.wallet);
+    this.electionStage = await this.web3SVC.getStage(this.address);
+    
+    if(Number(this.electionStage) !== ElectionStage.voting && !this.isEligible){
+      this.form.disable();
+    }
+
     this.contract = await this.web3SVC.getSmartContract(this.address, MainVotingC.abi);
     if(!this.contract){
       this.router.navigate(['/list']);
       throw new Error('smart the smat contract is unreachable');
     }
 
-    this.isEligible = await this.web3SVC.isVoterEligible(this.address, this.user.wallet);
 
-    this.election = await this.dexieSVC.getElection(this.address);
+    this.election = this.dexieSVC.selectedElection();
     if(!this.election){
       this.router.navigate(['/list']);
       throw new Error('election doesn\'t exist');
@@ -95,31 +121,32 @@ export class ElectionComponent implements OnInit{
   }
 
   async submitPK(){
-    this.voter.submitPK();
+      await this.voter.submitPK();
   }
 
-  async computeMPCkeys(){
+  async precomputeMPCkeys(){
     await this.httpSVC.precomputeMPCKeys(this.address);
   }
 
-  async vote(button: ButtonComponent){
-    if (!this.form.valid) {
-      button.setFailure('Select your candidate.')
-      return
-    }
-      button.state = 'loading';
-      const candidate = parseInt(this.form.value.selectedCandidate as string, 10);
+  async computeMPCkeys(){
+    await this.httpSVC.computeMPCKeys(this.address);
+  }
 
-      try{
-        await this.voter.submitVote(candidate);
-      }catch(e){
-        console.error(e);
-        button.setFailure();
-      }
-      finally{
-        button.state = 'ready';
-      }
- 
+  async computeBlindedVotesSum(){
+    await this.httpSVC.computeBlindedVotesSum(this.address, this.election!.ECaddress);
+  }
+  
+  async computeGroupTallies(){
+    await this.httpSVC.computeGroupTallies(this.address, this.election!.fastECmulAddress, this.election!.ECaddress);
+  }
+
+  async vote(){
+    if (!this.form.valid) {
+      throw new Error('Select your candidate.')
+    }
+    const candidate = parseInt(this.form.value.selectedCandidate as string, 10);
+
+    await this.voter.submitVote(candidate);
   }
 
   public filterParty(event: Event){
@@ -138,11 +165,40 @@ export class ElectionComponent implements OnInit{
       return
     }
     const regexp = new RegExp(term, 'gi')
-    this.FilteredCandidates = this.election!.candidates.filter((candiate) => candiate.index.toString().match(term) || regexp.test(candiate.name))
+    this.FilteredCandidates = this.election!.candidates.filter((candiate) => candiate.index.toString().match(term) || regexp.test(candiate.name));
   }
   
-  enrollVoters(){
+  protected refresh(){
+    this.voter.refresh()
+  }
+
+  public enrollVoters(){
     this.httpSVC.enrollVoters(this.address);
   }
 
+  
+  public async repair(){
+    await this.httpSVC.repairVoters(this.address);
   }
+
+  public async repairVotes(){  
+    await this.voter.repairFaultyVotes();
+  }
+
+  public toggleSort(){
+    this.sort = (this.sort + 1) % (Object.keys(ESort).length / 2);
+  }
+
+  protected sortFn(candiateA: ICandidate, candiateB: ICandidate){
+    if(this.sort === ESort.none){
+      return 0
+    }
+    
+    const comparison = candiateA.name.localeCompare(candiateB.name);
+    return this.sort === ESort.up ? comparison : -comparison;
+  }
+
+  protected async getTallies(): Promise<number[]>{
+    return await this.voter.getFinalTallies();
+  }
+}

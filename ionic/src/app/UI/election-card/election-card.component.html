@@ -7,7 +7,7 @@
     </div>
         <div class="content">{{description}}</div>
         <div class="buttons">
-            <UI-button #enrollBtn [disabled]="isEligible" (click)="enroll(enrollBtn)">Enroll</UI-button>
-            <button [routerLink]="['/election', address]" routerLinkActive="router-link-active" > preview</button>
+            <button ui-button #enrollBtn [disabled]="registered || isEligible  || (stage | electionstage) !== 'setup'" (click)="handleButtonAction(enrollBtn, 'Enrolled!', 'failed to enroll! Try again later', enroll.bind(this))">Enroll</button>
+            <button [routerLink]="['/election', id]" routerLinkActive="router-link-active" (click)="selectElection()">{{stage | stageToAction}}</button>
         </div>
     </div>

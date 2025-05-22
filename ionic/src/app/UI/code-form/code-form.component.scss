@@ -1,0 +1,15 @@
+.code-inputs {
+	display: flex;
+	justify-content: space-between;
+	margin: auto;
+	width: fit-content;
+	gap: 5px;
+  }
+
+  .code-inputs input {
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	font-size: 24px;
+	text-align: center;
+  }

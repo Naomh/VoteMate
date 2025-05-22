@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'UI-snackbar',
-  standalone: true,
-  imports: [],
-  templateUrl: './snackbar.component.html',
-  styleUrl: './snackbar.component.scss'
+    selector: 'UI-snackbar',
+    imports: [],
+    templateUrl: './snackbar.component.html',
+    styleUrl: './snackbar.component.scss'
 })
 export class SnackbarComponent {
   protected isVisible = false;

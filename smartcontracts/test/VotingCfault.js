@@ -65,7 +65,7 @@ contract('MainVotingC', function(accounts) {
     for (let i = 0; i < auth.cntVoters; i += enroll_batch) {
       let cnt = (i + enroll_batch - 1) < auth.cntVoters ? enroll_batch : (auth.cntVoters % enroll_batch); 
       let batch = enroll_addrs.slice(i, i + cnt);
-      var receipt = await votingc.enrollVoters(batch, { from: authority, gas: 12.5 * 1000 * 1000 });
+      var receipt = await votingc.enrollVoters(batch, { from: authority });
 
       console.log(`\t \\/== Gas used in enrollVoters batch with start_idx ${i}:`, receipt.receipt.gasUsed);
       gasUsedEnroll += receipt.receipt.gasUsed;
@@ -80,7 +80,7 @@ contract('MainVotingC', function(accounts) {
   it("Split to groups and deploy booth contracts", async () => {
     var gasUsedSplit = 0;
     for (let i = 0; i < auth.cntVoters; i += split_batch) {
-      var receipt = await votingc.splitGroups(i, split_batch, auth.votingGroupsCnt, { from: authority, gas: 12.5 * 1000 * 1000 });
+      var receipt = await votingc.splitGroups(i, split_batch, auth.votingGroupsCnt, { from: authority });
       console.log(`\t \\/== Gas used in splitGroups batch with start_idx ${i}:`, receipt.receipt.gasUsed);
       gasUsedSplit += receipt.receipt.gasUsed;
     }
@@ -94,7 +94,7 @@ contract('MainVotingC', function(accounts) {
     var deploy_batch = 2;
     var gasUsedDeploy = 0;
     for (let i = 0; i < auth.votingGroupsCnt; i += deploy_batch) {
-      var receipt = await votingc.deployBooths(i, deploy_batch, votingfunc.address, votingcalls.address, { from: authority, gas: 12.5 * 1000 * 1000 });
+      var receipt = await votingc.deployBooths(i, deploy_batch, votingfunc.address, votingcalls.address, { from: authority });
       gasUsedDeploy += receipt.receipt.gasUsed;
 
 
@@ -178,7 +178,7 @@ contract('MainVotingC', function(accounts) {
 
       var rightMarkersComputed = false;
       while (!rightMarkersComputed) {
-        var receipt = await booth.buildRightMarkers4MPC({ from: authority, gas: 12.5 * 1000 * 1000 });
+        var receipt = await booth.buildRightMarkers4MPC({ from: authority });
 
         receipt.receipt.logs.forEach( e => {
           if(e.event !== undefined && e.event == "RightMarkersComputed") {
@@ -209,15 +209,14 @@ contract('MainVotingC', function(accounts) {
       let booth = await VotingBoothC.at(booths[i].address);
 
       var act_left = [utils.toPaddedHex(auth._G.x, 32), utils.toPaddedHex(auth._G.y, 32), 1];
-
       for (let j = 0; j < booths[i].cntVoters / config.MPC_BATCH_SIZE; j++) {
         // precompute modular inverse off-chain
-        invModArrs_MPC = await booth.modInvCache4MPCBatched.call(j * config.MPC_BATCH_SIZE, act_left, {gas: 125000000});
+        invModArrs_MPC = await booth.modInvCache4MPCBatched.call(j * config.MPC_BATCH_SIZE, act_left);
 
         act_left = invModArrs_MPC[2];
 
         // MPC keys computation on-chain
-        var receipt = await booth.computeMPCKeys(invModArrs_MPC[1], invModArrs_MPC[0], { from: authority, gas: 12.5 * 1000 * 1000 });
+        var receipt = await booth.computeMPCKeys(invModArrs_MPC[1], invModArrs_MPC[0], { from: authority});
         gasUsedMPC += receipt.receipt.gasUsed;
 
         invModArrs_MPC = null;
@@ -280,7 +279,7 @@ contract('MainVotingC', function(accounts) {
       var invModArrs = await booth.modInvCache4SubmitVote.call(tmpPars[1], res2, res3, tmpPars[4], {from: voters[i].address});
 
       // submit vote
-      var receipt = await booth.submitVote(tmpPars[0], tmpPars[1], res2, res3, tmpPars[4], invModArrs, {from: voters[i].address, gas: 12.5 * 1000 * 1000});
+      var receipt = await booth.submitVote(tmpPars[0], tmpPars[1], res2, res3, tmpPars[4], invModArrs, {from: voters[i].address});
       console.log(`\t \\/== Gas used in submitVote by voter[${i}]:`, receipt.receipt.gasUsed);
     }
 
@@ -314,7 +313,7 @@ contract('MainVotingC', function(accounts) {
     for (let i = 0; i < booths.length; i++) {
       let booth = await VotingBoothC.at(booths[i].address);
 
-      var receipt = await booth.changeStageToFaultRepair({from: authority, gas: 12.5 * 1000 * 1000});
+      var receipt = await booth.changeStageToFaultRepair({from: authority});
       console.log(`\t \\/== Gas used in changeStageToFaultRepair:`, receipt.receipt.gasUsed);
 
       let nonVotedIDXes_fromSC = [];
@@ -355,11 +354,12 @@ contract('MainVotingC', function(accounts) {
       var decomp = [];
       for (let j = 0; j < voters[i].booth.faultyVotersCnt; j++) {
         var tmpItems = await fastECc.decomposeScalar.call(args[0][j], config.NN, config.LAMBDA);
+        console.log('tempajtems', tmpItems);
         decomp.push(BigInt(tmpItems[0]));
         decomp.push(BigInt(tmpItems[1]));
       }
       args[0] = utils.BIarrayToHexUnaligned(decomp); // update proof_r in arguments of SC (should be 2x longer)
-      
+
       // decompose scalars of hashes to two parts
       var decomp = [];
       for (let j = 0; j < voters[i].booth.faultyVotersCnt; j++) {
@@ -374,6 +374,7 @@ contract('MainVotingC', function(accounts) {
       args[0].forEach(e => {
         res0.push(W3.utils.toBN(e)); 
       });
+      console.log('res nula', res0);
       var res1 = [];
       args[1].forEach(e => {
         res1.push(W3.utils.toBN(e));
@@ -384,7 +385,7 @@ contract('MainVotingC', function(accounts) {
         repairKeys,
         voters[i].id,
         res0, res1,// ...(args.slice(0, 2)),
-        {from: voters[i].address, gas: 50 * 1000 * 1000}
+        {from: voters[i].address}
       );
       
       var gasUsedVoter = 0;
@@ -395,6 +396,7 @@ contract('MainVotingC', function(accounts) {
         if (end > voters[i].booth.faultyVotersIdxs.length) {
           end = voters[i].booth.faultyVotersIdxs.length;
         }
+
         var receipt = await booth.repairBlindedVote(
           invModArrs.slice(2*l, 2*end),
           res0.slice(2*l, 2*end),
@@ -404,7 +406,7 @@ contract('MainVotingC', function(accounts) {
           repairKeys.slice(2*l, 2*end),
           voters[i].booth.faultyVotersIdxs.slice(l, end),
           voters[i].id,
-          {from: voters[i].address, gas: 12.5 * 1000 * 1000}
+          {from: voters[i].address}
         );
 
         gasUsedVoter += receipt.receipt.gasUsed;
@@ -437,7 +439,7 @@ contract('MainVotingC', function(accounts) {
        // computeBlindedVotesSum batched
       var votesSumComputed = false;
       while (!votesSumComputed) {
-        var receipt = await booth.computeBlindedVotesSum({ from: authority, gas: 12.5 * 1000 * 1000 });
+        var receipt = await booth.computeBlindedVotesSum({ from: authority});
 
         receipt.receipt.logs.forEach( e => {
           if(e.event !== undefined && e.event == "BlindedVotesSumComputed") {
@@ -495,15 +497,18 @@ contract('MainVotingC', function(accounts) {
       let booth = await VotingBoothC.at(booths[i].address);
 
       var decomp = [];
+      console.log('---------------------');
       for (let j = 0; j < config.CANDIDATES_CNT; j++) {
+        console.log(web3.utils.numberToHex(booths[i]._tally[j].toString(10)));
         var tmpItems = await fastECc.decomposeScalar.call(web3.utils.numberToHex(booths[i]._tally[j].toString(10)), config.NN, config.LAMBDA);
         decomp.push(BigInt(tmpItems[0]));
         decomp.push(BigInt(tmpItems[1]));
       }
+      console.log('---------------------')
 
       var invModArrs = await booth.modInvCache4Tally.call(utils.BIarrayToHexUnaligned(decomp), {from: authority});
 
-      var receipt = await booth.computeTally(utils.BIarrayToHexUnaligned(decomp), invModArrs, {from: authority, gas: 12.5 * 1000 * 1000});
+      var receipt = await booth.computeTally(utils.BIarrayToHexUnaligned(decomp), invModArrs, {from: authority});
       console.log(`\t \\/== Gas used in computeTally by authority in group ${i}:`, receipt.receipt.gasUsed);
       gasUsed += receipt.receipt.gasUsed;
 

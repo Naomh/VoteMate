@@ -6,8 +6,8 @@ async function sendSMS() {
   try {
     client.messages.create({
       from: "+13203004512",
-      to: "+420724959520",
-      body: "skákal pes",
+      to: "+420#########",
+      body: "message",
     });
   } catch (e) {
     console.log(e);

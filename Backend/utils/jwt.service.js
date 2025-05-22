@@ -39,7 +39,6 @@ class JWTService{
   }
 
   decode(token){
-    console.log(token)
     return jwt.decode(token);
   }
 
@@ -51,7 +50,6 @@ class JWTService{
   }
 
   verifyJwt(token) {
-    try {
       const decoded = jwt.verify(token, this.keyPair.publicKey);
       return {
         valid: true,
@@ -59,14 +57,6 @@ class JWTService{
         expirationDate: jwt.decode(token).exp * 1000,
         decoded,
       };
-    } catch (e) {
-      console.error(e);
-      return {
-        valid: false,
-        expired: e.message === "jwt expired",
-        decoded: null,
-      };
-    }
   }
 }
 module.exports = new JWTService();

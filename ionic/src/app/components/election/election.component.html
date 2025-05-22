@@ -1,51 +1,135 @@
 <div class="container">
     <div class="header">
-    <h1>
-        {{election?.name}}
-    </h1>
-    <p>
-       {{election?.description}}
-    </p>
-    <div class="dates">
-        <h3>starts on {{election?.start | date: 'short'}}</h3>
-        <h3>ends on {{election?.end | date: 'short'}}</h3>
+        <h1>
+            {{election?.name}}
+        </h1>
+        <p>
+            {{election?.description}}
+        </p>
+        <div class="dates">
+            <h3>starts on {{election?.start | date: 'short'}}</h3>
+            <h3>ends on {{election?.end | date: 'short'}}</h3>
+        </div>
     </div>
-    </div>
+    @if ((electionStage | electionstage) === 'tally'){
+        <div *ngIf="finalTally() as tally">
+            <div class="formsHeader">  
+                    <h2>Results</h2>
+                <div class="filters">
+                    <h3>Settings</h3>
+                    <div>
+                        <button [class.selected]="chart.view === 'candidate'" (click)="chart.prepareCandidateChartData()">Candidates</button>
+                        <button [class.selected]="chart.view === 'party'" (click)="chart.preparePartyChartData()">Parties</button>
+                        <button class="imgbutton" (click)="chart.swapType()">
+                           @if (chart.type === 'bar') {
+                               <img height="25px" width="20px" src="../../../assets/images/chart-simple-solid.svg">
+                            }@else {
+                               <img height="25px" width="20px" src="../../../assets/images/chart-pie-solid.svg">
+                            }
+                        </button>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div class="chart">
+                <UI-tally-chart #chart [tally]="tally" [candidates]="election!.candidates"></UI-tally-chart>
+            </div>
+        </div>
+    }@else{
     <div class="formsHeader">
-        <h2>Candidates:</h2>
+        <h2>Candidates</h2>
         <div class="filters">
-            <h3>Settings:</h3>
+            <h3>Settings</h3>
             <div>
-                <button>sort ↑↓</button>
+                <button (click)="toggleSort()">sort ↑↓</button>
+                <button (click)="refresh()" class="imgbutton"><img src="../../../assets/images/refresh.svg"></button>
                 Party:
                 <select (change)="filterParty($event)" id="parties">
                     <option></option>
                     <option *ngFor="let party of election?.parties">{{party.acronym}}</option>
-                </select>
-                <input placeholder="search" (input)="filter($event)">
+                    </select>
+                    <input placeholder="search" (input)="filter($event)">
             </div>
         </div>
         <hr>
     </div>
-    <form [formGroup]="form" (ngSubmit)="vote(voteBtn)">
-        <div class="candidate" *ngFor="let candidate of FilteredCandidates">
-            <input type="radio" [id]="candidate.name" formControlName="selectedCandidate" [value]="candidate.index">
-            <label [for]="candidate.name">
-              <h3>
-                  {{candidate.index}}. {{candidate.name}} <span>/{{candidate.party}}/</span>
-              </h3>
-            </label>
-            <div>
-                {{candidate.bio}}
-            </div>
+    <div class="candidates">
+        <form [formGroup]="form">
+            @if (FilteredCandidates?.length) {
+                @for (candidate of FilteredCandidates.sort(sortFn.bind(this)); track $index) {
+                    <div class="candidate">
+                        <input  type="radio" [id]="candidate.name" formControlName="selectedCandidate" [value]="candidate.index">
+                        <label [class.disabled]="(electionStage | electionstage) !== 'voting'" [for]="candidate.name">
+                            <h3>
+                                {{candidate.index + 1}}. {{candidate.name}} <span>/{{candidate.party}}/</span>
+                            </h3>
+                        </label>
+                        <div>
+                            {{candidate.bio}}
+                        </div>
+                    </div>
+                }
+            }@else {
+                <div class="candidate notFound">
+                    <h3>No candidates found</h3>
+                </div>
+            }
+        </form>
+        <div class="submit">
+            
+            @if ((electionStage | electionstage) === 'signup') {
+                <button ui-button #submitPkBtn [disabled]="!isEligible || PkSubmitted()" 
+                (click)="handleButtonAction(
+                    submitPkBtn, 
+                    'PK submitted! Thanks.', 
+                    'PK submission failed! Try again later.', 
+                    submitPK.bind(this))" >Register to vote</button>
+            }
+            @else if ((electionStage | electionstage) === 'fault repair') {
+                <button ui-button #repairBtn 
+                (click)="handleButtonAction(
+                    repairBtn, 
+                    'Repair key submitted!', 
+                    'Submition failed!', 
+                    repairVotes.bind(this))"
+                >Repair Votes</button>
+                <div *ngIf="repairBtn.state === 'loading'" class="busy">Calculating your repair vote. This might take a while. Plese, do not exit.</div>
+            }
+            @else {
+                <button ui-button #voteBtn [disabled]="!isEligible || !form.valid || (electionStage | electionstage) !== 'voting'" 
+                (click)="handleButtonAction(voteBtn, 'Vote submitted!', 'Vote submition failed', vote.bind(this))"
+                >vote</button>
+                <div *ngIf="voteBtn.state === 'loading'" class="busy">Calculating your vote. This might take a while. Plese, do not exit.</div>
+            }
         </div>
-        <UI-button #voteBtn [disabled]="!isEligible || !form.valid" type="submit">vote</UI-button>
-    </form>
-    <button [routerLink]="['/list']" routerLinkActive="router-link-active">back</button>
-    <button (click)="enrollVoters()">Enroll voters</button>
-    <button (click)="splitGroups()">split groups</button>
-    <button (click)="submitPK()">SubmitPK</button>
-    <button (click)="finishSetupPhase()">finishSetupPhase</button>
-    <button (click)="computeMPCkeys()">ComputeMPC keys</button>
-    <button (click)="logStats()">log stats</button>
+    </div>
+    }
+    <div class="actions">
+        <button [routerLink]="['/list']" routerLinkActive="router-link-active">back</button>
+    </div>
+    @if(isAdmin()) {
+        @switch (electionStage | electionstage) {
+            @case('setup'){
+                <button  (click)="enrollVoters()">Enroll voters</button>
+                <button (click)="splitGroups()">split groups</button>
+            }
+            @case('signup'){
+                <button (click)="finishSetupPhase()">finishSetupPhase</button>
+            }
+            @case('pre voting') {
+                <button (click)="precomputeMPCkeys()">PrecomputeMPC keys</button>
+                <button (click)="computeMPCkeys()">ComputeMPC keys</button>
+            }
+            @case('voting') {
+                <button (click)="repair()">Repair</button>
+            }
+            @case('tally'){
+                <button (click)="computeBlindedVotesSum()">compute blinded votes sums</button>
+                <button (click)="computeGroupTallies()">compute group tallies</button>
+                <button (click)="getTallies()">get tallies</button>
+            }
+            
+        }
+        <button (click)="logStats()">log stats</button>
+    }
 </div>

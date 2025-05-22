@@ -1,39 +1,52 @@
 <div class="container">
-
   <form [formGroup]="electionForm" (ngSubmit)="submitForm(SubmitButton)">
-
-    <label for="name">
-      Název:
-      <input id="name" formControlName="name" required />
-    </label>
-    <hr>
-    <div class="uploads">
-      <label for="parties">
-        Parties:   
-        <input id="parties" formControlName="parties" type="file" (change)="loadParties($event)">
-      </label>
-      <label for="candidates">
-        Candidates
-        <input id="candidates" formControlName="candidates" type="file" (change)="loadCandidates($event)">
+    <div class="form-group">
+      <label for="name" class="form-label">
+        Name:
+        <input id="name" formControlName="name" required class="form-control" />
       </label>
     </div>
-    <label for>
-      Popis:<br>
-      <textarea id="description" formControlName="description"></textarea>
-    </label>
-    <br>
-    <br>
-    <label for="startDate">
-      Začátek:
-      <input id="startDate" type="datetime-local" formControlName="start" required />
-    </label>
-    
-    <label for="endDate">
-      Konec:
-      <input id="endDate" type="datetime-local" formControlName="end" required />
-    </label>
-    
-    <UI-button #SubmitButton type="submit">Odeslat</UI-button>
+    <hr>
+    <div class="uploads">
+      <div class="upload-item">
+        <label for="parties">
+          Upload Parties:
+          <input id="parties" formControlName="parties" type="file" (change)="loadParties($event)" class="form-control-file">
+        </label>
+      </div>
+      <div class="upload-item">
+        <label for="candidates">
+          Upload Candidates:
+          <input id="candidates" formControlName="candidates" type="file" (change)="loadCandidates($event)" class="form-control-file">
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description" class="form-label">
+        Description:<br>
+        <textarea id="description" formControlName="description" class="form-control" maxlength="200"></textarea>
+      </label>
+    </div>
+    <div class="form-group date-group">
+      <div class="date-item">
+        <label for="startDate" class="form-label">
+          Start Date:
+          <input id="startDate" type="datetime-local" formControlName="start" required class="form-control" />
+        </label>
+      </div>
+      <div class="date-item">
+        <label for="endDate" class="form-label">
+          End Date:
+          <input id="endDate" type="datetime-local" formControlName="end" required class="form-control" />
+        </label>
+      </div>
+      <div class="date-item">
+        <label for="startSignUp" class="form-label">
+          Start signup:
+          <input id="startSignUp" type="datetime-local" formControlName="startSignUp" required class="form-control" />
+        </label>
+      </div>
+    </div>
+    <button ui-button #SubmitButton type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
-  

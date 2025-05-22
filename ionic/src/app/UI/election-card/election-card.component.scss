@@ -1,18 +1,18 @@
 @use "../../../mixins.scss" as mix;
 :host{
-    &:nth-child(n)>.card::after{
+    &:nth-child(4n +1)>.card::after{
         background: var(--linear-gradient-base);
     }
     
-    &:nth-child(2n)>.card::after{
+    &:nth-child(4n + 2)>.card::after{
         background: var(--linear-gradient-step1);
     }
 
-    &:nth-child(3n)>.card::after{
+    &:nth-child(4n + 3)>.card::after{
         background: var(--linear-gradient-step2);
     }
     
-    &:nth-child(4n)>.card::after{
+    &:nth-child(4n + 4)>.card::after{
         background: var(--linear-gradient-step3);
     }
 }
@@ -26,7 +26,7 @@
     padding: 0.5em;
     font-family: var(--text-font-family);
     border: rgba(0, 0, 0, 0.1) 1px solid;
-    background-color: rgba(240, 248, 255, 0.315);
+    background-color: var(--c-background);
     box-shadow:  0px 3px 6px rgba(0, 0, 0, 0.1), 0px 6px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     position: relative;
@@ -61,56 +61,76 @@
             &-unreachable,
             &-setup,
             &-signup,
-            &-pre .voting,
+            &-pre.voting,
             &-voting,
             &-fault .repair,
             &-tally{
                 &::after{
                     display: block;
-                    position: relative;
-                    top: -18px;
-                    left: -5px;
-                    height: 25px;
+                    position: absolute;
+                    top: 6px;
+                    left:  -5px;
+                    height: 24px;
                     width: 3px !important;
                     content: "";
                 }
             }
             &-unreachable{
-                color: rgb(114, 114, 114);
+                color: var(--c-stage-unreachable);
                 &::after{
-                    background-color: rgb(114, 114, 114);
+                    background-color: var(--c-stage-unreachable);
                 }
 
             }
             &-setup{
-                color: blue;
+                color: var(--c-stage-setup);
                 &::after{
-                    background-color: blue;
+                    background-color: var(--c-stage-setup);
                 }
             }
-            &-signup{}
+            &-signup{
+                color: var(--c-stage-signup);
+                &::after{
+                    background-color: var(--c-stage-signup);
+                }
+            }
                 
-            &-pre .voting{
-
+            &-pre.voting{
+                color: var(--c-stage-pre-voting);
+                &::after{
+                    background-color: var(--c-stage-pre-voting);
+                }
             }
             
             &-voting{
-
+                color: var(--c-stage-voting);
+                &::after{
+                    background-color: var(--c-stage-voting);
+                }
             }
                 
             &-fault .repair{
-
+                color: var(--c-stage-fault);
+                &::after{
+                    background-color: var(--c-stage-fault);
+                }
             }
             &-tally{
-
+                color: var(--c-stage-tally);
+                &::after{
+                    background-color: var(--c-stage-tally);
+                }
             }
 
         }
     }
 }
 .content{
+    margin-top: 5px;
     @include mix.truncate(3)
 }
+
+
 .buttons{
     position: absolute;
     bottom: 20px;

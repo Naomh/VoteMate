@@ -14,12 +14,13 @@ export function randomBytes(mod: BN) {
 
 export function shaX(input: any[] | string, newSizeB:number): string{
     const stdHashSize = 32;
+
     if(stdHashSize >= newSizeB){
         const hash = Array.isArray(input) ? w3.utils.soliditySha3(...input): w3.utils.soliditySha3(input);
         if(!hash){
             throw new Error('Hash computation failed');
         }
-        return hash.substring(2, 2 + 2 * newSizeB);
+        return hash.substring(0, 2 + 2 * newSizeB);
     }else{
         throw new Error('Not Implemented');
     }
@@ -76,14 +77,38 @@ export function bytesToHex(a: number[]){
    return hex.join('');
 }
 
-export function BIarrayToHexUnaligned(arr: BigInt[]) {
+export function BIarrayToHexUnaligned(arr: BigInt[] | BN[]) {
 
     if(!Array.isArray(arr)){
     throw new Error('inputed variable is not an array')
     }
         let ret: string[] = [];
         arr.forEach(e => {
-            ret.push(Web3.utils.numberToHex(e.toString(10)));
+            let hex = e.toString(16);
+            if(hex.startsWith('-')){
+                hex = hex.slice(1);
+                ret.push('-0x' + hex);
+            }else{
+                ret.push('0x' + hex);
+            }
         });
     return ret;
+}
+
+export function toHexString(num: BN | BigInt) {
+    return '0x' + num.toString(16).padStart(64, '0');
+}
+export function ECPointsToHex(acc:string[], item: any){
+    acc.push(toHexString(item.getX()), toHexString(item.getY()));
+    return acc;
+}
+
+export function addPaddingToHex(e: string){           
+    let isNegative = false;
+    if(e.startsWith('-')){
+        isNegative = true;
+        e = e.slice(1);
+    }
+    e = e.padStart(64, '0');
+    return (isNegative? '-0x': '0x') + e;
 }

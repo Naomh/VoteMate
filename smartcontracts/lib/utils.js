@@ -3,6 +3,7 @@
 
 const crypto = require('crypto');
 let W3 = require('web3');
+const assert = require('assert');
 
 class Utils {
     constructor() {}
@@ -35,7 +36,11 @@ class Utils {
 
     toPaddedHex = function (item, paddingBytes){
         let pi = W3.utils.padLeft(item, paddingBytes * 2);
-        return pi;
+        if(pi.startsWith('0x')){
+            return pi;
+        }else{
+            return '0x' + pi
+        }
     }
 
     shaX = function(a, newSizeB) {
@@ -128,7 +133,7 @@ class Utils {
         assert(Array.isArray(arr));
         let ret = [];
         arr.forEach(e => {
-            ret.push(web3.utils.numberToHex(e.toString(10)));
+            ret.push(W3.utils.numberToHex(e.toString(10)));
         });
         return ret;
     }

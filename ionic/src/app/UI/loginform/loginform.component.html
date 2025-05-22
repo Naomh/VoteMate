@@ -1,29 +1,20 @@
 <div class="container">
 	<div class="screen">
 		<div class="screen__content">
-            <ng-container *ngIf="formTemplate === 'login'; else register">
-                    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login">
-                        <div class="login__field">
-                            <i class="login__icon fas fa-user"></i>
-                            <input formControlName="email" type="text" class="login__input" placeholder="Email">
-                        </div>
-                        <div class="login__field">
-                            <i class="login__icon fas fa-lock"></i>
-                            <input formControlName="password" type="password" class="login__input" placeholder="Password">
-                        </div>
-                        <button class="button login__submit" type="submit" [disabled]="loginForm.invalid">
-                            <span class="button__text">Log In Now</span>
-                            <i class="button__icon fas fa-chevron-right"></i>
-                        </button>
-                    </form>
-
+            <ng-container [ngSwitch]="formTemplate">
+                <ng-container *ngSwitchCase="'login'">
+                    <ng-container *ngTemplateOutlet="login"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'register'">
+                    <ng-container *ngTemplateOutlet="register"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'resetPw'">
+                    <ng-container *ngTemplateOutlet="resetPw"></ng-container>
+                  </ng-container>
+                    <ng-container *ngSwitchCase="'enterCode'">
+                        <ng-container *ngTemplateOutlet="enterCode"></ng-container>
+                    </ng-container>
             </ng-container>
-			<div class="social-login">
-				<h3>Log in via</h3>
-				<div class="social-icons">
-					<a href="#" (click)="onGoogleLogin()" class="google"></a>
-				</div>
-			</div>
             <a href="#" class="link__register" (click)="switchTemplate()">{{formTemplate === 'login' ? 'Register here!': 'Log in'}}</a>
 		</div>
 		<div class="screen__background">
@@ -35,44 +26,119 @@
 	</div>
 </div>
 
-
-
+<ng-template #login>
+    <ng-container>
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin(btn)" class="login">
+            <div class="login__field">
+                <i class="login__icon fas fa-user"></i>
+                <input formControlName="email" type="text" class="login__input" placeholder="Email">
+            </div>
+            <div class="login__field">
+                <i class="login__icon fas fa-lock"></i>
+                <input formControlName="password" type="password" class="login__input" placeholder="Password">
+            </div>
+            <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Forgot password?</a>
+            <button #btn ui-button class="button login__submit" type="submit" [disabled]="loginForm.invalid">
+                <span class="button__text">Log in now</span>
+                <i class="button__icon fas fa-chevron-right"></i>
+            </button>
+        </form>
+    </ng-container>
+    <div class="social-login">
+        <h3>Log in via</h3>
+        <div class="social-icons">
+            <a href="#" (click)="onGoogleLogin()" class="google"></a>
+        </div>
+    </div>
+</ng-template>
 
 <ng-template #register>
-    <form [formGroup]="registrationForm" (ngSubmit)="onRegistration()" class="register">
+    <ng-container>
+
+    <form [formGroup]="registrationForm" (ngSubmit)="onRegistration(btn)" class="register">
         <div class="login__field">
             <input formControlName="name" type="text" class="login__input" placeholder="Name">
-            <div *ngIf="registrationForm.controls['name'].invalid && registrationForm.controls['name'].touched">
+            @if(registrationForm.controls['name'].invalid && registrationForm.controls['name'].touched) {   
                 <small *ngIf="registrationForm.controls['name'].errors?.['required']">Name is required.</small>
-            </div>
+            }
+    
         </div>
         <div class="login__field">
             <i class="login__icon fas fa-user"></i>
             <input formControlName="email" type="text" class="login__input" placeholder="Email">
-            <div *ngIf="registrationForm.controls['email'].invalid && registrationForm.controls['email'].touched">
+            @if(registrationForm.controls['email'].invalid && registrationForm.controls['email'].touched){
                 <small *ngIf="registrationForm.controls['email'].errors?.['required']">Email is required.</small>
                 <small *ngIf="registrationForm.controls['email'].errors?.['email']">Please enter a valid email address.</small>
-            </div>
+            }
         </div>
         <div class="login__field">
             <i class="login__icon fas fa-lock"></i>
             <input formControlName="password" type="password" class="login__input" placeholder="Password">
-            <div *ngIf="registrationForm.controls['password'].invalid && registrationForm.controls['password'].touched">
+            @if(registrationForm.controls['password'].invalid && registrationForm.controls['password'].touched){
                 <small *ngIf="registrationForm.controls['password'].errors?.['required']">Password is required.</small>
                 <small *ngIf="registrationForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters long.</small>
-            </div>
+            }
         </div>
         <div class="login__field">
             <i class="login__icon fas fa-lock"></i>
             <input formControlName="confirmPassword" type="password" class="login__input" placeholder="Password confirm">
-            <div *ngIf="registrationForm.errors?.['mismatch']">
+            @if(registrationForm.errors?.['mismatch']){
                 <small>Passwords do not match.</small>
-            </div>
+            }
         </div>
 
-        <button type="submit" [disabled]="registrationForm.invalid" class="button login__submit">
+        <button #btn ui-button type="submit" [disabled]="registrationForm.invalid" class="button login__submit">
             <span class="button__text">register</span>
             <i class="button__icon fas fa-chevron-right"></i>
         </button>				
     </form>
+    </ng-container>
+
 </ng-template>
+
+    <ng-template #resetPw>
+        <h3 class="resetText">Enter your email to reset</h3>
+
+    <form [formGroup]="resetPwForm" class="resetPw" (ngSubmit)="resetPassword(btn)">
+        <div class="login__field">
+            <input formControlName="email" type="text" class="login__input" placeholder="Email">
+            @if(resetPwForm.controls['email'].invalid && resetPwForm.controls['email'].touched){
+                <small *ngIf="resetPwForm.controls['email'].errors?.['email']">Please enter a valid email address.</small>
+            }
+        </div>
+        <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Back to login</a>
+        <button #btn ui-button type="submit" class="button login__submit" [disabled]="resetPwForm.invalid">
+            <span class="button__text">send</span>
+        </button>
+        <button type="submit" class="button login__submit" (click)="switchTemplateCode()">submit a code</button>
+    </form>
+    </ng-template>
+
+    <ng-template #enterCode>
+        <h3 class="enterCode">Enter your code</h3>
+    <form [formGroup]="enterCodeForm" class="enterCode" (ngSubmit)="checkCode(btn)">
+            <UI-code-form #codeForm [length]="6" (change)="setCode($event)"></UI-code-form>
+            @if(enterCodeForm.controls['code'].touched){
+                <small *ngIf="enterCodeForm.controls['code'].errors?.['required']">Code is required.</small>
+                <small *ngIf="enterCodeForm.controls['code'].errors?.['minlength']">The code has to be 6 letter long</small>
+            }
+            <div class="form-group">
+              <label for="password">New password</label>
+              <input formControlName="password" type="password" id="password" required>
+              @if(enterCodeForm.controls['password'].touched){
+                  <small *ngIf="enterCodeForm.controls['password'].errors?.['required']">Password is required.</small>
+                  <small *ngIf="enterCodeForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters long.</small>
+                }
+            </div>
+        
+            <div class="form-group">
+              <label for="confirmPassword">Confirm password</label>
+              <input formControlName="confirmPassword" type="password" id="confirmPassword" required>
+              @if(registrationForm.errors?.['mismatch']){
+                <small>Passwords do not match.</small>
+                }
+            </div>
+            <a href="#" class="link__reset_pw" (click)="switchTemplatePw()">Back to login</a>
+            <button #btn ui-button type="submit" [disabled]="enterCodeForm.invalid">Submit</button>
+    </form>
+    </ng-template>

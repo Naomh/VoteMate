@@ -1,3 +1,7 @@
-<div *ngIf="user() as user">
-    <UI-profile-card (registerWallet)="registerWallet()" [user]="user" [onlineStatus]="onlineStatus()"></UI-profile-card>
-</div>
+<ng-container *ngIf="user() as alias">
+    <UI-profile-card 
+        (registerWallet)="registerWallet()"
+        (logOut)="onLogout()"
+        [user]="alias" [onlineStatus]="onlineStatus()"
+        [balance]="userBalance()"></UI-profile-card>
+</ng-container>

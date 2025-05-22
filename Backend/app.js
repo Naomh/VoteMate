@@ -1,3 +1,4 @@
+// #region Imports
 const OAuthConf = require("./OAuth/google.json");
 const { getGoogleOAuthTokens, getGoogleUser } = require("./OAuth/OAuth.js");
 const db = require("./database.js");
@@ -14,54 +15,66 @@ const cfg = require("./config.json");
 const sbVote = require("./SBvote.js");
 
 const web3 = new (require("web3"))(cfg.network);
-const authorityAcc = web3.eth.accounts.privateKeyToAccount(
-  "0xabde56b8d376b7efc5db0b848609dc58834078f4bc45528c38b09708bdc3eef9"
-); //(cfg.account_pk);
+const authorityAcc = web3.eth.accounts.privateKeyToAccount(cfg.account_pk);
 
-const app = express();
-
-const Calendar = require("./utils/calendar");
+const {Calendar, createEvent} = require("./utils/calendar");
 const calendar = new Calendar();
+// #endregion
 
+// #region Initialization
+const app = express();
 init();
-//deployElection('ElectionA', ['kocour','lišák', 'kohout','myšák'])
-//deployElection('ElectionB', ['Pepa','Honza', 'Adam', 'Rudolf', 'Květoslav'])
 
 app.use(
   cors({
-    origin: ["http://localhost:4200", cfg.url],
+    origin: [   
+    'http://localhost:4200',
+    'capacitor://localhost',
+    'ionic://localhost',        
+    'https://localhost',
+     cfg.url],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(bodyparser.json({ limit: "50mb" }));
 //app.use(deserializeUser);
+// #endregion
 
+// #region Routes
 app.get("/GoogleClient", getGoogleClient);
 app.get("/api/session/oauth/google", googleOAuthHandler);
 app.get("/verify", verifyAccount);
 app.post("/register", register);
 app.post("/login", login);
+app.post("/resetPW", resetPassword);
+app.post("/setNewPw", setNewPw);
 app.post("/verifyCookie", verifyCookie);
 app.post("/reissue", reissueSession);
-app.post("/enrollVoters", isAuthorized, enrollVoters);
+app.post("/enrollVoters", isAuthorized, isAdmin, enrollVoters);
 app.post("/enrollVoter", isAuthorized, enrollVoter);
-app.post("/createElection", isAuthorized, createElection);
+app.post("/createElection", isAuthorized, isAdmin, createElection);
 app.post("/getElections", isAuthorized, getElections);
+app.post("/isAdmin", isAuthorized, isUserAdmin);
 
-app.post("/splitGroups", isAuthorized, splitGroups);
-app.post("/finishSetup", isAuthorized, finishSetup);
-app.post("/precomputeMPC", isAuthorized, precomputeMPC);
+app.post("/submitVote", isAuthorized, submitVote);
+app.post("/splitGroups", isAuthorized, isAdmin, splitGroups);
+app.post("/finishSetup", isAuthorized, isAdmin, finishSetup);
+app.post("/precomputeMPC", isAuthorized, isAdmin, precomputeMPC);
+app.post("/computeMPCs", isAuthorized, isAdmin, computeMPCs);
+app.post("/computeBlindedVotesSum", isAdmin, isAuthorized, ComputeBlindedVotesSum);
+app.post("/computeGroupTallies", isAdmin, isAuthorized, computeGrouptallies);
+app.post("/repair", isAdmin, repairVotes )
+// #endregion
 
+// #region Initialization Functions
 async function init() {
   await db.connect();
   web3.eth.accounts.wallet.add(authorityAcc);
-  //assignElections();
   await redeploy();
-  //db.createElection('Test', ['Jenda', 'Alena', 'Karel'], '0xA8aBf213F4E18c5796c66f4225E03Fc47D6977A3', '0x72Ca4FA730991EED9A2602a11921876bE1d04bdF', '0x973766DDc9Ff2faAeee43a9b6d0762d66Bb913a0', '0x123259B1451b9d88352BBDdfc8ACA66B681333a1', [], 3, 100)
 }
-
 
 async function redeploy() {
   try {
@@ -73,26 +86,40 @@ async function redeploy() {
       const code = await web3.eth.getCode(address);
       if (code === "0x") {
         const updatedElection = await sbVote.deployContracts(election);
-        db.updateElection(election._id, updatedElection);
+        await db.updateElection(election._id, updatedElection);
       }
 
-      const startEvent = {
-        date: election.start,
-        fn: () => sbVote.enrollVoters(election.address),
-      };
-      calendar.addEvent(startEvent);
-
-      const endEvent = {
-        date: election.end,
-        fn: () => sbVote.tally(election.address),
-      };
-      calendar.addEvent(endEvent);
+      scheduleElectionEvents(election);
     }
   } catch (e) {
     console.error(e);
   }
 }
 
+function scheduleElectionEvents(election) {
+    const startSignUpEvent = {
+      date: election.startSignUp,
+      fn: sbVote.initiateSignUpPhase(election.mainVotingAddress),
+    };  
+
+    calendar.addEvent(startSignUpEvent);
+
+    const startEvent = {
+      date: election.start,
+      fn: sbVote.initiateVotingPhase(election.mainVotingAddress),
+    };
+    calendar.addEvent(startEvent);
+    
+    const endEvent = {
+      date: election.end,
+      fn: () => sbVote.initiateTallyPhase(election.mainVotingAddress, election.fastECmulAddress, election.ECaddress),
+    };
+    calendar.addEvent(endEvent);
+}
+
+// #endregion
+
+// #region Utility Functions
 function getGoogleClient(req, res) {
   res.setHeader("Content-Type", "application/json");
   res.json({
@@ -103,12 +130,15 @@ function getGoogleClient(req, res) {
 }
 
 function handleError(error, res) {
-  if (!error?.status) {
+  console.error(error);
+  if (!error || !(error?.status)) {
     return res.status(500).json({ message: "internal error" });
   }
   return res.status(error.status).json({ message: error.message });
 }
+// #endregion
 
+// #region Authentication
 async function register(req, res) {
   try {
     const userInfo = req.body;
@@ -125,11 +155,45 @@ async function login(req, res) {
   try {
     const userInfo = req.body;
     const uid = await db.login(...Object.values(userInfo));
-    const result = await setAccessCookie(req, res, uid);
+    
+    const voter = await db.findAccount({ _id: uid });
+    const result = await setAccessCookie(req, res, voter._id, voter.role);
 
     return result.status(200).send();
   } catch (error) {
     return handleError(error, res);
+  }
+}
+
+async function setNewPw(req, res) {
+  try {
+    const { code, password } = req.body;
+    const token = await db.findResetPWToken(code);
+    const result = await db.setNewPassword(token, password);
+    if (result) {
+      res.status(200).json({ message: "OK" }).send();
+    } else {
+      res.status(500).json({ message: "Error" }).send();
+    }
+  } catch (e) {
+    console.error(e);
+    return handleError(e, res);
+  }
+}
+
+async function resetPassword(req, res) {
+  try {
+    const email = req.body.email;
+    const account = await db.findAccount({ email });
+    if (account) {
+      const token = await db.createResetPWToken(account._id);
+      mailer.sendResetPwEmail(email, token.resetToken);
+    } else {
+      res.status(500).send();
+    }
+  } catch (e) {
+    console.error(e);
+    return handleError(e, res);
   }
 }
 
@@ -146,22 +210,24 @@ async function verifyAccount(req, res) {
       return res.status(400).json({ message: "Invalid verification code." });
     }
 
-    await setAccessCookie(req, res, user._id);
-    res.status(200).json({ message: "Ok" }).send();
+    await setAccessCookie(req, res, user._id, user.role);
+    res.status(200).json({ message: "Ok" }).redirect(config.url).send();
   } catch (error) {
     handleError(error, res);
   }
 }
 
-async function setAccessCookie(req, res, uid) {
+async function setAccessCookie(req, res, uid, role) {
   try {
     const refreshToken = JWTService.signJwt(
-      { uid: uid },
+      { uid },
       { expiresIn: 30 * 24 * 60 * 60 * 1000 } // 7 days
     );
     const hashedRefreshToken = db.generatePasswordHash(refreshToken);
+    const isAdmin = role === 'admin'? true: false;
     const session = await db.createSession(
-      uid,
+      uid, 
+      isAdmin,
       req.ip,
       req.get("user-agent") ?? "",
       hashedRefreshToken
@@ -205,8 +271,8 @@ async function reissueSession(req, res) {
       throw { status: 401, message: "Refresh token expired" };
     }
     await db.removeSessions(uid);
-    const voter = await db.findVoter({ _id: uid });
-    await setAccessCookie(req, res, uid);
+    const voter = await db.findAccount({ _id: uid });
+    await setAccessCookie(req, res, uid, voter.role);
     res
       .json({
         email: voter.email,
@@ -245,7 +311,7 @@ async function googleOAuthHandler(req, res) {
       }
     );
 
-    await setAccessCookie(req, res, user.uid);
+    await setAccessCookie(req, res, user.uid, user.role);
     res.redirect(`${cfg.url}/register?email=${encodeURIComponent(user.email)}`);
   } catch (e) {
     return res.redirect(cfg.url);
@@ -257,119 +323,31 @@ async function verifyCookie(req, res) {
   res.json(isAuthorized(req));
   res.send();
 }
+// #endregion
 
-async function registerWallet(req, res) {
+// #region Voting
+async function submitVote(req, res) {
   try {
-    const user = await db.findVoter({ uid: req.locals.uid });
-
-    if (!user.status) {
-      throw {
-        status: 401,
-        message:
-          "Only verified users can register a wallet. Please verify your account",
-      };
-    }
-
-    if (user.walletStatus) {
-      throw {
-        status: 401,
-        message: "A wallet has been already registered from this account.",
-      };
-    }
-
-    await db.createWallet(req.body.adress);
-    await db.findAndUpdateAccount({ uid: user.uid }, { walletStatus: true });
+    const { address, vote } = req.body;
+    const result = await sbVote.submitVote(address, vote);
     res.status(200).json({ message: "OK" }).send();
   } catch (e) {
-    handleError(e, res);
-  }
-}
-
-function isAuthorized(req, res, next) {
-  const token = req.cookies.accessToken;
-  if (!token) {
-    return anauthorized(req, res);
-  }
-  try {
-    const { valid, expired, expirationDate } = JWTService.verifyJwt(token);
-    console.log(valid, expirationDate);
-    if (next) {
-      next();
-    }
-
-    return { valid: valid && !expired, expirationDate };
-  } catch (error) {
-    return anauthorized(req, res);
-  }
-}
-
-async function anauthorized(req, res) {
-  res.status(401);
-  res.json({ message: "You are anauthorized to perform this action" });
-}
-
-async function createElection(req, res) {
-  try {
-    const electionObject = req.body;
-    const election = await sbVote.deployContracts(electionObject);
-    db.createElection(election);
-    res.json({ address: election.mainVotingAddress });
-    res.status(200);
-    res.send();
-  } catch (e) {
-    handleError(e, res);
-  }
-}
-
-async function getElections(req, res) {
-  try {
-    const elections = await db.getAllElections();
-
-    if (elections) {
-      res.status(200);
-      res.json(
-        elections.map((election) => ({
-          id: election._id.toString(),
-          mainVotingAddress: election.mainVotingAddress,
-          ECaddress: election.ECaddress,
-          fastECmulAddress: election.fastECmulAddress,
-          votingFuncAddress: election.votingFuncAddress,
-          votingCallsAddress: election.votingCallsAddress,
-          description: election.description,
-          name: election.name,
-          mpcBatchSize: election.mpcBatchSize,
-          rmBatchSize: election.rmBatchSize,
-          candidates: election.candidates.map((candidate, index) => ({
-            name: candidate.name,
-            bio: candidate.bio,
-            party: candidate.party,
-            index,
-          })),
-          parties: election.parties,
-          start: election.start,
-          end: election.end,
-        }))
-      );
-    } else {
-      res.status(200);
-      res.json({ message: "no active elections found" });
-    }
-    res.send();
-  } catch (e) {
-    handleError(e);
+    return handleError(e, res);
   }
 }
 
 async function enrollVoter(req, res) {
   try {
     const { contract, wallet } = req.body;
-    const election = db.addVoter(contract, wallet);
+    const uid = JWTService.decode(req.cookies.accessToken).uid;
+    const election = await db.addVoter(contract, wallet, uid);
     if (election) {
       res.status(200);
-      res.json({ message: "Ok" });
+      res.json({ message: "Ok", election: {isRegistered: election.isRegistered, ...election}});
       res.send();
     }
-  } catch (e) {
+  }catch(e){
+    console.error(e);
     handleError(e, res);
   }
 }
@@ -381,6 +359,7 @@ async function enrollVoters(req, res) {
     res.status(200);
     res.send();
   } catch (e) {
+    console.error(e);
     handleError(e, res);
   }
 }
@@ -388,7 +367,7 @@ async function enrollVoters(req, res) {
 async function splitGroups(req, res) {
   try {
     const address = req.body.address;
-    sbVote.splitGroups(address);
+    await sbVote.splitGroups(address);
     res.status(200);
     res.send();
   } catch (e) {
@@ -411,6 +390,51 @@ async function precomputeMPC(req, res) {
   }
 }
 
+async function computeMPCs(req, res) {
+  try {
+    const address = req.body.address;
+    await sbVote.computeMPCKeys(address);
+    res.status(200);
+    res.send();
+  } catch (error) {
+    handleError(
+      { status: 500, message: "Operation failed due to an internal error" },
+      res
+    );
+  }
+}
+
+async function ComputeBlindedVotesSum(req, res) {
+  try {
+    const address = req.body.address;
+    const result = await sbVote.computeBlindedVotesSum(address);
+    res.body = { result };
+    res.status(200);
+    res.send();
+  } catch (error) {
+    handleError(
+      { status: 500, message: "Operation failed due to an internal error" },
+      res
+    );
+  }
+}
+
+async function computeGrouptallies(req, res) {
+  try {
+    const address = req.body.address;
+    const fastECmulAddress = req.body.fastECmulAddress;
+    const ECaddress = req.body.ECaddress;
+    const result = await sbVote.computeGroupTallies(address, fastECmulAddress, ECaddress);
+    res.body = { result };
+    res.status(200);
+    res.send();
+  } catch (error) {
+    handleError(
+      { status: 500, message: "Operation failed due to an internal error" },
+      res
+    );
+  }
+}
 
 async function finishSetup(req, res) {
   try {
@@ -421,6 +445,114 @@ async function finishSetup(req, res) {
   } catch (e) {
     handleError(e, res);
   }
+}
+async function repairVotes(req,res){
+  try{
+    const address = req.body.address;
+    sbVote.prepareToRepairVotes(address);
+    res.status(200);
+    res.send();
+  }catch(e){
+    handleError(e, res);
+  }
+}
+
+// #endregion
+
+// #region Election Management
+async function createElection(req, res) {
+  try {
+    const electionObject = req.body;
+    const election = await sbVote.deployContracts(electionObject);
+    await db.createElection(election);
+    scheduleElectionEvents(election);
+    sbVote.sendStageEmail(sbVote.stages.SETUP, election.mainVotingAddress);
+    res.json({ address: election.mainVotingAddress });
+    res.status(200);
+    res.send();
+  } catch (e) {
+    handleError(e, res);
+  }
+}
+
+async function getElections(req, res) {
+  try {
+    const token = JWTService.decode(req.cookies.accessToken).uid;
+    const elections = await db.getAllElections(token);
+    if (elections) {
+      res.status(200);
+      res.json(
+        elections.map((election) => ({
+          ...election,
+          id: election._id.toString(),
+          candidates: election.candidates.map((candidate, i) =>({index: i, ...candidate}))
+        }))
+      );
+    } else {
+      res.status(200);
+      res.json({ message: "no active elections found" });
+    }
+    res.send();
+  } catch (e) {
+    handleError(e);
+  }
+}
+// #endregion
+
+// #region Middleware
+function isAuthorized(req, res, next) {
+  const token = req.cookies.accessToken;
+
+  if (!token) {
+    return anauthorized(req, res);
+  }
+  try {
+    const { valid, expired, expirationDate } = JWTService.verifyJwt(token);
+    if (next) {
+      next();
+    }
+
+    return { valid: valid && !expired, expirationDate };
+  } catch (error) {
+    return anauthorized(req, res);
+  }
+}
+
+function isAdmin(req, res, next) {
+  const token = req.cookies.accessToken;
+
+  if (!token) {
+    return anauthorized(req, res);
+  }
+
+  try {
+    const { uid } = JWTService.decode(token);
+    db.findAccount({ _id: uid }).then((user) => {
+      if (user.role === "admin") {
+        return next();
+      } else {
+        return anauthorized(req, res);
+      }
+    });
+  } catch (error) {
+    return anauthorized(req, res);
+  }
+}
+
+async function isUserAdmin(req, res) {
+  try {
+    const { email } = req.body;
+    const user = await db.findAccount({ email });
+    const isAdmin = user?.role === "admin";
+    res.status(200).json({ isAdmin });
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
+async function anauthorized(req, res) {
+  res.status(401);
+  res.json({ message: "You are anauthorized to perform this action" });
 }
 
 async function deserializeUser(req, res, next) {
@@ -465,5 +597,6 @@ async function deserializeUser(req, res, next) {
 
   return next();
 }
+// #endregion
 
 module.exports = app;

@@ -1,5 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+export enum ElectionStage {
+  unreachable = -1,
+  setup = 0,
+  signup = 1,
+  preVoting = 2,
+  voting = 3,
+  faultRepair = 4,
+  tally = 5
+}
 
 @Pipe({
   name: 'electionstage',

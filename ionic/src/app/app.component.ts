@@ -17,17 +17,15 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { SnackbarService } from './services/snackbar.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    LoginComponent,
-    CommonModule,
-    ProfileComponent,
-    SnackbarComponent,
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+    selector: 'app-root',
+    imports: [
+        LoginComponent,
+        CommonModule,
+        ProfileComponent,
+        SnackbarComponent,
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit, AfterViewInit {
   private web3SVC = inject(Web3Service);
@@ -46,11 +44,11 @@ export class AppComponent implements OnInit, AfterViewInit {
       const userInfo = await this.httpSVC.refreshSession();
     } catch{
       const login = await this.dexieSVC.getUser();
-      console.log('už jsem tady zas', login);
       if (login) {
         this.httpSVC.logIn({email: login.email, password: login.password});
       }
     }
+
     const elections = await this.httpSVC.getAvailableElections();
     if (elections) {
       this.dexieSVC.updateElections(elections);
@@ -59,7 +57,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     const user = this.user();
     if (user && user.pk) {
-      console.log(await this.web3SVC.getWalletfromPk(user.pk, user.password));
+      await this.web3SVC.getWalletfromPk(user.pk, user.password);
     }
   }
 

@@ -204,10 +204,10 @@ contract('MainVotingC', function(accounts) {
 
       for (let j = 0; j < booths[i].cntVoters / config.MPC_BATCH_SIZE; j++) {
         // precompute modular inverse off-chain
+
         invModArrs_MPC = await booth.modInvCache4MPCBatched.call(j * config.MPC_BATCH_SIZE, act_left, {gas: 125000000});
 
         act_left = invModArrs_MPC[2];
-
         // MPC keys computation on-chain
         var receipt = await booth.computeMPCKeys(invModArrs_MPC[1], invModArrs_MPC[0], { from: authority, gas: 12 * 1000 * 1000 });
         gasUsedMPCbooth += receipt.receipt.gasUsed;

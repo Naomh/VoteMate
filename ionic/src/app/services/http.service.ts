@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { ILoginForm, IRegisterForm } from '../UI/loginform/loginform.component';
+import { IEnterCodeForm, ILoginForm, IRegisterForm, IResetPwForm } from '../UI/loginform/loginform.component';
 import { firstValueFrom, Observable } from 'rxjs';
 import { IUser } from './dexie.service';
 import { IElection, IElectionQuery } from '../UI/election-list/election.interface';
+import { IElectionRes } from '../interfaces/responses.interface';
+import { environment } from '../../environments/environment';
 
 interface IOAuht {
   clientId: string;
@@ -15,8 +17,10 @@ interface IOAuht {
 })
 export class HttpService {
 
+
+
   private _http = inject(HttpClient);
-  private _api = 'http://192.168.0.248:3000/'//'http://localhost:3000/'
+  private _api = environment.apiUrl; // Použití hodnoty z konfiguračního souboru
   private _OAuthCID!: string;
   private _OAuthRedirectUrl!: string;
   private _rootUrl: string = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -68,6 +72,10 @@ export class HttpService {
     window.location.replace(this._rootUrl + '?' + qs.toString());
   }
   
+  public isAdmin(user: IUser): Promise<{isAdmin: boolean}>{
+    return firstValueFrom(this._http.post<{isAdmin: boolean}>(this._api + 'isadmin', user, {withCredentials: true}))
+  }
+
   public register(user: IRegisterForm){
     return firstValueFrom(this._http.post(this._api + 'register', user, {withCredentials: true}))
   }
@@ -84,14 +92,8 @@ export class HttpService {
     return firstValueFrom(this._http.post(this._api + 'verifyCookie', {withCredentials: true}));
   }
 
-  public refreshSession(): Promise<IUser> | undefined{
-    try{
+  public refreshSession(): Promise<IUser>{
       return firstValueFrom(this._http.post<IUser>(this._api + 'reissue',{}, {withCredentials: true}));
-    }catch(e){
-      console.error('request failed')
-      return undefined;
-
-    }
   }
   public getAvailableElections(): Promise<IElection[]> {
     return firstValueFrom(this._http.post<IElection[]>(this._api + 'getElections', {}, {withCredentials: true}));
@@ -100,25 +102,52 @@ export class HttpService {
   public splitGroups(address:string){
     return firstValueFrom(this._http.post(this._api + 'splitGroups',{address: address}, {withCredentials: true}));
   }
+  
   public finishSetupPhase(address: string) {
     return firstValueFrom(this._http.post(this._api + 'finishSetup',{address: address}, {withCredentials: true}));
   }
+  
   public precomputeMPCKeys(address: string) {
     return firstValueFrom(this._http.post(this._api + 'precomputeMPC',{address: address}, {withCredentials: true}));
   }
-  public enrollVoter(address: string, walletAddress: string): Promise<void>{
-    return firstValueFrom(this._http.post<void>(this._api + 'enrollVoter', {contract: address, wallet: walletAddress}));
-  } 
 
-  public generateElection(){
-    return firstValueFrom(this._http.post<any>(this._api + 'createElection', {}, {withCredentials: true}));
+  public computeMPCKeys(address: string) {
+    return firstValueFrom(this._http.post(this._api + 'computeMPCs',{address: address}, {withCredentials: true}));
   }
 
+  public computeBlindedVotesSum(address: string, ECaddress: string) {
+    return firstValueFrom(this._http.post(this._api + 'computeBlindedVotesSum', {address: address, ECaddress: ECaddress}, {withCredentials: true}));
+  }
+
+  public computeGroupTallies(address: string, fastECmulAddress: string, ECaddress: string) {
+    return firstValueFrom(this._http.post(this._api + 'computeGroupTallies', {address: address, ECaddress: ECaddress, fastECmulAddress: fastECmulAddress}, {withCredentials: true}));
+  }
+
+  public enrollVoter(address: string, walletAddress: string): Promise<IElectionRes>{
+    return firstValueFrom(this._http.post<IElectionRes>(this._api + 'enrollVoter', {contract: address, wallet: walletAddress}, {withCredentials: true}));
+  } 
+
   public enrollVoters(address: string){
-    return firstValueFrom(this._http.post<any>(this._api + 'enrollVoters', {address}, {withCredentials: true}));
+    return firstValueFrom(this._http.post<void>(this._api + 'enrollVoters', {address}, {withCredentials: true}));
+  }
+
+  public repairVoters(address: string){
+    return firstValueFrom(this._http.post<void>(this._api + 'repair', {address}, {withCredentials: true}));
   }
 
   public createElection(election: IElectionQuery){
     return firstValueFrom(this._http.post<boolean>(this._api + 'createElection', {...election}, {withCredentials: true}));
+  }
+
+  public resetPassword(email: IResetPwForm){
+    return firstValueFrom(this._http.post<void>(this._api + 'resetPW', email));
+  }
+
+  public enterCode(form: IEnterCodeForm) {
+    return firstValueFrom(this._http.post<void>(this._api + 'setNewPw', form, {withCredentials: true}));
+  }
+
+  public submitVote(address: string, vote: number) {
+    return firstValueFrom(this._http.post<void>(this._api + 'submitVote', {address, vote}, {withCredentials: true}))
   }
 }

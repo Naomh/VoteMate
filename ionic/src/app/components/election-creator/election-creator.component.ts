@@ -10,11 +10,10 @@ interface JsonObject {
 }
 
 @Component({
-  selector: 'app-election-creator',
-  standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, ButtonComponent],
-  templateUrl: './election-creator.component.html',
-  styleUrl: './election-creator.component.scss'
+    selector: 'app-election-creator',
+    imports: [ReactiveFormsModule, FormsModule, CommonModule, ButtonComponent],
+    templateUrl: './election-creator.component.html',
+    styleUrl: './election-creator.component.scss'
 })
 export class ElectionCreatorComponent {
   protected httpSVC: HttpService = inject(HttpService); 
@@ -29,6 +28,7 @@ export class ElectionCreatorComponent {
       candidates: [null, Validators.required],
       parties: [null, Validators.required],
       start: ['', Validators.required],
+      startSignUp: ['', Validators.required],
       end: ['', Validators.required]
     });
   }
@@ -61,12 +61,10 @@ export class ElectionCreatorComponent {
 
   protected async loadParties(event: Event){
     this.parties = await this.loadJsonFile(event);
-    console.log(this.parties)
 }
 
   protected async loadCandidates(event: Event){
     this.candidates = await this.loadJsonFile(event);
-    console.log(this.candidates)
   }
 
 
@@ -97,15 +95,15 @@ protected loadJsonFile(event: Event): Promise<JSON>{
 
   private async processParties(): Promise<{parties: IParty[], partyKeys: JsonObject}>{
     try{
-      const partyKeys:JsonObject = {}
-      const parties: IParty[] = this.parties['polozky'].map((item: JsonObject) => {
-        partyKeys[item['ESTRANA']] = item['ZKRATKAE8'];
+      const partyKeys: JsonObject = {};
+      const parties: IParty[] = this.parties['items'].map((item: JsonObject) => {
+        partyKeys[item['partyId']] = item['acronym'];
         const party = {
-          name: item['NAZEVCELK'],
-          acronym: item['ZKRATKAE8'],
-          eref: item['ESTRANA'],
-          vref: item['VSTRANA']
-        }
+          name: item['fullName'],
+          acronym: item['acronym'],
+          eref: item['partyId'],
+          vref: item['voterId']
+        };
         return party;
       });
       return {parties, partyKeys};      
@@ -115,21 +113,20 @@ protected loadJsonFile(event: Event): Promise<JSON>{
   }
 
   private async processCandidates(partyKeys: JsonObject): Promise<ICandidate[]>{
-    console.log(partyKeys);
     try{
-      const candidates: ICandidate[] = this.candidates['polozky'].map((item: JsonObject, index:number) => {
-        const name = `${item['TITULPRED'] ??''} ${item['JMENO']} ${item['PRIJMENI']} ${item['TITULZA'] ??''}`.trim()
+      const candidates: ICandidate[] = this.candidates['items'].map((item: JsonObject, index: number) => {
+        const name = `${item['titleBefore'] ?? ''} ${item['firstName']} ${item['lastName']} ${item['titleAfter'] ?? ''}`.trim();
         const candidate: ICandidate = {
           index: index,
           name,
-          party: partyKeys[item['ESTRANA']],
-          bio: partyKeys[item['POVOLANI']],
-        }
+          party: partyKeys[item['partyId']],
+          bio: item['profession'],
+        };
         return candidate;
-      })
-      return candidates
+      });
+      return candidates;
     }catch(e){
-      throw new Error('Invalid data format of candidates')
+      throw new Error('Invalid data format of candidates');
     }
   }
 }
